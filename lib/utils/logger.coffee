@@ -32,7 +32,7 @@ module.exports = class Logger
   LEVEL_COLORS:
     TRACE: 'grey'
     DEBUG: 'grey'
-    INFO:  'black'
+    INFO:  'white'
     PASS:  'green'
     WARN:  'yellow'
     ERROR: 'red'
