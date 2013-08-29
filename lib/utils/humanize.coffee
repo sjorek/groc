@@ -1,7 +1,7 @@
 module.exports = humanize =
   joinSentence: (parts, conjunctive='and') ->
     if parts.length > 2
-      [parts[0..-2].join(', '), parts[parts.length - 1]].join(", #{conjunctive} ")
+      [parts[0..-2].join(', '), parts[parts.length - 1]].join(" #{conjunctive} ")
     else
       parts.join(" #{conjunctive} ")
 
