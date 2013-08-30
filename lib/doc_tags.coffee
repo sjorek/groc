@@ -15,6 +15,66 @@ humanize = require './utils/humanize'
 collapse_space = (value) ->
   value.replace /\s+/g, ' '
 
+# JSDOC3
+#
+# @access
+# @alias
+# @augments
+# @author
+# @borrows
+# @callback
+# @classdesc
+# @constant
+# @constructor
+# @constructs
+# @copyright
+# @default
+# @deprecated
+# @desc
+# @enum
+# @event
+# @example
+# @exports
+# @external
+# @file
+# @fires
+# @global
+# @ignore
+# @inner
+# @instance
+# @kind
+# @lends
+# @license
+# @link
+# @member
+# @memberof
+# @method
+# @mixes
+# @mixin
+# @module
+# @name
+# @namespace
+# @param
+# @private
+# @property
+# @protected
+# @public
+# @readonly
+# @requires
+# @returns
+# @see
+# @since
+# @static
+# @summary
+# @this
+# @throws
+# @todo
+# @tutorial
+# @type
+# @typedef
+# @variation
+# @version
+
 # This is a sample doc tagged block comment
 #
 # @public
@@ -25,6 +85,12 @@ module.exports = DOC_TAGS =
     section:     'description'
     markdown:    '{value}'
 
+  abstract:
+    section:     'access'
+  constant:
+    section:     'access'
+  deprecated:
+    section:     'access'
   internal:
     section:     'access'
   'private':
@@ -42,9 +108,25 @@ module.exports = DOC_TAGS =
   destructor:
     section:     'special'
 
-  constant:
+  'class':
     section:     'type'
+  event:
+    section:     'type'
+    # converts parsed values to markdown text
+    #
+    # @private
+    # @method markdown
+    #
+    # @param  {String}   value
+    # @return {String} should be in markdown syntax
+    markdown:    (value) ->
+      if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
+        "event #{match[2]} of class #{match[1]}"
+      else
+        "event #{value}"
   method:
+    section:     'type'
+  mixin:
     section:     'type'
   module:
     section:     'type'
@@ -76,19 +158,68 @@ module.exports = DOC_TAGS =
   alias:
     valuePrefix: 'as'
     section:     'metadata'
-    markdown:    'is aliased as {value}'
+    markdown:    'is aliased as _{value}_'
+  fires:
+    section:     'metadata'
+    # converts parsed values to markdown text
+    #
+    # @private
+    # @method markdown
+    #
+    # @param  {String}   value
+    # @return {String} should be in markdown syntax
+    markdown:    (value) ->
+      if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
+        "fires #{humanize.article match[2]} _#{match[2]}_ event on class _#{match[1]}_"
+      else
+        "fires #{humanize.article value} _#{value}_ event"
+  memberof:
+    section:     'metadata'
+    markdown:    'is a member of _{value}_'
+  mixes:
+    section:     'metadata'
+    markdown:    'mixes _{value}_ in'
+  namespace:
+    section:     'metadata'
+    markdown:    'is in namespace _{value}_'
   publishes:
     section:     'metadata'
   requests:
     section:     'metadata'
-    markdown:    'makes an ajax request to {value}'
+    markdown:    'makes an ajax request to <{value}>'
+  see:
+    section:     'metadata'
+    markdown:    'refers to <{value}>'
+  since:
+    section:     'metadata'
+    markdown:    'is available since version {value}'
   subscribes:
     valuePrefix: 'to'
     section:     'metadata'
     markdown:    'subscribes to {value}'
   type:
     section:     'metadata'
-    markdown:    'of type _{value}_'
+    markdown:    'is of type _{value}_'
+  version:
+    section:     'metadata'
+    markdown:    'has version {value}'
+
+
+  author:
+    section:     'authoring'
+
+    # renders author names, optionally hyper-linked
+    #
+    # @public
+    # @method markdown
+    #
+    # @param  {String}  value
+    # @return {String}          Should be in markdown syntax
+    markdown:    (value) ->
+      if match = collapse_space(value).match /^\s*([^<]+)\s+<([^>]+)>\s*$/
+        "[#{match[1]}](#{match[2]})"
+      else
+        "#{value}"
 
   todo:
     section:     'todo'
@@ -149,6 +280,10 @@ module.exports = DOC_TAGS =
             "any number of #{humanize.pluralize type.replace(/^\.\.\.|\.\.\.$/, "")}"
           else if type.match /\[\]$/
             "an Array of #{humanize.pluralize type.replace(/\[\]$/, "")}"
+          else if type.match /^Array<[^>]+>/
+            values = for value in type.replace(/^Array<|>$/, "").split(/,|\|/)
+              humanize.pluralize value
+            "an Array of #{humanize.joinSentence values, 'or'}"
           else
             "#{humanize.article type} #{type}"
       )
@@ -202,3 +337,4 @@ module.exports = DOC_TAGS =
     section:     'flag'
   defaultHasValue:
     section:     'metadata'
+

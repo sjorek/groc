@@ -131,11 +131,17 @@ module.exports = class Default extends Base
       firstPart.push tag.markdown for tag in sections.type if sections.type?
 
       metaOutput += "#{humanize.capitalize firstPart.join(' ')}"
-      if sections.flags? or sections.metadata?
+
+      if sections.flags? or sections.metadata? or sections.authoring?
         secondPart = []
         secondPart.push tag.markdown for tag in sections.flags if sections.flags?
         secondPart.push tag.markdown for tag in sections.metadata if sections.metadata?
+        if sections.authoring?
+          authors = []
+          authors.push tag.markdown for tag in sections.authoring
+          secondPart.push "is authored by #{humanize.joinSentence authors}"
         metaOutput += " #{humanize.joinSentence secondPart}"
+
 
       output += "<span class='doc-section-header'>#{metaOutput}</span>\n\n" if metaOutput?
 
