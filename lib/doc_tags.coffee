@@ -207,22 +207,21 @@ module.exports = DOC_TAGS =
 
   author:
     section:     'authoring'
-
-    # renders author names, optionally hyper-linked
-    #
-    # @public
-    # @method markdown
-    #
-    # @param  {String}  value
-    # @return {String}          Should be in markdown syntax
-    markdown:    (value) ->
-      if match = collapse_space(value).match /^\s*([^<]+)\s+<([^>]+)>\s*$/
-        # the other alternatives, as [text](link) do not (yet) encode email
-        # addresses - that sucks, so adding braces simply looks and reads
-        # better in the resulting output
-        "#{match[1]} (<#{match[2]}>)"
-      else
-        "#{value}"
+# the other alternatives, as [text](link) do not (yet) encode email
+# addresses - that sucks, so we leave it as it is, for now …
+#    # renders author names, optionally hyper-linked
+#    #
+#    # @public
+#    # @method markdown
+#    #
+#    # @param  {String}  value
+#    # @return {String}          Should be in markdown syntax
+#    markdown:    (value) ->
+#      if match = collapse_space(value).match /^\s*([^<]+)\s+<([^>]+)>\s*$/
+#        "[#{match[1]}](<#{match[2]}>)"
+#      else
+#        "#{value}"
+    markdown:    '{value}'
 
   todo:
     section:     'todo'
