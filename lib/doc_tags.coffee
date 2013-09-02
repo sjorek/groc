@@ -254,7 +254,7 @@ module.exports = DOC_TAGS =
     # @return {Object}
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s+(\[?)([\w\.\$]+)(?:=([^\s\]]+))?(\]?)\s*(.*)$/
-      types:        (parts[1]?.split /\|{1,2}/g)
+      types:        (parts[1]?.split /\|{1,2}(?:[^\.])/g)
       isOptional:   (parts[2] == '[' and parts[5] == ']')
       varName:      parts[3]
       isSubParam:   /\./.test parts[3]
@@ -282,10 +282,10 @@ module.exports = DOC_TAGS =
             "any number of #{humanize.pluralize type.replace(/^\.\.\.|\.\.\.$/, "")}"
           else if type.match /\[\]$/
             "an Array of #{humanize.pluralize type.replace(/\[\]$/, "")}"
-          else if type.match /^Array<[^>]+>/
-            values = for value in type.replace(/^Array<|>$/, "").split(/,|\|/)
-              humanize.pluralize value
-            "an Array of #{humanize.joinSentence values, 'or'}"
+          else if type.match /^Array\.<[^>]+>/
+            subtype = for subtype in type.replace(/^Array\.<|>$/g, "").split(/,|\|/)
+              humanize.pluralize subtype
+            "an Array of #{humanize.joinSentence subtype, 'or'}"
           else
             "#{humanize.article type} #{type}"
       )
@@ -297,10 +297,10 @@ module.exports = DOC_TAGS =
 
       if types.length > 1
         verb = 'can'
-      else if types[0] == 'a Mixed'
+      else if types[0] == 'a Mixed' or types[0] == 'a *'
         verb = 'can'
         types[0] = 'of any type'
-      else if types[0] == 'an Array of Mixeds'
+      else if types[0] == 'an Array of Mixeds' or types[0] == 'an Array of *'
         verb = 'can'
         types[0] = 'an Array of any type'
       else if types[0] == 'any number of Mixeds'
@@ -318,11 +318,21 @@ module.exports = DOC_TAGS =
     section:     'returns'
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
-      types:       parts[1].split /\|{1,2}/g
+      types:       parts[1].split /\|{1,2}(?:[^\.])/g
       description: parts[2]
     markdown:     (value) ->
-      types = ("#{humanize.article type} #{type}" for type in value.types)
-      "**returns #{types.join ' or '}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      types = (
+        for type in value.types
+          if type.match /\[\]$/
+            "an Array of #{humanize.pluralize type.replace(/\[\]$/, "")}"
+          else if type.match /^Array\.<[^>]+>/
+            subtype = for subtype in type.replace(/^Array\.<|>$/g, "").split(/,|\|/)
+              humanize.pluralize subtype
+            "an Array of #{humanize.joinSentence subtype, 'or'}"
+          else
+            "#{humanize.article type} #{type}"
+      )
+      "**returns #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
   returns:       'return'
   throw:
     section:     'returns'
@@ -332,7 +342,7 @@ module.exports = DOC_TAGS =
       description: parts[2]
     markdown:    (value) ->
       types = ("#{humanize.article type} #{type}" for type in value.types)
-      "**can throw #{types.join ' or '}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      "**can throw #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
   throws:        'throw'
 
   defaultNoValue:
