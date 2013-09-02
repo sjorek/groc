@@ -132,14 +132,10 @@ module.exports = class Default extends Base
 
       metaOutput += "#{humanize.capitalize firstPart.join(' ')}"
 
-      if sections.flags? or sections.metadata? or sections.authoring?
+      if sections.flags? or sections.metadata?
         secondPart = []
         secondPart.push tag.markdown for tag in sections.flags if sections.flags?
         secondPart.push tag.markdown for tag in sections.metadata if sections.metadata?
-        if sections.authoring?
-          authors = []
-          authors.push tag.markdown for tag in sections.authoring
-          secondPart.push "is authored by #{humanize.joinSentence authors}"
         metaOutput += " #{humanize.joinSentence secondPart}"
 
 
@@ -160,12 +156,20 @@ module.exports = class Default extends Base
               humanize.capitalize tag.markdown
             else
               tag.markdown
-        ).join('<br/>**and** ')
+        ).join('<br/>**and** ') + '\n\n'
 
       if sections.howto?
-        output += "\n\nHow-To:\n\n#{humanize.gutterify tag.markdown, 0}" for tag in sections.howto
+        output += "How-To:\n\n#{humanize.gutterify tag.markdown, 0}\n\n" for tag in sections.howto
 
       if sections.example?
-        output += "\n\nExample:\n\n#{humanize.gutterify tag.markdown, 4}" for tag in sections.example
+        output += "Example:\n\n#{humanize.gutterify tag.markdown, 4}\n\n" for tag in sections.example
+
+      if sections.authors?
+        output += "Author#{if sections.authors.length is 1 then '' else 's'}:\n\n"
+        output += "#{tag.markdown}\n\n" for tag in sections.authors
+
+      if sections.references?
+        output += "Reference#{if sections.references.length is 1 then '' else 's'}:\n\n"
+        output += "#{tag.markdown}\n\n" for tag in sections.references
 
       segment.comments = output.split '\n'

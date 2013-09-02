@@ -35,6 +35,7 @@ collapse_space = (value) ->
 # @event
 # @example
 # @exports
+# @extends
 # @external
 # @file
 # @fires
@@ -159,6 +160,16 @@ module.exports = DOC_TAGS =
     valuePrefix: 'as'
     section:     'metadata'
     markdown:    'is aliased as _{value}_'
+  alias:
+    valuePrefix: 'as'
+    section:     'metadata'
+    markdown:    'is aliased as _{value}_'
+  augments:
+    section:     'metadata'
+    markdown:    'extends _{value}_'
+  'extends':
+    section:     'metadata'
+    markdown:    'extends _{value}_'
   fires:
     section:     'metadata'
     # converts parsed values to markdown text
@@ -187,9 +198,6 @@ module.exports = DOC_TAGS =
   requests:
     section:     'metadata'
     markdown:    'makes an ajax request to <{value}>'
-  see:
-    section:     'metadata'
-    markdown:    'refers to <{value}>'
   since:
     section:     'metadata'
     markdown:    'is available since version {value}'
@@ -204,24 +212,41 @@ module.exports = DOC_TAGS =
     section:     'metadata'
     markdown:    'has version {value}'
 
-
   author:
-    section:     'authoring'
-# the other alternatives, as [text](link) do not (yet) encode email
-# addresses - that sucks, so we leave it as it is, for now …
-#    # renders author names, optionally hyper-linked
-#    #
-#    # @public
-#    # @method markdown
-#    #
-#    # @param  {String}  value
-#    # @return {String}          Should be in markdown syntax
-#    markdown:    (value) ->
-#      if match = collapse_space(value).match /^\s*([^<]+)\s+<([^>]+)>\s*$/
-#        "[#{match[1]}](<#{match[2]}>)"
-#      else
-#        "#{value}"
-    markdown:    '{value}'
+    section:     'authors'
+    # renders @author tags
+    #
+    # @public
+    # @method markdown
+    #
+    # @param  {String}  value
+    # @return {String}          Should be in markdown syntax
+    # @author Stephan Jorek <stephan.jorek@gmail.com>
+    markdown:    (value) ->
+      value = collapse_space value
+      # the other alternatives, as [text](link) do not (yet) encode email
+      # addresses - that sucks, so we leave it as it is, for now …
+      if author = value.match /^\s*(.*)<([^>]+)>\s*$/
+        "* #{author[1]} (<#{author[2]}>)"
+      else
+        "* #{value}"
+
+  see:
+    section:     'references'
+    # renders @see references
+    #
+    # @public
+    # @method markdown
+    #
+    # @param  {String}  value
+    # @return {String}          Should be in markdown syntax
+    # @see https://github.com/nevir/groc
+    markdown:    (value) ->
+      value = collapse_space value
+      if /^\s*(\[[^\]]+\]\([^\)]+\)|<[^>]+>|\`[^\`]+\`)\s*$/.test value
+        "* #{value}"
+      else
+        "* <#{value}>"
 
   todo:
     section:     'todo'
@@ -282,10 +307,10 @@ module.exports = DOC_TAGS =
             "any number of #{humanize.pluralize type.replace(/^\.\.\.|\.\.\.$/, "")}"
           else if type.match /\[\]$/
             "an Array of #{humanize.pluralize type.replace(/\[\]$/, "")}"
-          else if type.match /^Array\.<[^>]+>/
-            subtype = for subtype in type.replace(/^Array\.<|>$/g, "").split(/,|\|/)
-              humanize.pluralize subtype
-            "an Array of #{humanize.joinSentence subtype, 'or'}"
+          else if subtype = type.match /^(Array|Object)\.<([^>]+)>/
+            subtypes = for subtypes in subtype[2].replace(/^(Array|Object)\.<|>$/g, "").split(/,/)
+              humanize.pluralize subtypes
+            "an #{subtype[1]} of #{humanize.joinSentence subtypes, 'or'}"
           else
             "#{humanize.article type} #{type}"
       )
@@ -318,17 +343,17 @@ module.exports = DOC_TAGS =
     section:     'returns'
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
-      types:       parts[1].split /\|{1,2}(?:[^\.])/g
+      types:       parts[1].split /\|{1,2}/g
       description: parts[2]
     markdown:     (value) ->
       types = (
         for type in value.types
           if type.match /\[\]$/
             "an Array of #{humanize.pluralize type.replace(/\[\]$/, "")}"
-          else if type.match /^Array\.<[^>]+>/
-            subtype = for subtype in type.replace(/^Array\.<|>$/g, "").split(/,|\|/)
-              humanize.pluralize subtype
-            "an Array of #{humanize.joinSentence subtype, 'or'}"
+          else if subtype = type.match /^(Array|Object)\.<([^>]+)>/
+            subtypes = for subtypes in subtype[2].replace(/^(Array|Object)\.<|>$/g, "").split(/,/)
+              humanize.pluralize subtypes
+            "an #{subtype[1]} of #{humanize.joinSentence subtypes, 'or'}"
           else
             "#{humanize.article type} #{type}"
       )
