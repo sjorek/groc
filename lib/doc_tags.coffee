@@ -1,6 +1,8 @@
-# # Known Doc Tags
 
 humanize = require './utils/humanize'
+type_urls_global = require './type_urls_global'
+type_urls_dom = require './type_urls_dom'
+
 
 # This function collapses... spaces
 #
@@ -15,21 +17,56 @@ humanize = require './utils/humanize'
 collapse_space = (value) ->
   value.replace /\s+/g, ' '
 
+# This function creates links to JavaScript-types
+#
+# @param  {String} type
+# @return {String}
+link_type = (type, caption, url) ->
+
+  caption ?= type
+
+  url = get_namespace_type_url type unless url?
+  url = get_known_type_url type unless url?
+
+  if url?
+    "[#{caption}](#{url})"
+  else
+    caption
+
+# This function returns the URL of a well-known JavaScript-type matching `type`.
+#
+# @param  {String} type
+# @return {String}
+get_known_type_url = (type) ->
+  return type_urls_global[type] if type_urls_global[type]?
+  return type_urls_dom[type] if type_urls_dom[type]?
+  null
+
+# This function returns the URL determined by the `type`'s namespace.  Needs a
+# namespace-url-map specified in project properties.
+# 
+# @param  {String} type
+# @return {String}
+get_namespace_type_url = (type) ->
+  # TODO implement `get_namespace_type_url`
+  null
+
 # This function converts type names for return-doctags
 #
 # @param  {String} type
 # @return {String}
 convert_type = (type) ->
   if type is 'null' or type is 'undefined'
-    "*#{type}*"
+    "*#{link_type type}*"
   else if type.match /\[\]$/
-    "an *Array* of *#{humanize.pluralize type.replace(/\[\]$/, "")}*"
+    type = type.replace /\[\]$/, ""
+    "an *#{link_type 'Array'}* of *#{link_type type, humanize.pluralize type}*"
   else if subtype = type.match /^(Array|Object)\.<([^>]+)>/
     subtypes = for subtypes in subtype[2].replace(/^(Array|Object)\.<|>$/g, "").split(/,/)
-      "*#{humanize.pluralize subtypes}*"
-    "an *#{subtype[1]}* of #{humanize.joinSentence subtypes, 'or'}"
+      "*#{link_type subtypes, humanize.pluralize subtypes}*"
+    "an *#{link_type subtype[1]}* of #{humanize.joinSentence subtypes, 'or'}"
   else
-    "#{humanize.article type} *#{type}*"
+    "#{humanize.article type} *#{link_type type}*"
 
 # This function translates type names for return(s)-doctags
 #
@@ -38,10 +75,10 @@ convert_type = (type) ->
 translate_type = (type) ->
   if type == 'a *mixed*' or type == 'a ***'
     'any type'
-  else if type == 'an *Array* of *mixeds*' or type == 'an *Array* of ***'
-    'an *Array* of any type'
-  else if type == 'an *Object* of *mixeds*' or type == 'an *Object* of ***'
-    'an *Object* with properties of any type'
+  else if type == "an *#{link_type 'Array'}* of *mixeds*" or type == "an *#{link_type 'Array'}* of ***"
+    "an *#{link_type 'Array'}* of any type"
+  else if type == "an *#{link_type 'Object'}* of *mixeds*" or type == "an *#{link_type 'Object'}* of ***"
+    "an *#{link_type 'Object'}* with properties of any type"
   else
     type
 
@@ -51,7 +88,8 @@ translate_type = (type) ->
 # @return {String}
 convert_parameter_type = (type) ->
   if type.match /^\.\.\.|\.\.\.$/
-    "any number of *#{humanize.pluralize type.replace(/^\.\.\.|\.\.\.$/, "")}*"
+    type = type.replace /^\.\.\.|\.\.\.$/, ""
+    "any number of *#{link_type type, humanize.pluralize type}*"
   else
     convert_type type
 
@@ -173,9 +211,9 @@ module.exports = DOC_TAGS =
     # @return {String} should be in markdown syntax
     markdown:    (value) ->
       if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
-        "event *#{match[2]} of class *#{match[1]}*"
+        "event *#{link_type match[2]} of class *#{link_type match[1]}*"
       else
-        "event *#{value}*"
+        "event *#{link_type value}*"
   method:
     section:     'type'
     markdown:    'method *{value}*'
@@ -237,9 +275,9 @@ module.exports = DOC_TAGS =
     # @return {String} should be in markdown syntax
     markdown:    (value) ->
       if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
-        "fires #{humanize.article match[2]} *#{match[2]}* event on class *#{match[1]}*"
+        "fires #{humanize.article match[2]} *#{link_type match[2]}* event on class *#{link_type match[1]}*"
       else
-        "fires #{humanize.article value} *#{value}* event"
+        "fires #{humanize.article value} *#{link_type value}* event"
   memberof:
     section:     'metadata'
     markdown:    'is a member of *{value}*'
@@ -410,7 +448,7 @@ module.exports = DOC_TAGS =
       types:       parts[1].split /\|{1,2}/g
       description: parts[2]
     markdown:    (value) ->
-      types = ("#{humanize.article type} *#{type}*" for type in value.types)
+      types = ("#{humanize.article type} *#{link_type type}*" for type in value.types)
       "**can throw #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
   throws:        'throw'
 
