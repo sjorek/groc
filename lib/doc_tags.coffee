@@ -19,7 +19,7 @@ collapse_space = (value) ->
 #
 # @param  {String} type
 # @return {String}
-convert_return_type = (type) ->
+convert_type = (type) ->
   if type is 'null' or type is 'undefined'
     "*#{type}*"
   else if type.match /\[\]$/
@@ -35,7 +35,7 @@ convert_return_type = (type) ->
 #
 # @param  {String} type
 # @return {String}
-translate_return_type = (type) ->
+translate_type = (type) ->
   if type == 'a *mixed*' or type == 'a ***'
     'any type'
   else if type == 'an *Array* of *mixeds*' or type == 'an *Array* of ***'
@@ -53,7 +53,7 @@ convert_parameter_type = (type) ->
   if type.match /^\.\.\.|\.\.\.$/
     "any number of *#{humanize.pluralize type.replace(/^\.\.\.|\.\.\.$/, "")}*"
   else
-    convert_return_type type
+    convert_type type
 
 # This function translates type names for param(s)-doctags
 #
@@ -63,7 +63,7 @@ translate_parameter_type = (type) ->
   if type == 'any number of *mixeds*'
     type = 'any number of arguments of any type'
   else
-    translate_return_type type
+    translate_type type
 
 # JSDOC3
 #
@@ -257,7 +257,18 @@ module.exports = DOC_TAGS =
     markdown:    'subscribes to {value}'
   type:
     section:     'metadata'
-    markdown:    'is of type *{value}*'
+    # render type-doctags
+    #
+    # Alternative: `markdown:    'is of type *{value}*'`
+    #
+    # @param  {String}  value
+    # @return {String}
+    markdown:     (value) ->
+      value = translate_type convert_type value
+      if value is 'any type'
+        "is of #{value}"
+      else
+        "is #{value}"
   version:
     section:     'metadata'
     markdown:    'has version {value}'
@@ -363,7 +374,7 @@ module.exports = DOC_TAGS =
         type = translate_parameter_type types[0]
         if type isnt types[0]
           verb = 'can'
-          types[0] = type
+          types[0] = if type is 'any type' then "of #{type}" else type
 
       fragments.push "#{verb} be #{humanize.joinSentence types, 'or'}"
       fragments.push "has a default value of #{value.defaultValue}" if value.defaultValue?
@@ -379,9 +390,9 @@ module.exports = DOC_TAGS =
       types:       parts[1].split /\|{1,2}/g
       description: parts[2]
     markdown:     (value) ->
-      types = (convert_return_type type for type in value.types)
+      types = (convert_type type for type in value.types)
       if types.length is 1
-        type = translate_return_type types[0]
+        type = translate_type types[0]
         if type isnt types[0]
           types[0] = type
       "**returns #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
@@ -393,7 +404,7 @@ module.exports = DOC_TAGS =
       types:       parts[1].split /\|{1,2}/g
       description: parts[2]
     markdown:    (value) ->
-      types = ("#{humanize.article type} #{type}" for type in value.types)
+      types = ("#{humanize.article type} *#{type}*" for type in value.types)
       "**can throw #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
   throws:        'throw'
 
