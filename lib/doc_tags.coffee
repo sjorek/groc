@@ -159,17 +159,17 @@ module.exports = DOC_TAGS =
   alias:
     valuePrefix: 'as'
     section:     'metadata'
-    markdown:    'is aliased as _{value}_'
+    markdown:    'is aliased as *{value}*'
   alias:
     valuePrefix: 'as'
     section:     'metadata'
-    markdown:    'is aliased as _{value}_'
+    markdown:    'is aliased as *{value}*'
   augments:
     section:     'metadata'
-    markdown:    'extends _{value}_'
+    markdown:    'extends *{value}*'
   'extends':
     section:     'metadata'
-    markdown:    'extends _{value}_'
+    markdown:    'extends *{value}*'
   fires:
     section:     'metadata'
     # converts parsed values to markdown text
@@ -181,18 +181,18 @@ module.exports = DOC_TAGS =
     # @return {String} should be in markdown syntax
     markdown:    (value) ->
       if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
-        "fires #{humanize.article match[2]} _#{match[2]}_ event on class _#{match[1]}_"
+        "fires #{humanize.article match[2]} *#{match[2]}* event on class *#{match[1]}*"
       else
-        "fires #{humanize.article value} _#{value}_ event"
+        "fires #{humanize.article value} *#{value}* event"
   memberof:
     section:     'metadata'
-    markdown:    'is a member of _{value}_'
+    markdown:    'is a member of *{value}*'
   mixes:
     section:     'metadata'
-    markdown:    'mixes _{value}_ in'
+    markdown:    'mixes *{value}* in'
   namespace:
     section:     'metadata'
-    markdown:    'is in namespace _{value}_'
+    markdown:    'is in namespace *{value}*'
   publishes:
     section:     'metadata'
   requests:
@@ -207,7 +207,7 @@ module.exports = DOC_TAGS =
     markdown:    'subscribes to {value}'
   type:
     section:     'metadata'
-    markdown:    'is of type _{value}_'
+    markdown:    'is of type *{value}*'
   version:
     section:     'metadata'
     markdown:    'has version {value}'
