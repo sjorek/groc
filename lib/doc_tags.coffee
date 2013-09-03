@@ -15,6 +15,56 @@ humanize = require './utils/humanize'
 collapse_space = (value) ->
   value.replace /\s+/g, ' '
 
+# This function converts type names for return-doctags
+#
+# @param  {String} type
+# @return {String}
+convert_return_type = (type) ->
+  if type is 'null' or type is 'undefined'
+    "*#{type}*"
+  else if type.match /\[\]$/
+    "an *Array* of *#{humanize.pluralize type.replace(/\[\]$/, "")}*"
+  else if subtype = type.match /^(Array|Object)\.<([^>]+)>/
+    subtypes = for subtypes in subtype[2].replace(/^(Array|Object)\.<|>$/g, "").split(/,/)
+      "*#{humanize.pluralize subtypes}*"
+    "an *#{subtype[1]}* of #{humanize.joinSentence subtypes, 'or'}"
+  else
+    "#{humanize.article type} *#{type}*"
+
+# This function translates type names for return(s)-doctags
+#
+# @param  {String} type
+# @return {String}
+translate_return_type = (type) ->
+  if type == 'a *mixed*' or type == 'a ***'
+    'any type'
+  else if type == 'an *Array* of *mixeds*' or type == 'an *Array* of ***'
+    'an *Array* of any type'
+  else if type == 'an *Object* of *mixeds*' or type == 'an *Object* of ***'
+    'an *Object* with properties of any type'
+  else
+    type
+
+# This function converts type names for param(s)-doctags
+#
+# @param  {String} type
+# @return {String}
+convert_parameter_type = (type) ->
+  if type.match /^\.\.\.|\.\.\.$/
+    "any number of *#{humanize.pluralize type.replace(/^\.\.\.|\.\.\.$/, "")}*"
+  else
+    convert_return_type type
+
+# This function translates type names for param(s)-doctags
+#
+# @param  {String} type
+# @return {String}
+translate_parameter_type = (type) ->
+  if type == 'any number of *mixeds*'
+    type = 'any number of arguments of any type'
+  else
+    translate_return_type type
+
 # JSDOC3
 #
 # @access
@@ -113,7 +163,7 @@ module.exports = DOC_TAGS =
     section:     'type'
   event:
     section:     'type'
-    # converts parsed values to markdown text
+    # renders event-doctags
     #
     # @private
     # @method markdown
@@ -172,7 +222,7 @@ module.exports = DOC_TAGS =
     markdown:    'extends *{value}*'
   fires:
     section:     'metadata'
-    # converts parsed values to markdown text
+    # renders @fires-doctags
     #
     # @private
     # @method markdown
@@ -214,7 +264,7 @@ module.exports = DOC_TAGS =
 
   author:
     section:     'authors'
-    # renders @author tags
+    # renders author-doctags
     #
     # @public
     # @method markdown
@@ -279,7 +329,7 @@ module.exports = DOC_TAGS =
     # @return {Object}
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s+(\[?)([\w\.\$]+)(?:=([^\s\]]+))?(\]?)\s*(.*)$/
-      types:        (parts[1]?.split /\|{1,2}(?:[^\.])/g)
+      types:        (parts[1]?.split /\|{1,2}/g)
       isOptional:   (parts[2] == '[' and parts[5] == ']')
       varName:      parts[3]
       isSubParam:   /\./.test parts[3]
@@ -301,20 +351,7 @@ module.exports = DOC_TAGS =
     #
     # @return {String} should be in markdown syntax
     markdown:    (value) ->
-      types = (
-        for type in value.types
-          if type.match /^\.\.\.|\.\.\.$/
-            "any number of #{humanize.pluralize type.replace(/^\.\.\.|\.\.\.$/, "")}"
-          else if type.match /\[\]$/
-            "an Array of #{humanize.pluralize type.replace(/\[\]$/, "")}"
-          else if subtype = type.match /^(Array|Object)\.<([^>]+)>/
-            subtypes = for subtypes in subtype[2].replace(/^(Array|Object)\.<|>$/g, "").split(/,/)
-              humanize.pluralize subtypes
-            "an #{subtype[1]} of #{humanize.joinSentence subtypes, 'or'}"
-          else
-            "#{humanize.article type} #{type}"
-      )
-
+      types = (convert_parameter_type type for type in value.types)
       fragments = []
 
       fragments.push 'is optional' if value.isOptional
@@ -322,20 +359,16 @@ module.exports = DOC_TAGS =
 
       if types.length > 1
         verb = 'can'
-      else if types[0] == 'a Mixed' or types[0] == 'a *'
-        verb = 'can'
-        types[0] = 'of any type'
-      else if types[0] == 'an Array of Mixeds' or types[0] == 'an Array of *'
-        verb = 'can'
-        types[0] = 'an Array of any type'
-      else if types[0] == 'any number of Mixeds'
-        verb = 'can'
-        types[0] = 'any number of arguments of any type'
+      else
+        type = translate_parameter_type types[0]
+        if type isnt types[0]
+          verb = 'can'
+          types[0] = type
 
       fragments.push "#{verb} be #{humanize.joinSentence types, 'or'}"
       fragments.push "has a default value of #{value.defaultValue}" if value.defaultValue?
 
-      "#{if value.isSubParam then "    *" else "*"} **#{value.varName} #{humanize.joinSentence fragments}.**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      "#{if value.isSubParam then "    *" else "*"} ***#{value.varName}* #{humanize.joinSentence fragments}.**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
   params:        'param'
   parameters:    'param'
 
@@ -346,17 +379,11 @@ module.exports = DOC_TAGS =
       types:       parts[1].split /\|{1,2}/g
       description: parts[2]
     markdown:     (value) ->
-      types = (
-        for type in value.types
-          if type.match /\[\]$/
-            "an Array of #{humanize.pluralize type.replace(/\[\]$/, "")}"
-          else if subtype = type.match /^(Array|Object)\.<([^>]+)>/
-            subtypes = for subtypes in subtype[2].replace(/^(Array|Object)\.<|>$/g, "").split(/,/)
-              humanize.pluralize subtypes
-            "an #{subtype[1]} of #{humanize.joinSentence subtypes, 'or'}"
-          else
-            "#{humanize.article type} #{type}"
-      )
+      types = (convert_return_type type for type in value.types)
+      if types.length is 1
+        type = translate_return_type types[0]
+        if type isnt types[0]
+          types[0] = type
       "**returns #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
   returns:       'return'
   throw:
