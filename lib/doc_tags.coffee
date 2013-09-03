@@ -161,6 +161,7 @@ module.exports = DOC_TAGS =
 
   'class':
     section:     'type'
+    markdown:    'class *{value}*'
   event:
     section:     'type'
     # renders event-doctags
@@ -172,19 +173,24 @@ module.exports = DOC_TAGS =
     # @return {String} should be in markdown syntax
     markdown:    (value) ->
       if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
-        "event #{match[2]} of class #{match[1]}"
+        "event *#{match[2]} of class *#{match[1]}*"
       else
-        "event #{value}"
+        "event *#{value}*"
   method:
     section:     'type'
+    markdown:    'method *{value}*'
   mixin:
     section:     'type'
+    markdown:    'mixin *{value}*'
   module:
     section:     'type'
+    markdown:    'module *{value}*'
   'package':
     section:     'type'
+    markdown:    'package *{value}*'
   property:
     section:     'type'
+    markdown:    'property *{value}*'
 
   accessor:
     section:     'flag'

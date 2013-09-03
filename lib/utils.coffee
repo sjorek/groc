@@ -355,7 +355,9 @@ module.exports = Utils =
         for tag in segment.tags
           if tag.definition.markdown?
             if 'string' == typeof tag.definition.markdown
-              tag.markdown = tag.definition.markdown.replace /\{value\}/g, tag.value
+              tag.markdown = tag.definition.markdown.replace(/\{value\}/g, tag.value)
+              # The simpler `tag.markdown.replace(/ \*\*$/, '')` erroneously fails 
+              tag.markdown = tag.markdown.replace(/// \*\*$///, '')
             else
               tag.markdown = tag.definition.markdown(tag.value)
           else
