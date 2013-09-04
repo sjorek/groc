@@ -106,7 +106,7 @@ module.exports = DOC_TAGS =
 
   'class':
     section:     'type'
-    markdown:    'class *{value}*'
+    markdown:    'class *{type}*'
   event:
     section:     'type'
     # renders event-doctags
@@ -123,19 +123,19 @@ module.exports = DOC_TAGS =
         "event *#{link_type value}*"
   method:
     section:     'type'
-    markdown:    'method *{value}*'
+    markdown:    'method *{type}*'
   mixin:
     section:     'type'
-    markdown:    'mixin *{value}*'
+    markdown:    'mixin *{type}*'
   module:
     section:     'type'
-    markdown:    'module *{value}*'
+    markdown:    'module *{type}*'
   'package':
     section:     'type'
-    markdown:    'package *{value}*'
+    markdown:    'package *{type}*'
   property:
     section:     'type'
-    markdown:    'property *{value}*'
+    markdown:    'property *{type}*'
 
   accessor:
     section:     'flag'
@@ -160,17 +160,13 @@ module.exports = DOC_TAGS =
   alias:
     valuePrefix: 'as'
     section:     'metadata'
-    markdown:    'is aliased as *{value}*'
-  alias:
-    valuePrefix: 'as'
-    section:     'metadata'
-    markdown:    'is aliased as *{value}*'
+    markdown:    'is aliased as *{type}*'
   augments:
     section:     'metadata'
-    markdown:    'extends *{value}*'
+    markdown:    'extends *{type}*'
   'extends':
     section:     'metadata'
-    markdown:    'extends *{value}*'
+    markdown:    'extends *{type}*'
   fires:
     section:     'metadata'
     # renders @fires-doctags
@@ -187,13 +183,13 @@ module.exports = DOC_TAGS =
         "fires #{humanize.article value} *#{link_type value}* event"
   memberof:
     section:     'metadata'
-    markdown:    'is a member of *{value}*'
+    markdown:    'is a member of *{type}*'
   mixes:
     section:     'metadata'
-    markdown:    'mixes *{value}* in'
+    markdown:    'mixes *{type}* in'
   namespace:
     section:     'metadata'
-    markdown:    'is in namespace *{value}*'
+    markdown:    'is in namespace *{type}*'
   publishes:
     section:     'metadata'
   requests:
@@ -205,7 +201,7 @@ module.exports = DOC_TAGS =
   subscribes:
     valuePrefix: 'to'
     section:     'metadata'
-    markdown:    'subscribes to {value}'
+    markdown:    'subscribes to {type}'
   type:
     section:     'metadata'
     # render type-doctags

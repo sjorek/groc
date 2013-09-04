@@ -52,7 +52,7 @@ module.exports = DOCTAGHelpers =
     else
       "#{humanize.article type} *#{link_type type}*"
   
-  # This function translates type names for return(s)-doctags
+  # This function translates type names for return-doctags
   #
   # @param  {String} type
   # @return {String}
@@ -68,7 +68,7 @@ module.exports = DOCTAGHelpers =
     else
       type
   
-  # This function converts type names for param(s)-doctags
+  # This function converts type names for param-doctags
   #
   # @param  {String} type
   # @return {String}
@@ -79,7 +79,7 @@ module.exports = DOCTAGHelpers =
     else
       convert_type type
   
-  # This function translates type names for param(s)-doctags
+  # This function translates type names for param-doctags
   #
   # @param  {String} type
   # @return {String}
