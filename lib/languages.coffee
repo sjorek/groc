@@ -40,6 +40,7 @@ module.exports = LANGUAGES =
     singleLineComment: ['#']
     ignorePrefix:      '}'
     foldPrefix:        '-'
+    typeUrls:          ['groc/types/javascript_globals.json', 'groc/types/javascript_dom.json']
 
   Go:
     nameMatchers:      ['.go']
@@ -86,6 +87,7 @@ module.exports = LANGUAGES =
     multiLineComment:  ['/*', '*', '*/']
     ignorePrefix:      '}'
     foldPrefix:        '-'
+    typeUrls:          ['groc/types/javascript_globals.json', 'groc/types/javascript_dom.json']
 
   Jake:
     nameMatchers:      ['.jake']

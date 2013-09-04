@@ -1,7 +1,7 @@
 
 humanize = require './utils/humanize'
-type_urls_global = require './type_urls_global'
-type_urls_dom = require './type_urls_dom'
+type_urls_global = require '../types/javascript_globals.json'
+type_urls_dom = require '../types/javascript_dom.json'
 
 
 # This function collapses... spaces
