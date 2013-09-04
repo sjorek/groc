@@ -1,4 +1,6 @@
 
+humanize = require './humanize'
+
 module.exports = DOCTAGHelpers =
   # This function collapses... spaces
   #

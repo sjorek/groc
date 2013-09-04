@@ -290,11 +290,8 @@ module.exports = Utils =
 
   parseDocTags: (segments, project, fileInfo, callback) ->
     
-    unless fileInfo?.language.doctags?
-      callback()
-      return
+    DOC_TAGS = if fileInfo?.language.doctags? then fileInfo.language.doctags else null
 
-    DOC_TAGS = fileInfo.language.doctags
     TAG_REGEX = /(?:^|\s)@(\w+)(?:\s+(.*))?/
     TAG_VALUE_REGEX = /^(?:"(.*)"|'(.*)'|\{(.*)\}|(.*))$/
 
@@ -309,7 +306,7 @@ module.exports = Utils =
         tagSections = {}
 
         for line in segment.comments when line?
-          if (match = line.match TAG_REGEX)?
+          if DOC_TAGS? and (match = line.match TAG_REGEX)?
             currTag = {
               name: match[1]
               value: match[2] || ''
@@ -318,33 +315,34 @@ module.exports = Utils =
           else
             currTag.value += "\n#{line}"
 
-        for tag in tags
-          tag.value = tag.value.replace /^\n|\n$/g, ''
+        if DOC_TAGS?
+          for tag in tags
+            tag.value = tag.value.replace /^\n|\n$/g, ''
 
-          tagDefinition = DOC_TAGS[tag.name]
+            tagDefinition = DOC_TAGS[tag.name]
 
-          unless tagDefinition?
-            if tag.value.length == 0
-              tagDefinition = 'defaultNoValue'
-            else
-              tagDefinition = 'defaultHasValue'
+            unless tagDefinition?
+              if tag.value.length == 0
+                tagDefinition = 'defaultNoValue'
+              else
+                tagDefinition = 'defaultHasValue'
 
-          if 'string' == typeof tagDefinition
-            tagDefinition = DOC_TAGS[tagDefinition]
+            if 'string' == typeof tagDefinition
+              tagDefinition = DOC_TAGS[tagDefinition]
 
-          tag.definition = tagDefinition
-          tag.section = tagDefinition.section
+            tag.definition = tagDefinition
+            tag.section = tagDefinition.section
 
-          if tagDefinition.valuePrefix?
-            tag.value = tag.value.replace ///#{tagDefinition.valuePrefix?}\s+///, ''
+            if tagDefinition.valuePrefix?
+              tag.value = tag.value.replace ///#{tagDefinition.valuePrefix?}\s+///, ''
 
-          if tagDefinition.parseValue?
-            tag.value = tagDefinition.parseValue tag.value
-          else if not /\n/.test tag.value
-            tag.value = tag.value.match(TAG_VALUE_REGEX)[1..].join('')
+            if tagDefinition.parseValue?
+              tag.value = tagDefinition.parseValue tag.value
+            else if not /\n/.test tag.value
+              tag.value = tag.value.match(TAG_VALUE_REGEX)[1..].join('')
 
-          tagSections[tag.section] = [] unless tagSections[tag.section]?
-          tagSections[tag.section].push tag
+            tagSections[tag.section] = [] unless tagSections[tag.section]?
+            tagSections[tag.section].push tag
 
         segment.tags = tags
         segment.tagSections = tagSections

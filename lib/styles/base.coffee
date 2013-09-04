@@ -36,7 +36,7 @@ module.exports = class Base
 
         @renderDocTags segments, fileInfo
 
-        Utils.highlightCode segments, (error) =>
+        Utils.highlightCode segments, fileInfo.language, (error) =>
           if error
             if error.failedHighlights
               for highlight, i in error.failedHighlights

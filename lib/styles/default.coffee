@@ -138,7 +138,6 @@ module.exports = class Default extends Base
         secondPart.push tag.markdown for tag in sections.metadata if sections.metadata?
         metaOutput += " #{humanize.joinSentence secondPart}"
 
-
       output += "<span class='doc-section-header'>#{metaOutput}</span>\n\n" if metaOutput?
 
       output += "#{tag.markdown}\n\n" for tag in sections.description if sections.description?

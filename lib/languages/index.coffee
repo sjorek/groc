@@ -49,7 +49,7 @@ module.exports = LANGUAGES =
     singleLineComment : ['#']
     ignorePrefix      : '}'
     foldPrefix        : '-'
-    doctags           : require './jsdoc3_doctags'
+    doctags           : require './doctags'
     namespace         :
       separator       : '.'
       types           : [
@@ -105,7 +105,7 @@ module.exports = LANGUAGES =
     multiLineComment  : ['/*', '*', '*/']
     ignorePrefix      : '}'
     foldPrefix        : '-'
-    doctags           : require './jsdoc3_doctags'
+    doctags           : require './doctags'
     namespace         :
       separator       : '.'
       types           : [
