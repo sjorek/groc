@@ -106,8 +106,10 @@ module.exports = CLI = (inputArgs, callback) ->
       default:  'Default'
 
     showdown:
-      describe: "The showdown extension(s) to load when generating documentation."
-      default:  'github,table'
+      describe: "Showdown extension(s) to load, repeat option to add more extensions (--no-showdown and the option itself discards default)."
+      alias:    'sd'
+      default:  ['github','table']
+      type:     'list'
 
     strip:
       describe: "A path prefix to strip when generating documentation paths (or --no-strip)."
@@ -121,6 +123,7 @@ module.exports = CLI = (inputArgs, callback) ->
     languages:
       describe: "Path to language definition file."
       default:  "groc/lib/languages"
+      type:     'path'
 
     silent:
       describe: "Output errors only."

@@ -1,107 +1,14 @@
 
-humanize = require './utils/humanize'
-type_urls_global = require '../types/javascript_globals.json'
-type_urls_dom = require '../types/javascript_dom.json'
+humanize = require '../utils/humanize'
 
-
-# This function collapses... spaces
-#
-# @private
-# @method  collapse_space
-#
-# @param  {String} value This is the value which will be collapsed. The primary
-#                        purpose of this method is to allow multiline parameter
-#                        descriptions, just like this one.
-#
-# @return {String}
-collapse_space = (value) ->
-  value.replace /\s+/g, ' '
-
-# This function creates links to JavaScript-types
-#
-# @param  {String} type
-# @return {String}
-link_type = (type, caption, url) ->
-
-  caption ?= type
-
-  url = get_namespace_type_url type unless url?
-  url = get_known_type_url type unless url?
-
-  if url?
-    "[#{caption}](#{url})"
-  else
-    caption
-
-# This function returns the URL of a well-known JavaScript-type matching `type`.
-#
-# @param  {String} type
-# @return {String}
-get_known_type_url = (type) ->
-  return type_urls_global[type] if type_urls_global[type]?
-  return type_urls_dom[type] if type_urls_dom[type]?
-  null
-
-# This function returns the URL determined by the `type`'s namespace.  Needs a
-# namespace-url-map specified in project properties.
-# 
-# @param  {String} type
-# @return {String}
-get_namespace_type_url = (type) ->
-  # TODO implement `get_namespace_type_url`
-  null
-
-# This function converts type names for return-doctags
-#
-# @param  {String} type
-# @return {String}
-convert_type = (type) ->
-  if type is 'null' or type is 'undefined'
-    "*#{link_type type}*"
-  else if type.match /\[\]$/
-    type = type.replace /\[\]$/, ""
-    "an *#{link_type 'Array'}* of *#{link_type type, humanize.pluralize type}*"
-  else if subtype = type.match /^(Array|Object)\.<([^>]+)>/
-    subtypes = for subtypes in subtype[2].replace(/^(Array|Object)\.<|>$/g, "").split(/,/)
-      "*#{link_type subtypes, humanize.pluralize subtypes}*"
-    "an *#{link_type subtype[1]}* of #{humanize.joinSentence subtypes, 'or'}"
-  else
-    "#{humanize.article type} *#{link_type type}*"
-
-# This function translates type names for return(s)-doctags
-#
-# @param  {String} type
-# @return {String}
-translate_type = (type) ->
-  if type == 'a *mixed*' or type == 'a ***'
-    'any type'
-  else if type == "an *#{link_type 'Array'}* of *mixeds*" or type == "an *#{link_type 'Array'}* of ***"
-    "an *#{link_type 'Array'}* of any type"
-  else if type == "an *#{link_type 'Object'}* of *mixeds*" or type == "an *#{link_type 'Object'}* of ***"
-    "an *#{link_type 'Object'}* with properties of any type"
-  else
-    type
-
-# This function converts type names for param(s)-doctags
-#
-# @param  {String} type
-# @return {String}
-convert_parameter_type = (type) ->
-  if type.match /^\.\.\.|\.\.\.$/
-    type = type.replace /^\.\.\.|\.\.\.$/, ""
-    "any number of *#{link_type type, humanize.pluralize type}*"
-  else
-    convert_type type
-
-# This function translates type names for param(s)-doctags
-#
-# @param  {String} type
-# @return {String}
-translate_parameter_type = (type) ->
-  if type == 'any number of *mixeds*'
-    type = 'any number of arguments of any type'
-  else
-    translate_type type
+{
+  collapse_space,
+  link_type,
+  convert_type,
+  translate_type,
+  convert_parameter_type,
+  translate_parameter_type
+} = require '../utils/doctag_helpers'
 
 # JSDOC3
 #

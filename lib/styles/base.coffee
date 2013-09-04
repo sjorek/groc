@@ -24,19 +24,19 @@ module.exports = class Base
 
     @log.debug 'Split %s into %d segments', fileInfo.sourcePath, segments.length
 
-    Utils.parseDocTags segments, @project, (error) =>
+    Utils.parseDocTags segments, @project, fileInfo, (error) =>
       if error
         @log.error 'Failed to parse doc tags %s: %s\n', fileInfo.sourcePath, error.message, error.stack
         return callback error
 
-      Utils.markdownDocTags segments, @project, (error) =>
+      Utils.markdownDocTags segments, @project, fileInfo, (error) =>
         if error
           @log.error 'Failed to markdown doc tags %s: %s\n', fileInfo.sourcePath, error.message, error.stack
           return callback error
 
-        @renderDocTags segments
+        @renderDocTags segments, fileInfo
 
-        Utils.highlightCode segments, fileInfo.language, (error) =>
+        Utils.highlightCode segments, (error) =>
           if error
             if error.failedHighlights
               for highlight, i in error.failedHighlights

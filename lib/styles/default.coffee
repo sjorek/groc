@@ -113,7 +113,7 @@ module.exports = class Default extends Base
 
         callback()
 
-  renderDocTags: (segments) ->
+  renderDocTags: (segments, fileInfo) ->
     for segment, segmentIndex in segments when segment.tagSections?
 
       sections = segment.tagSections

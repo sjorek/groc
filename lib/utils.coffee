@@ -10,9 +10,9 @@ showdown = require 'showdown'
 
 CompatibilityHelpers = require './utils/compatibility_helpers'
 LANGUAGES            = null
-DOC_TAGS             = require './doc_tags'
+DOC_TAGS             = null
 Logger               = require './utils/logger'
-
+DOCTAGHelpers        = require './utils/doctag_helpers'
 
 module.exports = Utils =
   # Escape regular expression characters in a string
@@ -288,7 +288,13 @@ module.exports = Utils =
     pygmentize.stdin.write mergedCode
     pygmentize.stdin.end()
 
-  parseDocTags: (segments, project, callback) ->
+  parseDocTags: (segments, project, fileInfo, callback) ->
+    
+    unless fileInfo?.language.doctags?
+      callback()
+      return
+
+    DOC_TAGS = fileInfo.language.doctags
     TAG_REGEX = /(?:^|\s)@(\w+)(?:\s+(.*))?/
     TAG_VALUE_REGEX = /^(?:"(.*)"|'(.*)'|\{(.*)\}|(.*))$/
 
@@ -348,7 +354,7 @@ module.exports = Utils =
 
     callback()
 
-  markdownDocTags: (segments, project, callback) ->
+  markdownDocTags: (segments, project, fileInfo, callback) ->
     try
       for segment, segmentIndex in segments when segment.tags?
 
@@ -356,10 +362,17 @@ module.exports = Utils =
           if tag.definition.markdown?
             if 'string' == typeof tag.definition.markdown
               tag.markdown = tag.definition.markdown.replace(/\{value\}/g, tag.value)
-              # The simpler `tag.markdown.replace(/ \*\*$/, '')` erroneously fails 
-              tag.markdown = tag.markdown.replace(/// \*\*$///, '')
+              if /\{type\}/.test tag.definition.markdown
+                if fileInfo?.language.namespace?
+                  type = DOCTAGHelpers.link_type tag.value, null, null, fileInfo.language.namespace
+                else
+                  type = tag.value
+                tag.markdown = tag.markdown.replace(/\{type\}/g, type)
+              # If the value is empty, strip the empty suffix.  The simpler
+              # `tag.markdown.replace / \*\*$/, ''` erroneously fails 
+              tag.markdown = tag.markdown.replace /// \*\*$///, ''
             else
-              tag.markdown = tag.definition.markdown(tag.value)
+              tag.markdown = tag.definition.markdown(tag.value, fileInfo)
           else
             if tag.value.length > 0
               tag.markdown = "#{tag.name} #{tag.value}"
@@ -375,8 +388,7 @@ module.exports = Utils =
   # [showdown](https://github.com/coreyti/showdown).
   markdownComments: (segments, project, callback) ->
 
-    extensions = project.options.showdown.split ','
-    converter  = new showdown.converter(extensions: extensions)
+    converter  = new showdown.converter(extensions: project.options.showdown)
 
     try
       for segment, segmentIndex in segments
