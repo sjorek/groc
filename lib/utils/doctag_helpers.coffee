@@ -25,12 +25,20 @@ module.exports = DOCTAGHelpers =
   # @param  {Array.<Object>}  namespace.types
   # @return {String}
   link_type: link_type = (type, caption, url, namespace) ->
-  
+
     caption ?= type
 
-    if not url? and namespace?
-      url = null # TODO implement type URLs
-  
+    # if not url? and namespace?
+      # for types in namespace.types
+        # if types[type]?
+          # url = types[type]
+          # break
+      # if not url? and namespace.separator?
+        # for types in namespace.types
+          # for own root, baseUrl of types
+            # if root[root.length-1] is namespace.separator and type.indexOf(root) is 0
+              # console.log 'is matching  : ', type, root, baseUrl
+            # #url = baseUrl
     if url?
       "[#{caption}](#{url})"
     else

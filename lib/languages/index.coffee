@@ -53,8 +53,8 @@ module.exports = LANGUAGES =
     namespace         :
       separator       : '.'
       types           : [
-        require './javascript/namespace_global.json'
-        require './javascript/namespace_dom.json'
+        require './namespace/javascript_globals.json'
+        require './namespace/javascript_dom.json'
       ]
 
   Go                  : 
@@ -109,8 +109,8 @@ module.exports = LANGUAGES =
     namespace         :
       separator       : '.'
       types           : [
-        require './javascript/namespace_global.json'
-        require './javascript/namespace_dom.json'
+        require './namespace/javascript_globals.json'
+        require './namespace/javascript_dom.json'
       ]
 
   Jake                : 
@@ -118,6 +118,18 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'javascript'
     singleLineComment : ['//']
     ignorePrefix      : '}'
+    foldPrefix        : '-'
+
+  JSON          : 
+    nameMatchers      : ['.json']
+    pygmentsLexer     : 'json'
+    # actually this is nonsense, but we need it to render the output
+    singleLineComment : ['//']
+    # actually this is nonsense, but we need it to render the output
+    multiLineComment  : ['/*', '*', '*/']
+    # actually this is nonsense, but we need it to render the output
+    ignorePrefix      : '}'
+    # actually this is nonsense, but we need it to render the output
     foldPrefix        : '-'
 
   LaTeX               : 

@@ -1,4 +1,74 @@
+# Supported Doctags
+# ================================
+#
+# This script tries to implement known doctags from jsdoc, jsdoc2 and jsdoc3. 
+# Most of them are supported.  This implementation is mainly suitable for
+# languages like *Javascript*, *Coffeescript* or even *PHP*, but certainly not
+# for *Ruby* or *Python* as the later languages have their own conventions and
+# thorough introspection capabilities.
 
+# A list of doctag-candidates:  
+#   
+# _@access_  
+# _@alias_  
+# _@augments_  
+# _@author_  
+# _@borrows_  
+# _@callback_  
+# _@classdesc_  
+# _@constant_  
+# _@constructor_  
+# _@constructs_  
+# _@copyright_  
+# _@default_  
+# _@deprecated_  
+# _@desc_  
+# _@enum_  
+# _@event_  
+# _@example_  
+# _@exports_  
+# _@extends_  
+# _@external_  
+# _@file_  
+# _@fires_  
+# _@global_  
+# _@ignore_  
+# _@inner_  
+# _@instance_  
+# _@kind_  
+# _@lends_  
+# _@license_  
+# _@link_  
+# _@member_  
+# _@memberof_  
+# _@method_  
+# _@mixes_  
+# _@mixin_  
+# _@module_  
+# _@name_  
+# _@namespace_  
+# _@param_  
+# _@private_  
+# _@property_  
+# _@protected_  
+# _@public_  
+# _@readonly_  
+# _@requires_  
+# _@returns_  
+# _@see_  
+# _@since_  
+# _@static_  
+# _@summary_  
+# _@this_  
+# _@throws_  
+# _@todo_  
+# _@tutorial_  
+# _@type_  
+# _@typedef_  
+# _@variation_  
+# _@version_  
+
+# -imports
 humanize = require '../utils/humanize'
 
 {
@@ -9,67 +79,6 @@ humanize = require '../utils/humanize'
   convert_parameter_type,
   translate_parameter_type
 } = require '../utils/doctag_helpers'
-
-# JSDOC3
-#
-# @access
-# @alias
-# @augments
-# @author
-# @borrows
-# @callback
-# @classdesc
-# @constant
-# @constructor
-# @constructs
-# @copyright
-# @default
-# @deprecated
-# @desc
-# @enum
-# @event
-# @example
-# @exports
-# @extends
-# @external
-# @file
-# @fires
-# @global
-# @ignore
-# @inner
-# @instance
-# @kind
-# @lends
-# @license
-# @link
-# @member
-# @memberof
-# @method
-# @mixes
-# @mixin
-# @module
-# @name
-# @namespace
-# @param
-# @private
-# @property
-# @protected
-# @public
-# @readonly
-# @requires
-# @returns
-# @see
-# @since
-# @static
-# @summary
-# @this
-# @throws
-# @todo
-# @tutorial
-# @type
-# @typedef
-# @variation
-# @version
 
 # This is a sample doc tagged block comment
 #
@@ -109,7 +118,7 @@ module.exports = DOC_TAGS =
     markdown:    'class *{type}*'
   event:
     section:     'type'
-    # renders event-doctags
+    # renders `@event`-doctags
     #
     # @private
     # @method markdown
@@ -169,15 +178,15 @@ module.exports = DOC_TAGS =
     markdown:    'extends *{type}*'
   fires:
     section:     'metadata'
-    # renders @fires-doctags
+    # renders `@fires`-doctags
     #
     # @private
     # @method markdown
     #
-    # @param  {String}   value
-    # @return {String} should be in markdown syntax
+    # @param  {String}  value
+    # @return {String}          should be in markdown syntax
     markdown:    (value) ->
-      if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
+      if match = collapse_space(value).match ///^\s*(.+)#(.+)\s*$///
         "fires #{humanize.article match[2]} *#{link_type match[2]}* event on class *#{link_type match[1]}*"
       else
         "fires #{humanize.article value} *#{link_type value}* event"
@@ -204,7 +213,7 @@ module.exports = DOC_TAGS =
     markdown:    'subscribes to {type}'
   type:
     section:     'metadata'
-    # render type-doctags
+    # render `@type`-doctags
     #
     # Alternative: `markdown:    'is of type *{value}*'`
     #
@@ -222,7 +231,7 @@ module.exports = DOC_TAGS =
 
   author:
     section:     'authors'
-    # renders author-doctags
+    # renders `@author`-doctags
     #
     # @public
     # @method markdown
@@ -241,7 +250,7 @@ module.exports = DOC_TAGS =
 
   see:
     section:     'references'
-    # renders @see references
+    # renders `@see`-doctags as hyperlink references
     #
     # @public
     # @method markdown
