@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="en"><head><title>utils/doctag_helpers</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="utils/doctag_helpers"><meta name="groc-project-path" content="lib/utils/doctag_helpers.coffee"><meta name="groc-github-url" content="https://github.com/sjorek/groc"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/sjorek/groc/blob/master/lib/utils/doctag_helpers.coffee">lib/utils/doctag_helpers.coffee</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="doctag-helpers">Doctag Helpers</h1></div></div></div><div class="segment"><div class="code folded"><div class="marker wrapper"><span class="c1"># -imports …</span></div><div class="wrapper"><span class="nv">_ = </span><span class="nx">require</span> <span class="s">&#39;underscore&#39;</span>
+<span class="nv">humanize = </span><span class="nx">require</span> <span class="s">&#39;./humanize&#39;</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p><span class='doc-section-header'>Package <em>groc/lib/utils/doctag_helpers</em> is an <em>Object</em></span></p></div></div><div class="code"><div class="wrapper"><span class="nv">module.exports = DOCTAGHelpers =</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>collapse_space</em></span></p>
+
+<p>This function collapses... spaces</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><strong><em>value</em> must be a <em>String</em>.</strong><br/>(This is the value which will be collapsed. The primary purpose of this method is to allow multiline parameter descriptions, just like this one.)</li>
+</ul>
+
+<p><strong>Returns a <em>String</em></strong></p></div></div><div class="code"><div class="wrapper">  <span class="nv">collapse_space: collapse_space = </span><span class="nf">(value) -&gt;</span>
+    <span class="nx">value</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/\s+/g</span><span class="p">,</span> <span class="s">&#39; &#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>link_type</em></span></p>
+
+<p>This function creates links to JavaScript-types for uses in <code>@doctags</code></p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em>String</em>.</strong></p></li>
+<li><p><strong><em>caption</em> is optional and must be a <em>String</em>.</strong></p></li>
+<li><p><strong><em>url</em> is optional and must be a <em>String</em>.</strong></p></li>
+<li><p><strong><em>namespace</em> is optional and must be an <em>Object</em>.</strong><br/>(see <a href="../languages.html">Supported Languages</a> and <a href="../languages/namespace.html">Language Namespaces</a>)</p>
+
+<ul><li><p><strong><em>namespace.separator</em> is optional and must be a <em>String</em>.</strong></p></li>
+<li><p><strong><em>namespace.types</em> must be an <em>Array</em> of <em>Objects</em>, <em>Arrays</em> or <em>Strings</em>.</strong></p></li></ul></li>
+</ul>
+
+<p><strong>Returns a <em>String</em></strong></p>
+
+<p>References:</p>
+
+<ul>
+<li><p><a href="../languages.html">Supported Languages</a></p></li>
+<li><p><a href="../languages/namespace.html">Language Namespaces</a></p></li>
+</ul></div></div><div class="code"><div class="wrapper">  <span class="nv">link_type: link_type = </span><span class="nf">(type, caption, url, namespace) -&gt;</span>
+
+    <span class="nx">caption</span> <span class="o">?=</span> <span class="nx">type</span>
+
+    <span class="k">if</span> <span class="kc">false</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">url</span><span class="o">?</span> <span class="o">and</span> <span class="nx">namespace</span><span class="o">?</span>
+      <span class="nv">url = </span><span class="kc">null</span>
+      <span class="k">for</span> <span class="nx">types</span> <span class="k">in</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">types</span>
+        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">types</span>
+          <span class="nv">url = </span><span class="nx">create_type_link</span><span class="p">.</span><span class="nx">apply</span> <span class="kc">null</span><span class="p">,</span> <span class="p">[</span><span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">types</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">types</span>
+          <span class="nv">url = </span><span class="nx">create_type_link</span><span class="p">.</span><span class="nx">apply</span> <span class="kc">null</span><span class="p">,</span> <span class="p">[</span><span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">types</span>
+        <span class="k">else</span> <span class="c1"># should be an object</span>
+          <span class="nv">url = </span><span class="nx">do</span> <span class="nf">-&gt;</span>
+            <span class="k">for</span> <span class="k">own</span> <span class="nx">subtype</span><span class="p">,</span> <span class="nx">types</span> <span class="k">of</span> <span class="nx">types</span>
+              <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">types</span>
+              <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">types</span>
+              <span class="k">else</span> <span class="k">if</span> <span class="nx">types</span> <span class="o">is</span> <span class="kc">null</span>
+                <span class="k">break</span>
+              <span class="k">else</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&#39;An unsupported namespace type-definition “#{types}” occured.&#39;</span>
+            <span class="nx">url</span>
+
+    <span class="k">if</span> <span class="nx">url</span><span class="o">?</span>
+      <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">caption</span><span class="si">}</span><span class="s">](</span><span class="si">#{</span><span class="nx">url</span><span class="si">}</span><span class="s">)&quot;</span>
+    <span class="k">else</span>
+      <span class="nx">caption</span>
+  </div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>convert_type</em></span></p>
+
+<p>This function converts type names in <code>@return</code>- and <code>@type</code>-doctags</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><strong><em>type</em> must be a <em>String</em>.</strong></li>
+</ul>
+
+<p><strong>Returns a <em>String</em></strong></p></div></div><div class="code"><div class="wrapper">  <span class="nv">convert_type: convert_type = </span><span class="nf">(type) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span> <span class="o">is</span> <span class="s">&#39;null&#39;</span> <span class="o">or</span> <span class="nx">type</span> <span class="o">is</span> <span class="s">&#39;undefined&#39;</span>
+      <span class="s">&quot;*</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">type</span><span class="si">}</span><span class="s">*&quot;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nv">subtype = </span><span class="nx">type</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^([^\[]+)\[\]$/</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="si">}</span><span class="s">* of *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">humanize</span><span class="p">.</span><span class="nx">pluralize</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s">*&quot;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nv">subtype = </span><span class="nx">type</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^(Array|Object)\.&lt;([^&gt;]+)&gt;/</span>
+      <span class="nv">subtypes = </span><span class="k">for</span> <span class="nx">subtypes</span> <span class="k">in</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^(Array|Object)\.&lt;|&gt;$/g</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="sr">/,/</span><span class="p">)</span>
+        <span class="s">&quot;*</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">subtypes</span><span class="p">,</span> <span class="nx">humanize</span><span class="p">.</span><span class="nx">pluralize</span> <span class="nx">subtypes</span><span class="si">}</span><span class="s">*&quot;</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s">* of </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">subtypes</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="si">}</span><span class="s">&quot;</span>
+    <span class="k">else</span>
+      <span class="s">&quot;</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">article</span> <span class="nx">type</span><span class="si">}</span><span class="s"> *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">type</span><span class="si">}</span><span class="s">*&quot;</span>
+  </div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>translate_type</em></span></p>
+
+<p>This function translates type names in <code>@return</code>- and <code>@type</code>-doctags</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><strong><em>type</em> must be a <em>String</em>.</strong></li>
+</ul>
+
+<p><strong>Returns a <em>String</em></strong></p></div></div><div class="code"><div class="wrapper">  <span class="nv">translate_type: translate_type = </span><span class="nf">(type) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&#39;a *mixed*&#39;</span> <span class="o">or</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&#39;a ***&#39;</span>
+      <span class="s">&#39;any type&#39;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="si">}</span><span class="s">* of *mixeds*&quot;</span> <span class="o">or</span> <span class="o">\</span>
+            <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="si">}</span><span class="s">* of ***&quot;</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="si">}</span><span class="s">* of any type&quot;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Object&#39;</span><span class="si">}</span><span class="s">* of *mixeds*&quot;</span> <span class="o">or</span> <span class="o">\</span>
+            <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Object&#39;</span><span class="si">}</span><span class="s">* of ***&quot;</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Object&#39;</span><span class="si">}</span><span class="s">* with properties of any type&quot;</span>
+    <span class="k">else</span>
+      <span class="nx">type</span>
+  </div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>convert_parameter_type</em></span></p>
+
+<p>This function converts type names in <code>@param</code>-doctags</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><strong><em>type</em> must be a <em>String</em>.</strong></li>
+</ul>
+
+<p><strong>Returns a <em>String</em></strong></p></div></div><div class="code"><div class="wrapper">  <span class="nv">convert_parameter_type: convert_parameter_type = </span><span class="nf">(type) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^\.\.\.|\.\.\.$/</span>
+      <span class="nv">type = </span><span class="nx">type</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/^\.\.\.|\.\.\.$/</span><span class="p">,</span> <span class="s">&quot;&quot;</span>
+      <span class="s">&quot;any number of *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">humanize</span><span class="p">.</span><span class="nx">pluralize</span> <span class="nx">type</span><span class="si">}</span><span class="s">*&quot;</span>
+    <span class="k">else</span>
+      <span class="nx">convert_type</span> <span class="nx">type</span>
+  </div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>translate_parameter_type</em></span></p>
+
+<p>This function translates type names in <code>@param</code>-doctags</p>
+
+<p>Parameters:</p>
+
+<ul>
+<li><strong><em>type</em> must be a <em>String</em>.</strong></li>
+</ul>
+
+<p><strong>Returns a <em>String</em></strong></p></div></div><div class="code"><div class="wrapper">  <span class="nv">translate_parameter_type: translate_parameter_type = </span><span class="nf">(type) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&#39;any number of *mixeds*&#39;</span>
+      <span class="nv">type = </span><span class="s">&#39;any number of arguments of any type&#39;</span>
+    <span class="k">else</span>
+      <span class="nx">translate_type</span> <span class="nx">type</span>
+  </div></div></div></div></body></html>
