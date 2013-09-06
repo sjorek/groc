@@ -2,6 +2,7 @@
 # ================================
 
 # -imports …
+_ = require 'underscore'
 humanize = require './humanize'
 
 # @package  groc/lib/utils/doctag_helpers
@@ -41,16 +42,23 @@ module.exports = DOCTAGHelpers =
     caption ?= type
 
     if false and not url? and namespace?
+      url = null
       for types in namespace.types
-        if types[type]?
-          url = types[type]
-          break
-      if not url? and namespace.separator?
-        for types in namespace.types
-          for own root, baseUrl of types
-            if root[root.length-1] is namespace.separator and type.indexOf(root) is 0
-              console.log 'is matching  : ', type, root, baseUrl
-            #url = baseUrl
+        if _.isArray types
+          url = create_type_link.apply null, [type, namespace.separator].concat types
+        else if _.isString types
+          url = create_type_link.apply null, [type, namespace.separator].concat types
+        else # should be an object
+          url = do ->
+            for own subtype, types of types
+              if _.isArray types
+              else if _.isString types
+              else if types is null
+                break
+              else
+                throw new Error 'An unsupported namespace type-definition “#{types}” occured.'
+            url
+
     if url?
       "[#{caption}](#{url})"
     else
