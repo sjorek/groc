@@ -47,7 +47,7 @@ module.exports = LANGUAGES =
     nameMatchers      : ['.coffee', 'Cakefile']
     pygmentsLexer     : 'coffee-script'
     multiLineComment  : [
-      # To block-comment line-matcher `' '` also works on lines not starting
+      # The block-comment line-matcher `' '` also works on lines not starting
       # with space-chars, because we add unmatched lines to the comments once
       # we are in a multi-line comment-block and until we left them …
       '###',     ' ',    '###'
@@ -76,7 +76,7 @@ module.exports = LANGUAGES =
     # Everything below `literateCodeLines` is used to match the code we detected
     literateCodeLines : ['    ']
     multiLineComment  : [
-      # To block-comment line-matcher `' '` also works on lines not starting
+      # The block-comment line-matcher `' '` also works on lines not starting
       # with space-chars, because we add unmatched lines to the comments once
       # we are in a multi-line comment-block and until we left them …
       '###',     ' ',    '###'
