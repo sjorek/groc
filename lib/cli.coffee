@@ -61,17 +61,20 @@ module.exports = CLI = (inputArgs, callback) ->
       type                   : 'boolean'
 
     glob                     :
-      describe               : "A file path or globbing expression that matches files to generate documentation for."
+      describe               : "A file path or globbing expression that matches " +
+                               "files to generate documentation for."
       default                : (opts) -> opts.argv._
       type                   : 'list'
 
     except                   :
-      describe               : "Glob expression of files to exclude.  Can be specified multiple times."
+      describe               : "Glob expression of files to exclude.  Can be " +
+                               "specified multiple times."
       alias                  : 'e'
       type                   : 'list'
 
     github                   :
-      describe               : "Generate your docs in the gh-pages branch of your git repository.  --out is ignored."
+      describe               : "Generate your docs in the gh-pages branch of " +
+                               "your git repository.  --out is ignored."
       alias                  : 'gh'
       type                   : 'boolean'
 
@@ -80,7 +83,8 @@ module.exports = CLI = (inputArgs, callback) ->
       type                   : 'string'
 
     out                      :
-      describe               : "The directory to place generated documentation, relative to the project root."
+      describe               : "The directory to place generated documentation, " + 
+                               "relative to the project root."
       alias                  : 'o'
       default                : './doc'
       type                   : 'path'
@@ -106,17 +110,20 @@ module.exports = CLI = (inputArgs, callback) ->
       default                : 'Default'
 
     showdown                 :
-      describe               : "Showdown extension(s) to load, repeat option to add more extensions (--no-showdown and the option itself discards default)."
+      describe               : "Load showdown extensions, repeat to load more " + 
+                               "(specifiying --[no-]showdown discards default)."
       alias                  : 'sd'
       default                : ['github','table']
       type                   : 'list'
 
     strip                    :
-      describe               : "A path prefix to strip when generating documentation paths (or --no-strip)."
+      describe               : "A path prefix to strip when generating documentation " +
+                               "paths (or --no-strip)."
       alias                  : 't'
 
     'whitespace-after-token' :
-      describe               : "Require whitespace after a comment token for a line to be considered a comment."
+      describe               : "Require whitespace after a comment token for a line " +
+                               "to be considered a comment."
       default                : true
       type                   : 'boolean'
 
