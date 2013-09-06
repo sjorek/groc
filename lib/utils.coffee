@@ -386,8 +386,7 @@ module.exports = Utils =
   # Annotate an array of segments by running their comments through
   # [showdown](https://github.com/coreyti/showdown).
   markdownComments: (segments, project, callback) ->
-
-    converter  = new showdown.converter(extensions: project.options.showdown)
+    converter = new showdown.converter(extensions: project.options.showdown)
 
     try
       for segment, segmentIndex in segments
