@@ -1,4 +1,3 @@
-
 Language Namespaces
 ================================
 
@@ -8,7 +7,16 @@ type-names (eg. `Package.ClassName` or `String`) or namespaces (eg. `Package.`,
 mind the trailing dot) to an URL as String or an Array containing the definition
 of how to link the namespace or specific type in the generated documentation.
 
+    # - some stub coffee-script to make this file run …
+    LANGUAGES =
+        language:
+            namespace:
+                types    : []
+                seperator: '.'
+                camelize : ->
 
+
+--------------------------------
 Synopsis
 --------------------------------
 
@@ -23,18 +31,18 @@ There are four variants to define how to link a type
 - **typeOrNamespace** :  
   
   This key is used to match the value to process.  May either match exactly with
-  the given value …
-
+  the given value …  
+  
   >     "typeOrNamespace" === "value"
-
+  
   … or if the processed language knows namespaces and has a `namespace.separator`
-  and the value ends with this separator …
-
+  and the value ends with this separator …  
+  
   >     "typeOrNamespace".lastIndexOf(separator) === \
   >     "typeOrNamespace".length - separator.length
-
+  
   … it can also match the start of the value …
-
+  
   >     "value".indexOf("typeOrNamespace") === 0
 
 - **optionalUrl?type={type}** :  
@@ -60,21 +68,19 @@ There are four variants to define how to link a type
   
   See *typeOrNamespace* in variant (1) above.
   
-  - If the Array is empty the value to process is used as link without touching it
-    at all.
+  - If the Array is empty the value to process is used as link without touching
+    it at all.
   
   - The Array may be substituted by null to disable linking the namespace or
     specific type completly.
-  
-
 
 - **urlPrefixOrFunction** :  
   
   Default: `""`
   
-  If this String is a property of `LANGUAGES.….namespace` and this property
-  is a function, the function will be called with the value to process, the
-  `namespace.separator` and the remaining `"typeOrNamespace"`-Array elements
+  If this String is a property of `LANGUAGES["language"].namespace` and this
+  property is a function, the function will be called with the value to process,
+  the `namespace.separator` and the remaining `"typeOrNamespace"`-Array elements
   as arguments.
   
   The function can either return the URL as string or `null` if the value to
@@ -96,7 +102,7 @@ There are four variants to define how to link a type
 
 - **splitNamespaceString** :  
   
-  Default: `LANGUAGES.….namespace.separator`
+  Default: `LANGUAGES["language"].namespace.separator`
   
   A string to split the type's value or `null` to skip splitting.  The resulting
   Array will be joined with the *joinNamespaceString* described below.
@@ -111,18 +117,20 @@ There are four variants to define how to link a type
 
 ### Variant (3): *Array*
 
-    [ "functionName", "more", "arguments", … ]
+    [ "functionName", "more", "arguments", "…" ]
 
 - **functionName** :  
   
   The Arrays first element must be a String refering to a property of
-  `LANGUAGES.….namespace` and this property must be a function.  The function
-  will be called with the type's value, the `namespace.separator` and the
-  remaining `"functionName"`-Array elements as arguments.
+  `LANGUAGES["language"].namespace` and this property must be a function.  The
+  function will be called with the type's value, the `namespace.separator` and
+  the remaining `"functionName"`-Array elements as arguments.
   
   The function can either return the URL as string or `null` if the function
-  does not know how to link the type's value. **ATTENTION: This differs from
-  the *urlPrefixOrFunction*-function in variant (1) above**
+  does not know how to link the type's value.
+  
+  **ATTENTION: This differs from the *urlPrefixOrFunction*-function in
+  variant (1) above**
 
 
 ### Variant (4): *String*
@@ -131,45 +139,48 @@ There are four variants to define how to link a type
 
 - **functionName** :  
   
-  This String must refer to a property of `LANGUAGES.….namespace` and this
-  property must be a function.  The function will be called with the type's
+  This String must refer to a property of `LANGUAGES["language"].namespace` and
+  this property must be a function.  The function will be called with the type's
   value and `namespace.separator` as arguments.
   
   The function can either return the URL as string or `null` if the function
-  does not know how to link the type's value. **ATTENTION: This differs from
-  the *urlPrefixOrFunction*-function in variant (1) above**
+  does not know how to link the type's value.
+  
+  **ATTENTION: This differs from the *urlPrefixOrFunction*-function in
+  variant (1) above**
 
 
+--------------------------------
 Example: 1:1 type translations
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "Exact.Match": "http://…/ExactMatch.html"
     }
 
-input     :
+… with an input like …
 
     "Exact.Match"
 
-output    :
+… outputs:
 
     "http://…/ExactMatch.html"
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "Exact.Match": "http://…/docs?type={type}"
     }
 
-input     :
+… with an input like …
 
     "Exact.Match"
 
-output    :
+… outputs:
 
     "http://…/docs?type=Exact%2EMatch"
 
@@ -177,89 +188,89 @@ output    :
 Example: Namespaces
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
-        "Package.": "http://…/docs.html#{type}"
+        "Package.": "http://…/docs.html#doc-{type}"
     }
 
-input     :
+… with an input like …
 
     "Package.ClassName"
 
-output    :
+… outputs:
 
-    "http://…/docs.html#Package%2EClassName"
+    "http://…/docs.html#doc-Package%2EClassName"
 
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "Package.": "http://…/docs?type={type}"
     }
 
-input     :
+… with an input like …
 
     "Package.ClassName"
 
-output    :
+… outputs:
 
     "http://…/docs?type=Package%2EClassName"
 
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "link.branch.": []
     }
 
-input     :
+… with an input like …
 
     "link.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     "link/branch/subbranch/leaf.html"
 
-input     :
+… with an input like …
 
     "link.another.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     null
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "root.branch.": ["something-to-prepend-to/"]
     }
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     "something-to-prepend-to/root/branch/subbranch/leaf.html"
 
-input     :
+… with an input like …
 
     "root.another.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     null
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "root.branch.": [
@@ -268,17 +279,17 @@ namespace :
         ]
     }
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     "http://absolute.url/to/prepend/to/branch.subbranch.leaf"
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "root.branch.": [
@@ -288,17 +299,17 @@ namespace :
         ]
     }
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     "http://absolute.url/to/prepend/to/root/branch/subbranch/leaf.html"
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "root.branch.": [
@@ -308,11 +319,11 @@ namespace :
         ]
     }
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     "relative/path/to/prepend/to/root/branch/subbranch/leaf/index.html"
 
@@ -327,17 +338,17 @@ output    :
         ]
     }
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     "path/to/prepend/to/file.subbranch.leaf.html"
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "root.branch.": [
@@ -349,17 +360,17 @@ namespace :
         ]
     }
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-output    :
+… outputs:
 
     "path/to/prepend/to/file-subbranch-leaf.html"
 
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "root.branch.": [
@@ -371,57 +382,57 @@ namespace :
          ]
     }
 
-input     :
+… with an input like …
 
     "root.branch.split.here.leaf"
 
-output    :
+… outputs:
 
     "path/to/prepend/to/branch/path/../to/subbranch/../leaf.html"
 
 
+--------------------------------
 Example: skip a namespace
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
         "skip.branch.": null
     }
 
-input      :
+… with an input like …
 
     "skip.branch.link"
 
-output     :
+… outputs:
 
     null
 
 
+--------------------------------
 Example: call a function
 --------------------------------
 
-namespace :
+A namespace like …
 
     {
-        "root.branch." : [ "camelizeFunction", "more", "arguments" ]
+        "root.branch." : [ "camelize", "more", "arguments" ]
     }
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-calls     :
+… calls …
 
-    LANGUAGES.….namespace.camelizeFunction(
+    LANGUAGES["language"].namespace.camelize(
         "root.branch.subbranch.leaf",
-        LANGUAGES.….namespace.separator,
+        LANGUAGES["language"].namespace.separator,
         "more", "arguments"
     )
 
-output    :
-
-Whatever the hypothetic function spits out, eg.:
+… which outputs whatever the hypothetic `camelize`-function spits out, eg.:
 
     "More/Aruments/RootBranchSubbranchLeaf.html"
 
@@ -429,25 +440,23 @@ Hint: This may also be `null` to skip the link-generation.
 
 --------------------------------
 
-namespace :
+A namespace like …
 
-    [ "camelizeFunction", "more", "arguments" ]
+    [ "camelize", "more", "arguments" ]
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-calls     :
+… calls …
 
-    LANGUAGES.….namespace.camelizeFunction(
+    LANGUAGES["language"].namespace.camelize(
         "root.branch.subbranch.leaf",
-        LANGUAGES.….namespace.separator,
+        LANGUAGES["language"].namespace.separator,
         "more", "arguments"
     )
 
-output    :
-
-Whatever the hypothetic function spits out, eg.:
+… which outputs whatever the hypothetic `camelize`-function spits out, eg.:
 
     "More/Arguments/RootBranchSubbranchLeaf.html"
 
@@ -456,24 +465,22 @@ given values. In this case further processing will be applied.
 
 --------------------------------
 
-namespace :
+A namespace like …
 
-    "camelizeFunction"
+    "camelize"
 
-input     :
+… with an input like …
 
     "root.branch.subbranch.leaf"
 
-calls     :
+… calls …
 
-    LANGUAGES.….namespace.camelizeFunction(
+    LANGUAGES["language"].namespace.camelize(
         "root.branch.subbranch.leaf",
-        LANGUAGES.….namespace.separator
+        LANGUAGES["language"].namespace.separator
     )
 
-output    :
-
-Whatever the hypothetic function spits out, eg.:
+… which outputs whatever the hypothetic `camelize`-function spits out, eg.:
 
     "RootBranchSubbranchLeaf.html"
 

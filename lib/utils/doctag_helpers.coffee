@@ -1,10 +1,16 @@
+# Doctag Helpers
+# ================================
 
+# -imports …
 humanize = require './humanize'
 
+# @package  groc/lib/utils/doctag_helpers
+# @type     {Object}
 module.exports = DOCTAGHelpers =
+
   # This function collapses... spaces
   #
-  # @private
+  # @public
   # @method  collapse_space
   #
   # @param  {String} value This is the value which will be collapsed. The primary
@@ -14,37 +20,46 @@ module.exports = DOCTAGHelpers =
   # @return {String}
   collapse_space: collapse_space = (value) ->
     value.replace /\s+/g, ' '
-  
-  # This function creates links to JavaScript-types
+
+  # This function creates links to JavaScript-types for uses in `@doctags`
   #
-  # @param  {String}          type
-  # @param  {String}          [caption]
-  # @param  {String}          [url]
-  # @param  {Object}          [namespace]
-  # @param  {String}          namespace.separator
-  # @param  {Array.<Object>}  namespace.types
+  # @public
+  # @method  link_type
+  #
+  # @param  {String}                      type
+  # @param  {String}                      [caption]
+  # @param  {String}                      [url]
+  # @param  {Object}                      [namespace] see [Supported Languages](../languages.html)
+  #                                                   and [Language Namespaces](../languages/namespace.html)
+  # @param  {String}                      [namespace.separator]
+  # @param  {Array.<Object,Array,String>} namespace.types
   # @return {String}
+  # @see    [Supported Languages](../languages.html)
+  # @see    [Language Namespaces](../languages/namespace.html)
   link_type: link_type = (type, caption, url, namespace) ->
 
     caption ?= type
 
-    # if not url? and namespace?
-      # for types in namespace.types
-        # if types[type]?
-          # url = types[type]
-          # break
-      # if not url? and namespace.separator?
-        # for types in namespace.types
-          # for own root, baseUrl of types
-            # if root[root.length-1] is namespace.separator and type.indexOf(root) is 0
-              # console.log 'is matching  : ', type, root, baseUrl
-            # #url = baseUrl
+    if false and not url? and namespace?
+      for types in namespace.types
+        if types[type]?
+          url = types[type]
+          break
+      if not url? and namespace.separator?
+        for types in namespace.types
+          for own root, baseUrl of types
+            if root[root.length-1] is namespace.separator and type.indexOf(root) is 0
+              console.log 'is matching  : ', type, root, baseUrl
+            #url = baseUrl
     if url?
       "[#{caption}](#{url})"
     else
       caption
   
-  # This function converts type names for return-doctags
+  # This function converts type names in `@return`- and `@type`-doctags
+  #
+  # @public
+  # @method  convert_type
   #
   # @param  {String} type
   # @return {String}
@@ -60,7 +75,10 @@ module.exports = DOCTAGHelpers =
     else
       "#{humanize.article type} *#{link_type type}*"
   
-  # This function translates type names for return-doctags
+  # This function translates type names in `@return`- and `@type`-doctags
+  #
+  # @public
+  # @method  translate_type
   #
   # @param  {String} type
   # @return {String}
@@ -76,7 +94,10 @@ module.exports = DOCTAGHelpers =
     else
       type
   
-  # This function converts type names for param-doctags
+  # This function converts type names in `@param`-doctags
+  #
+  # @public
+  # @method  convert_parameter_type
   #
   # @param  {String} type
   # @return {String}
@@ -87,7 +108,10 @@ module.exports = DOCTAGHelpers =
     else
       convert_type type
   
-  # This function translates type names for param-doctags
+  # This function translates type names in `@param`-doctags
+  #
+  # @public
+  # @method  translate_parameter_type
   #
   # @param  {String} type
   # @return {String}

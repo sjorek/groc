@@ -55,88 +55,88 @@ module.exports = CLI = (inputArgs, callback) ->
 
   optionsConfig =
 
-    help:
-      describe: "You're looking at it."
-      alias:   ['h', '?']
-      type:     'boolean'
+    help                     :
+      describe               : "You're looking at it."
+      alias                  : ['h', '?']
+      type                   : 'boolean'
 
-    glob:
-      describe: "A file path or globbing expression that matches files to generate documentation for."
-      default:  (opts) -> opts.argv._
-      type:     'list'
+    glob                     :
+      describe               : "A file path or globbing expression that matches files to generate documentation for."
+      default                : (opts) -> opts.argv._
+      type                   : 'list'
 
-    except:
-      describe: "Glob expression of files to exclude.  Can be specified multiple times."
-      alias:    'e'
-      type:     'list'
+    except                   :
+      describe               : "Glob expression of files to exclude.  Can be specified multiple times."
+      alias                  : 'e'
+      type                   : 'list'
 
-    github:
-      describe: "Generate your docs in the gh-pages branch of your git repository.  --out is ignored."
-      alias:    'gh'
-      type:     'boolean'
+    github                   :
+      describe               : "Generate your docs in the gh-pages branch of your git repository.  --out is ignored."
+      alias                  : 'gh'
+      type                   : 'boolean'
 
-    'repository-url':
-      describe: "Supply your GitHub repository URL (if groc fails to guess it)."
-      type:     'string'
+    'repository-url'         :
+      describe               : "Supply your GitHub repository URL (if groc fails to guess it)."
+      type                   : 'string'
 
-    out:
-      describe: "The directory to place generated documentation, relative to the project root."
-      alias:    'o'
-      default:  './doc'
-      type:     'path'
+    out                      :
+      describe               : "The directory to place generated documentation, relative to the project root."
+      alias                  : 'o'
+      default                : './doc'
+      type                   : 'path'
 
-    index:
-      describe: "The file to use as the index of the generated documentation."
-      alias:    'i'
-      default:  'README.md'
+    index                    :
+      describe               : "The file to use as the index of the generated documentation."
+      alias                  : 'i'
+      default                : 'README.md'
 
-    title:
-      describe: "The index's page title in the generated documentation."
-      default:  'index'
+    title                    :
+      describe               : "The index's page title in the generated documentation."
+      default                : 'index'
 
-    root:
-      describe: "The root directory of the project."
-      alias:    'r'
-      default:  '.'
-      type:     'path'
+    root                     :
+      describe               : "The root directory of the project."
+      alias                  : 'r'
+      default                : '.'
+      type                   : 'path'
 
-    style:
-      describe: "The style to use when generating documentation."
-      alias:    's'
-      default:  'Default'
+    style                    :
+      describe               : "The style to use when generating documentation."
+      alias                  : 's'
+      default                : 'Default'
 
-    showdown:
-      describe: "Showdown extension(s) to load, repeat option to add more extensions (--no-showdown and the option itself discards default)."
-      alias:    'sd'
-      default:  ['github','table']
-      type:     'list'
+    showdown                 :
+      describe               : "Showdown extension(s) to load, repeat option to add more extensions (--no-showdown and the option itself discards default)."
+      alias                  : 'sd'
+      default                : ['github','table']
+      type                   : 'list'
 
-    strip:
-      describe: "A path prefix to strip when generating documentation paths (or --no-strip)."
-      alias:    't'
+    strip                    :
+      describe               : "A path prefix to strip when generating documentation paths (or --no-strip)."
+      alias                  : 't'
 
-    'whitespace-after-token':
-      describe: "Require whitespace after a comment token for a line to be considered a comment."
-      default:  true
-      type:     'boolean'
+    'whitespace-after-token' :
+      describe               : "Require whitespace after a comment token for a line to be considered a comment."
+      default                : true
+      type                   : 'boolean'
 
-    languages:
-      describe: "Path to language definition file."
-      default:  "#{__dirname}/languages"
-      type:     'path'
+    languages                :
+      describe               : "Path to language definition file."
+      default                : "#{__dirname}/languages"
+      type                   : 'path'
 
-    silent:
-      describe: "Output errors only."
+    silent                   :
+      describe               : "Output errors only."
 
-    version:
-      describe: "Shows you the current version of groc (#{PACKAGE_INFO.version})"
-      alias:    'v'
+    version                  :
+      describe               : "Shows you the current version of groc (#{PACKAGE_INFO.version})"
+      alias                  : 'v'
 
-    verbose:
-      describe: "Output the inner workings of groc to help diagnose issues."
+    verbose                  :
+      describe               : "Output the inner workings of groc to help diagnose issues."
 
-   'very-verbose':
-      describe: "Hey, you asked for it."
+   'very-verbose'            :
+      describe               : "Hey, you asked for it."
 
 
   # ## Argument processing
@@ -192,10 +192,7 @@ module.exports = CLI = (inputArgs, callback) ->
   # Set up project-specific options as we get them.
   project.options.requireWhitespaceAfterToken = !!argv['whitespace-after-token']
   project.options.showdown = argv.showdown
-<<<<<<< HEAD
   project.options.languages = argv.languages
-=======
->>>>>>> showdown-extensions
 
   # We expand the `--glob` expressions into a poor-man's set, so that we can easily remove
   # exclusions defined by `--except` before we add the result to the project's file list.

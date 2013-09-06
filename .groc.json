@@ -1,5 +1,13 @@
 {
-  "glob": ["lib/**/*.coffee", "README.md", "lib/languages/**/*.md", "lib/languages/**/*.json", "lib/styles/*/style.sass", "lib/styles/*/*.jade", "scripts/**/*.sh"],
+  "glob": [
+    "README.md",
+    "lib/**/*.coffee",
+    "lib/**/*.litcoffee",
+    "lib/**/*.json",
+    "lib/styles/*/style.sass",
+    "lib/styles/*/*.jade",
+    "scripts/**/*.sh"
+  ],
   "github": false,
   "repository-url": "https://github.com/nevir/groc"
 }

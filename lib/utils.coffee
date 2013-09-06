@@ -98,11 +98,17 @@ module.exports = Utils =
     # Special case: If the language is comments-only, we can skip pygments
     return [new @Segment [], lines] if language.commentsOnly
 
+    # this flag is used to signal literate source code
     segments = []
     currSegment = new @Segment
 
     # Enforced whitespace after the comment token
     whitespaceMatch = if options.requireWhitespaceAfterToken then '\\s' else '\\s?'
+
+    isLiterateCode = false
+    if language.literateCodeLines?
+      isLiterateCode = true
+      codeLineMatcher = ///^(#{language.literateCodeLines.join('|')})(?:(.*))?$///
 
     if language.singleLineComment?
       singleLineMatcher = ///^\s*(#{language.singleLineComment.join('|')})(?:#{whitespaceMatch}(.*))?$///
@@ -127,8 +133,57 @@ module.exports = Utils =
         singleLineMatcher = blockSingleLineMatcher
 
     inBlock = false
+    inLiterateBlock = isLiterateCode is true
+
+    # This flag indicates if the previous line was empty, hence code must always
+    # be surrounded (or at least introduced) by an empty line, ie. matching an
+    # empty string (`""`).  This is needed to distinguish code from bullet-list
+    # or the like, which may match the start of a code-line by accident.  The
+    # initial value `true` allows us to immediately start with code, although
+    # this is quite unusual.
+    codeLineMayFollow = isLiterateCode is true
 
     for line in lines
+      if isLiterateCode
+
+        if codeLineMayFollow and (match = line.match codeLineMatcher)?
+          value = (match[2] || match[4])
+          continue if not value? or value is ''
+
+          inLiterateBlock = false if inLiterateBlock
+
+          # The previous cycle contained comments
+          if currSegment.comments.length > 0
+            segments.push currSegment
+            currSegment = new @Segment
+
+          # Process the matching literate code as if it isn't literate, hence
+          # we continue further processing of this line, as if `commentsOnly` is
+          # `false`, hence no `continue`-statement here.  Compare this to the
+          # following `else`-statement
+          line = value
+
+        else
+          # code-block requires an introducing empty line,
+          # also see`codeLineMayFollow` initialization above
+          codeLineMayFollow = line is ''
+
+          unless inLiterateBlock
+            inLiterateBlock = true
+            # From the previous cycle are comments left not being literate
+            if currSegment.comments.length > 0
+              segments.push currSegment
+              currSegment = new @Segment
+
+          # The previous cycle contained code
+          else if currSegment.code.length > 0
+            segments.push currSegment
+            currSegment = new @Segment
+
+          currSegment.comments.push line
+
+          # we skip further processing this line, as if `commentsOnly` is true
+          continue
 
       if inBlock
         if (match = line.match blockEndMatcher)?
@@ -163,7 +218,7 @@ module.exports = Utils =
 
         value = (match[2] || match[4])
 
-        if !value? or value == ''
+        if not value? or value == ''
 
         else
           if currSegment.code.length > 0

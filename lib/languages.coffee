@@ -46,15 +46,55 @@ module.exports = LANGUAGES =
   CoffeeScript        : 
     nameMatchers      : ['.coffee', 'Cakefile']
     pygmentsLexer     : 'coffee-script'
+    multiLineComment  : [
+      # To block-comment line-matcher `' '` also works on lines not starting
+      # with space-chars, because we add unmatched lines to the comments once
+      # we are in a multi-line comment-block and until we left them …
+      '###',     ' ',    '###'
+
+      # not implemented here, but works, if you set foldPrefix to something
+      # else than '-'.  Then we can use '-' for bullet-lists instead of '*' to
+      # distinguish bullet-lists from this kind of block comments.
+      #} '###*',    ' *',   '###',
+    ]
     singleLineComment : ['#']
     ignorePrefix      : '}'
     foldPrefix        : '-'
-    doctags           : require './doctags'
+    doctags           : require './languages/doctags'
     namespace         :
       separator       : '.'
       types           : [
-        require './namespace/javascript_globals.json'
-        require './namespace/javascript_dom.json'
+        require './languages/namespace/javascript_globals.json'
+        require './languages/namespace/javascript_dom.json'
+      ]
+
+  # @see http://ashkenas.com/literate-coffeescript
+  # @see http://coffeescript.org/#literate
+  LiterateCoffeeScript: 
+    nameMatchers      : ['.litcoffee']
+    pygmentsLexer     : 'coffee-script'
+    # Everything below `literateCodeLines` is used to match the code we detected
+    literateCodeLines : ['    ']
+    multiLineComment  : [
+      # To block-comment line-matcher `' '` also works on lines not starting
+      # with space-chars, because we add unmatched lines to the comments once
+      # we are in a multi-line comment-block and until we left them …
+      '###',     ' ',    '###'
+
+      # not implemented here, but works, if you set foldPrefix to something
+      # else than '-'.  Then we can use '-' for bullet-lists instead of '*' to
+      # distinguish bullet-lists from this kind of block comments.
+      #} '###*',    ' *',   '###',
+    ]
+    singleLineComment : ['#']
+    ignorePrefix      : '}'
+    foldPrefix        : '-'
+    doctags           : require './languages/doctags'
+    namespace         :
+      separator       : '.'
+      types           : [
+        require './languages/namespace/javascript_globals.json'
+        require './languages/namespace/javascript_dom.json'
       ]
 
   Go                  : 
@@ -105,12 +145,12 @@ module.exports = LANGUAGES =
     multiLineComment  : ['/*', '*', '*/']
     ignorePrefix      : '}'
     foldPrefix        : '-'
-    doctags           : require './doctags'
+    doctags           : require './languages/doctags'
     namespace         :
       separator       : '.'
       types           : [
-        require './namespace/javascript_globals.json'
-        require './namespace/javascript_dom.json'
+        require './languages/namespace/javascript_globals.json'
+        require './languages/namespace/javascript_dom.json'
       ]
 
   Jake                : 
