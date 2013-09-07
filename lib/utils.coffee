@@ -132,50 +132,64 @@ module.exports = Utils =
       else
         singleLineMatcher = blockSingleLineMatcher
 
+    if language.ignorePrefix?
+      stripIgnorePrefix = ///(#{language.singleLineComment.join '|'})#{whitespaceMatch}#{language.ignorePrefix}///
+
+    if language.foldPrefix?
+      stripFoldPrefix = ///(#{language.singleLineComment.join '|'})#{whitespaceMatch}#{language.foldPrefix}///
+
     inBlock = false
     inLiterateBlock = isLiterateCode is true
 
-    # This flag indicates if the previous line was empty, hence code must always
-    # be surrounded (or at least introduced) by an empty line, ie. matching an
-    # empty string (`""`).  This is needed to distinguish code from bullet-list
-    # or the like, which may match the start of a code-line by accident.  The
-    # initial value `true` allows us to immediately start with code, although
-    # this is quite unusual.
-    codeLineMayFollow = isLiterateCode is true
+    # This flag indicates if the previous line was empty, hence literate code
+    # must always be surrounded (or at least introduced) by an empty line, ie.
+    # matching an empty string (`""`).  This is needed to distinguish code from
+    # bullet-lists or the like, which may accidently match the start of a line
+    # of code.  The initial value `true` allows us to immediately start with
+    # code, although this is quite unusual.
+    literateCodePossible = isLiterateCode is true
 
+    # Now iterate over each line
     for line in lines
-      if isLiterateCode
 
-        if codeLineMayFollow and (match = line.match codeLineMatcher)?
+      if isLiterateCode
+        if literateCodePossible and (match = line.match codeLineMatcher)?
           value = (match[2] || match[4])
           continue if not value? or value is ''
 
-          inLiterateBlock = false if inLiterateBlock
-
-          # The previous cycle contained comments
-          if currSegment.comments.length > 0
+          # The previous cycle contained literate comments - in literate mode
+          # we absolutely want to separate code from comments into independent
+          # segments, as overlapping will make no sense in most cases
+          if inLiterateBlock and currSegment.comments.length > 0
             segments.push currSegment
             currSegment = new @Segment
 
+          inLiterateBlock = false
+
           # Process the matching literate code as if it isn't literate, hence
-          # we continue further processing of this line, as if `commentsOnly` is
-          # `false`, hence no `continue`-statement here.  Compare this to the
-          # following `else`-statement
+          # we continue further processing of this line and therefore no
+          # `continue`-statement occurs here.  Compare this to the following
+          # `else`-statement
           line = value
 
         else
           # code-block requires an introducing empty line,
-          # also see`codeLineMayFollow` initialization above
-          codeLineMayFollow = line is ''
+          # also see`literateCodePossible` initialization above
+          literateCodePossible = line is ''
 
           unless inLiterateBlock
             inLiterateBlock = true
-            # From the previous cycle are comments left not being literate
+
+            # From the previous cycle are comments left not being literate,
+            # so let's start a new segment
             if currSegment.comments.length > 0
               segments.push currSegment
               currSegment = new @Segment
 
-          # The previous cycle contained code
+          # The previous cycle contained literate code,
+          # so let's start a new segment, as in literate mode
+          # we separate code from comments into independent
+          # segments, as overlapping makes no sense in most cases
           else if currSegment.code.length > 0
             segments.push currSegment
             currSegment = new @Segment
@@ -212,30 +226,48 @@ module.exports = Utils =
       # Match that line to the language's single line comment syntax.
       #
       # However, we treat all comments beginning with } as inline code commentary
-      # and comments starting with ! cause that comment and the following code
+      # and comments starting with - cause that comment and the following code
       # block to start folded.
       else if (match = line.match singleLineMatcher)?
 
         value = (match[2] || match[4])
 
-        if not value? or value == ''
-
-        else
-          if currSegment.code.length > 0
-            segments.push currSegment
-            currSegment = new @Segment
+        if value? and value isnt ''
 
           # } For example, this comment should be treated as part of our code.
-          if value[0] == language.ignorePrefix
-            # } But let's not show the } character in our documentation
-            currSegment.code.push line.replace language.singleLineComment + language.ignorePrefix, language.singleLineComment
+          # } Achieved by prefixing the comment's content with “}”
+          if stripIgnorePrefix? and value.indexOf(language.ignorePrefix) is 0
 
-          # - ..and if we'd started this comment with ! instead of } it and all the code to the next comment would start folded
-          else if value[0] == language.foldPrefix
-            currSegment.foldMarker = line.replace language.singleLineComment + language.foldPrefix, language.singleLineComment
+            # **Unfold this code ->**
+            # - The previous cycle contained code, so lets start a new segment,
+            # } but only if the previous code-line isn't a comment forced to be
+            # } part of the code, as implemented here.  This allows embedding a
+            # } series of code-comments, even folded like this one.
+            if currSegment.code.length > 0 and \
+               not (currSegment.code[currSegment.code.length - 1].match singleLineMatcher)?
+              segments.push currSegment
+              currSegment = new @Segment
 
-          else
-            currSegment.comments.push value
+            # Let's strip the “}” character from our documentation
+            currSegment.code.push line.replace stripIgnorePrefix, match[1]
+
+          else 
+
+            # The previous cycle contained code, so lets start a new segment
+            if currSegment.code.length > 0
+              segments.push currSegment
+              currSegment = new @Segment
+
+            # - … if we start this comment with “-” instead of “}” it and all
+            # } code up to the next segment's first comment starts folded
+            if stripFoldPrefix? and value.indexOf(language.foldPrefix) is 0
+
+              # } … so folding stopped above, as this is a new segment !
+              # Let's strip the “-” character in our documentation
+              currSegment.foldMarker = line.replace stripFoldPrefix, match[1]
+
+            else
+              currSegment.comments.push value
 
       else
         currSegment.code.push line
