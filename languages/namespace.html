@@ -4,7 +4,7 @@
 It consists either of an Object, an Array or an String.  The Object is mapping
 type-names (eg. <code>Package.ClassName</code> or <code>String</code>) or namespaces (eg. <code>Package.</code>,
 mind the trailing dot) to an URL as String or an Array containing the definition
-of how to link the namespace or specific type in the generated documentation.</p></div></div></div><div class="segment"><div class="code folded"><div class="marker wrapper"><span class="c1"># - some stub coffee-script to make this file run …</span></div><div class="wrapper"><span class="nv">LANGUAGES =</span>
+of how to link the namespace or specific type in the generated documentation.</p></div></div></div><div class="segment"><div class="code folded"><div class="marker wrapper"><span class="c1"># some stub coffee-script to make this file run …</span></div><div class="wrapper"><span class="nv">LANGUAGES =</span>
     <span class="nv">language:</span>
         <span class="nv">namespace:</span>
             <span class="nv">types    : </span><span class="p">[]</span>
@@ -136,7 +136,9 @@ value.</p></li>
 
 <p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">{</span>
     <span class="s">&quot;Exact.Match&quot;</span><span class="o">:</span> <span class="s">&quot;http://…/ExactMatch.html&quot;</span>
-<span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;Exact.Match&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;http://…/ExactMatch.html&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+<span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1"># @property dummy</span>
+<span class="c1"># @type {Exact.Match}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs:</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <a href="http://…/ExactMatch.html"><em>Exact.Match</em></a></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
 
 <p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">{</span>
     <span class="s">&quot;Exact.Match&quot;</span><span class="o">:</span> <span class="s">&quot;http://…/docs?type={type}&quot;</span>
@@ -211,8 +213,8 @@ value.</p></li>
 <h2 id="example-skip-a-namespace">Example: skip a namespace</h2>
 
 <p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">{</span>
-    <span class="s">&quot;skip.branch.&quot;</span><span class="o">:</span> <span class="kc">null</span>
-<span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;skip.branch.link&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+    <span class="s">&quot;skip.branch.&quot;</span><span class="o">:</span> <span class="kc">false</span>
+<span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;skip.branch.link&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
 
 <h2 id="example-call-a-function">Example: call a function</h2>
 
@@ -222,7 +224,7 @@ value.</p></li>
     <span class="s">&quot;root.branch.subbranch.leaf&quot;</span><span class="p">,</span>
     <span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">,</span>
     <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span>
-<span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… which outputs whatever the hypothetic <code>camelize</code>-function spits out, eg.:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;More/Aruments/RootBranchSubbranchLeaf.html&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Hint: This may also be <code>null</code> to skip the link-generation.</p>
+<span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… which outputs whatever the hypothetic <code>camelize</code>-function spits out, eg.:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;More/Aruments/RootBranchSubbranchLeaf.html&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Hint: This may also be <code>false</code> to skip the link-generation.</p>
 
 <p>And with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.another.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… the process simply skips this input and goes on with the next namespace entry.</p>
 

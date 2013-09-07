@@ -63,7 +63,7 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
 <em>@type</em> <br />
 <em>@typedef</em> <br />
 <em>@variation</em> <br />
-<em>@version</em>  </p></div></div></div><div class="segment"><div class="code folded"><div class="marker wrapper"><span class="c1"># -imports</span></div><div class="wrapper"><span class="nv">humanize = </span><span class="nx">require</span> <span class="s">&#39;../utils/humanize&#39;</span>
+<em>@version</em>  </p></div></div></div><div class="segment"><div class="code folded"><div class="marker wrapper"><span class="c1">#imports</span></div><div class="wrapper"><span class="nv">humanize = </span><span class="nx">require</span> <span class="s">&#39;../utils/humanize&#39;</span>
 
 <span class="p">{</span>
   <span class="nx">collapse_space</span><span class="p">,</span>
@@ -242,7 +242,7 @@ Alternative: <code>markdown:    'is of type *{value}*'</code></p>
 <p>Author:</p>
 
 <ul>
-<li>Stephan Jorek  (<a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;:s&#116;&#101;&#112;&#x68;&#x61;&#110;&#x2e;&#x6a;&#111;&#x72;&#x65;&#107;&#x40;&#x67;&#x6d;&#97;&#x69;&#x6c;.&#x63;&#x6f;&#109;">s&#116;&#101;&#112;&#x68;&#x61;&#110;&#x2e;&#x6a;&#111;&#x72;&#x65;&#107;&#x40;&#x67;&#x6d;&#97;&#x69;&#x6c;.&#x63;&#x6f;&#109;</a>)</li>
+<li>Stephan Jorek  (<a href="&#109;&#97;&#x69;&#108;&#116;&#111;:&#x73;&#116;&#101;&#112;&#x68;&#x61;&#x6e;&#x2e;&#x6a;&#111;&#114;e&#107;&#x40;g&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#x73;&#116;&#101;&#112;&#x68;&#x61;&#x6e;&#x2e;&#x6a;&#111;&#114;e&#107;&#x40;g&#x6d;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a>)</li>
 </ul></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value) -&gt;</span>
       <span class="nv">value = </span><span class="nx">collapse_space</span> <span class="nx">value</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>the other alternatives, as <a href="link">text</a> do not (yet) encode email
 addresses - that sucks, so we leave it as it is, for now …</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nv">author = </span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^\s*(.*)&lt;([^&gt;]+)&gt;\s*$/</span>
