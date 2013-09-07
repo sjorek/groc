@@ -49,7 +49,7 @@ There are four variants to define how to link a type
   
   This String-value represents the URL to link to.  Any occurence of `{type}`
   will be substituted with the urlencoded value of the type.  The whole string
-  may be substituted by `null` to disable linking completly.
+  may be substituted by `false` to disable linking completly.
 
 
 ### Variant (2): *Object-Array-Map*
@@ -71,7 +71,7 @@ There are four variants to define how to link a type
   - If the Array is empty the value to process is used as link without touching
     it at all.
   
-  - The Array may be substituted by null to disable linking the namespace or
+  - The Array may be substituted by `false` to disable linking the namespace or
     specific type completly.
 
 - **urlPrefixOrFunction** :  
@@ -83,10 +83,11 @@ There are four variants to define how to link a type
   the `namespace.separator` and the remaining `"typeOrNamespace"`-Array elements
   as arguments.
   
-  The function can either return the URL as string or `null` if the value to
-  process shall not be linked.
+  The function can either return the URL as string, `false` if the value to
+  process shall not be linked, or `null` if the function can not handle the
+  value.
   
-  Otherwise the value is prepended to the generated URL, if it is not `null`.
+  Otherwise the value is prepended to the generated URL.
 
 - **stripNamespacePrefix** :  
   
@@ -126,11 +127,9 @@ There are four variants to define how to link a type
   function will be called with the type's value, the `namespace.separator` and
   the remaining `"functionName"`-Array elements as arguments.
   
-  The function can either return the URL as string or `null` if the function
-  does not know how to link the type's value.
-  
-  **ATTENTION: This differs from the *urlPrefixOrFunction*-function in
-  variant (1) above**
+  The function can either return the URL as string, `false` if the value to
+  process shall not be linked, or `null` if the function can not handle the
+  value.
 
 
 ### Variant (4): *String*
@@ -143,11 +142,9 @@ There are four variants to define how to link a type
   this property must be a function.  The function will be called with the type's
   value and `namespace.separator` as arguments.
   
-  The function can either return the URL as string or `null` if the function
-  does not know how to link the type's value.
-  
-  **ATTENTION: This differs from the *urlPrefixOrFunction*-function in
-  variant (1) above**
+  The function can either return the URL as string, `false` if the value to
+  process shall not be linked, or `null` if the function can not handle the
+  value.
 
 
 --------------------------------
@@ -285,7 +282,7 @@ A namespace like …
 
 … outputs:
 
-    "http://absolute.url/to/prepend/to/branch.subbranch.leaf"
+    "http://absolute.url/to/prepend/to/branch/subbranch/leaf.html"
 
 --------------------------------
 
@@ -414,7 +411,11 @@ A namespace like …
 Example: call a function
 --------------------------------
 
-A namespace like …
+If …
+
+    LANGUAGES["language"].namespace.camelize
+
+… is a function, then a namespace like …
 
     {
         "root.branch." : [ "camelize", "more", "arguments" ]
@@ -438,9 +439,19 @@ A namespace like …
 
 Hint: This may also be `null` to skip the link-generation.
 
+And with an input like …
+
+    "root.another.branch.subbranch.leaf"
+
+… the process simply skips this input and goes on with the next namespace entry.
+
 --------------------------------
 
-A namespace like …
+If …
+
+    LANGUAGES["language"].namespace.camelize
+
+… is a function, then a namespace like …
 
     [ "camelize", "more", "arguments" ]
 
@@ -465,7 +476,11 @@ given values. In this case further processing will be applied.
 
 --------------------------------
 
-A namespace like …
+If …
+
+    LANGUAGES["language"].namespace.camelize
+
+… is a function, then a namespace like …
 
     "camelize"
 
