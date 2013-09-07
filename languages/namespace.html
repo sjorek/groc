@@ -47,7 +47,7 @@ and the value ends with this separator …  </p>
 
 <p>This String-value represents the URL to link to.  Any occurence of <code>{type}</code>
 will be substituted with the urlencoded value of the type.  The whole string
-may be substituted by <code>null</code> to disable linking completly.</p></li>
+may be substituted by <code>false</code> to disable linking completly.</p></li>
 </ul>
 
 <h3 id="variant2objectarraymap">Variant (2): <em>Object-Array-Map</em></h3></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">{</span>
@@ -65,7 +65,7 @@ may be substituted by <code>null</code> to disable linking completly.</p></li>
 
 <ul><li><p>If the Array is empty the value to process is used as link without touching
 it at all.</p></li>
-<li><p>The Array may be substituted by null to disable linking the namespace or
+<li><p>The Array may be substituted by <code>false</code> to disable linking the namespace or
 specific type completly.</p></li></ul></li>
 <li><p><strong>urlPrefixOrFunction</strong> :  </p>
 
@@ -76,10 +76,11 @@ property is a function, the function will be called with the value to process,
 the <code>namespace.separator</code> and the remaining <code>"typeOrNamespace"</code>-Array elements
 as arguments.</p>
 
-<p>The function can either return the URL as string or <code>null</code> if the value to
-process shall not be linked.</p>
+<p>The function can either return the URL as string, <code>false</code> if the value to
+process shall not be linked, or <code>null</code> if the function can not handle the
+value.</p>
 
-<p>Otherwise the value is prepended to the generated URL, if it is not <code>null</code>.</p></li>
+<p>Otherwise the value is prepended to the generated URL.</p></li>
 <li><p><strong>stripNamespacePrefix</strong> :  </p>
 
 <p>Default: <code>""</code></p>
@@ -112,11 +113,9 @@ Array will be joined with the <em>joinNamespaceString</em> described below.</p><
 function will be called with the type's value, the <code>namespace.separator</code> and
 the remaining <code>"functionName"</code>-Array elements as arguments.</p>
 
-<p>The function can either return the URL as string or <code>null</code> if the function
-does not know how to link the type's value.</p>
-
-<p><strong>ATTENTION: This differs from the <em>urlPrefixOrFunction</em>-function in
-variant (1) above</strong></p></li>
+<p>The function can either return the URL as string, <code>false</code> if the value to
+process shall not be linked, or <code>null</code> if the function can not handle the
+value.</p></li>
 </ul>
 
 <h3 id="variant4string">Variant (4): <em>String</em></h3></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;functionName&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><ul>
@@ -126,11 +125,9 @@ variant (1) above</strong></p></li>
 this property must be a function.  The function will be called with the type's
 value and <code>namespace.separator</code> as arguments.</p>
 
-<p>The function can either return the URL as string or <code>null</code> if the function
-does not know how to link the type's value.</p>
-
-<p><strong>ATTENTION: This differs from the <em>urlPrefixOrFunction</em>-function in
-variant (1) above</strong></p></li>
+<p>The function can either return the URL as string, <code>false</code> if the value to
+process shall not be linked, or <code>null</code> if the function can not handle the
+value.</p></li>
 </ul>
 
 <hr />
@@ -166,7 +163,7 @@ variant (1) above</strong></p></li>
         <span class="s">&quot;http://absolute.url/to/prepend/to/&quot;</span><span class="p">,</span>
         <span class="s">&quot;root.&quot;</span>
     <span class="p">]</span>
-<span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;http://absolute.url/to/prepend/to/branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+<span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;http://absolute.url/to/prepend/to/branch/subbranch/leaf.html&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
 
 <p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">{</span>
     <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span>
@@ -219,7 +216,7 @@ variant (1) above</strong></p></li>
 
 <h2 id="example-call-a-function">Example: call a function</h2>
 
-<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">{</span>
+<p>If …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… is a function, then a namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">{</span>
     <span class="s">&quot;root.branch.&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="s">&quot;camelize&quot;</span><span class="p">,</span> <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span> <span class="p">]</span>
 <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
     <span class="s">&quot;root.branch.subbranch.leaf&quot;</span><span class="p">,</span>
@@ -227,9 +224,11 @@ variant (1) above</strong></p></li>
     <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span>
 <span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… which outputs whatever the hypothetic <code>camelize</code>-function spits out, eg.:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;More/Aruments/RootBranchSubbranchLeaf.html&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Hint: This may also be <code>null</code> to skip the link-generation.</p>
 
+<p>And with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.another.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… the process simply skips this input and goes on with the next namespace entry.</p>
+
 <hr />
 
-<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">[</span> <span class="s">&quot;camelize&quot;</span><span class="p">,</span> <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span> <span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
+<p>If …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… is a function, then a namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="p">[</span> <span class="s">&quot;camelize&quot;</span><span class="p">,</span> <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span> <span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
     <span class="s">&quot;root.branch.subbranch.leaf&quot;</span><span class="p">,</span>
     <span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">,</span>
     <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span>
@@ -238,7 +237,7 @@ given values. In this case further processing will be applied.</p>
 
 <hr />
 
-<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;camelize&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
+<p>If …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… is a function, then a namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;camelize&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;root.branch.subbranch.leaf&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
     <span class="s">&quot;root.branch.subbranch.leaf&quot;</span><span class="p">,</span>
     <span class="nx">LANGUAGES</span><span class="p">[</span><span class="s">&quot;language&quot;</span><span class="p">].</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span>
 <span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… which outputs whatever the hypothetic <code>camelize</code>-function spits out, eg.:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="s">&quot;RootBranchSubbranchLeaf.html&quot;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Hint: This may also be <code>null</code> if the function does not know how to handle the
