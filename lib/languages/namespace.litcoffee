@@ -159,11 +159,14 @@ A namespace like …
 
 … with an input like …
 
-    "Exact.Match"
+    # } @property dummy
+    # } @type {Exact.Match}
+    dummy: null
 
 … outputs:
 
-    "http://…/ExactMatch.html"
+    # **Property *dummy* is of type [*Exact.Match*](http://…/ExactMatch.html)**
+    dummy: null
 
 --------------------------------
 
@@ -395,7 +398,7 @@ Example: skip a namespace
 A namespace like …
 
     {
-        "skip.branch.": null
+        "skip.branch.": false
     }
 
 … with an input like …
@@ -404,7 +407,7 @@ A namespace like …
 
 … outputs:
 
-    null
+    false
 
 
 --------------------------------
@@ -437,7 +440,7 @@ If …
 
     "More/Aruments/RootBranchSubbranchLeaf.html"
 
-Hint: This may also be `null` to skip the link-generation.
+Hint: This may also be `false` to skip the link-generation.
 
 And with an input like …
 
