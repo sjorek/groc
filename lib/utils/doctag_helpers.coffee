@@ -41,15 +41,16 @@ module.exports = DOCTAGHelpers =
 
     caption ?= type
 
-    if false and not url? and namespace?
+    if false and not url? and namespace?.types?
       url = null
       for types in namespace.types
         if _.isArray types
           url = create_type_link.apply null, [type, namespace.separator].concat types
         else if _.isString types
-          url = create_type_link.apply null, [type, namespace.separator].concat types
-        else # should be an object
+          url = create_type_link.apply null, [type, namespace.separator, types]
+        else # should be an Object
           url = do ->
+            url = null
             for own subtype, types of types
               if _.isArray types
               else if _.isString types
@@ -58,6 +59,7 @@ module.exports = DOCTAGHelpers =
               else
                 throw new Error 'An unsupported namespace type-definition “#{types}” occured.'
             url
+        break if url?
 
     if url?
       "[#{caption}](#{url})"

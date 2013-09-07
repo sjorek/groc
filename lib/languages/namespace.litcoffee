@@ -1,32 +1,98 @@
-Language Namespaces
+Type Namespaces
 ================================
 
-The namespace json-files provide information to determine how to link a type. 
-It consists either of an Object, an Array or an String.  The Object is mapping
-type-names (eg. `Package.ClassName` or `String`) or namespaces (eg. `Package.`,
-mind the trailing dot) to an URL as String or an Array containing the definition
-of how to link the namespace or specific type in the generated documentation.
+    # - import the type-link generating function for testing purposes
+    {link_type} = require '../utils/doctag_helpers'
+    
+    # - … and some pretty colors
+    colors = require 'colors'
 
-    # - some stub coffee-script to make this file run …
+
+--------------------------------
+## Important notice
+
+This file has been written for documentation and testing purposes only.  This
+might change in future.  So, if you're reading this file's source instead of the
+generated documentation, you should (mentally) replace every occurence of
+`# } @…` below this comment with `# @…` (mind the stripped `}`-bracket).
+
+
+--------------------------------
+## Objectives
+
+The namespace json-files provide information used to determine how to link a
+type.  It consists of a list of Objects, Arrays, Strings or a mix of these
+three variants.
+
+The Object-variant maps types (eg. `Package.ClassName` or `String`) or
+namespaces (eg. `Package.`, mind the trailing dot) to an URL as String or 
+an Array containing the definition of how to link the namespace or specific
+type in the generated documentation.
+
+The Array and the String-variants provide a subset of (or shortcut to) the
+Object-variant's capabilities, as documented below.
+
+
+--------------------------------
+## Language definitions
+
+    # This is stub coffee-script providing a reduced reference of the related
+    # [language definition file](../languages.html)'s structure.  Also required
+    # to make this file run without failures, if one tries to do so.
     LANGUAGES =
-        language:
-            namespace:
-                types    : []
-                seperator: '.'
-                camelize : ->
+      language:
+        namespace:
+          types    : []
+          seperator: '.'
+          
+          # Convert “a.property.name” to “APropertyName”
+          #
+          # @public
+          # @method camelize
+          # @param  {String}  type  Input property string.
+          # @return {String}  Camelized property string.
+          camelize : do ->
+            _regexp = /(^|\.)([a-z0-9])/gi
+            _camelize = (match, dot, char) -> char.toUpperCase()
+            (type) ->
+              return false if /force/.test type
+              return null if /skip/.test type
+              type.replace _regexp, _camelize
+
+    # - define a test-function to prove that `link_type` is working porperly
+    test_link_type = (input, output) ->
+      result = link_type input, null, null, LANGUAGES.language.namespace
+      if result is output
+        console.info colors['green']("""
+    Success:
+        input           : #{input}
+        desired output  : #{output}
+        result          : #{result}
+        namespace.types :
+    
+    """), LANGUAGES.language.namespace.types
+      else
+        console.error colors['red']("""
+    Failure:
+        input           : #{input}
+        desired output  : #{output}
+        result          : #{result}
+        namespace.types :
+    
+    """), LANGUAGES.language.namespace.types
+      console.log '----'
 
 
 --------------------------------
-Synopsis
---------------------------------
+## Synopsis
 
 There are four variants to define how to link a type
 
-### Variant (1): *Object-String-Map*
+### Variant (1): A list of *Object-String-Maps*
 
-    {
-        "typeOrNamespace": "optionalUrl?type={type}"
-    }
+    LANGUAGES.language.namespace.types = [
+      "typeOrNamespace": "url?type={type}&firstPart={type.0}&secondPart={type.1}"
+    ]
 
 - **typeOrNamespace** :  
   
@@ -48,21 +114,25 @@ There are four variants to define how to link a type
 - **optionalUrl?type={type}** :  
   
   This String-value represents the URL to link to.  Any occurence of `{type}`
-  will be substituted with the urlencoded value of the type.  The whole string
-  may be substituted by `false` to disable linking completly.
+  will be substituted with the urlencoded value of the type.  The type name's
+  fragments replace any occurence of `{type.positionOfFragment-1}`.  Any of 
+  those placeholders being left after substition, will be stripped from the
+  resulting string.
+  
+  The whole string may be substituted by `false` to disable linking completly.
 
 
-### Variant (2): *Object-Array-Map*
+### Variant (2): A list *Object-Array-Maps*
 
-    {
-        "typeOrNamespace": [
-            "urlPrefixOrFunction"  ,
-            "stripNamespacePrefix" ,
-            "addUrlSuffix"         ,
-            "splitNamespaceString" ,
-            "joinNamespaceString"
-        ]
-    }
+    LANGUAGES.language.namespace.types = [
+      "typeOrNamespace": [
+        "urlPrefixOrFunction"  ,
+        "stripNamespacePrefix" ,
+        "addUrlSuffix"         ,
+        "splitNamespaceString" ,
+        "joinNamespaceString"
+      ]
+    ]
 
 - **typeOrNamespace** :  
   
@@ -78,7 +148,7 @@ There are four variants to define how to link a type
   
   Default: `""`
   
-  If this String is a property of `LANGUAGES["language"].namespace` and this
+  If this String is a property of `LANGUAGES.language.namespace` and this
   property is a function, the function will be called with the value to process,
   the `namespace.separator` and the remaining `"typeOrNamespace"`-Array elements
   as arguments.
@@ -103,7 +173,7 @@ There are four variants to define how to link a type
 
 - **splitNamespaceString** :  
   
-  Default: `LANGUAGES["language"].namespace.separator`
+  Default: `LANGUAGES.language.namespace.separator`
   
   A string to split the type's value or `null` to skip splitting.  The resulting
   Array will be joined with the *joinNamespaceString* described below.
@@ -116,46 +186,40 @@ There are four variants to define how to link a type
   *splitNamespaceString*.
 
 
-### Variant (3): *Array*
+### Variant (3): A list of *Arrays*
 
-    [ "functionName", "more", "arguments", "…" ]
+    LANGUAGES.language.namespace.types = [
+      [
+        "urlPrefixOrFunction"  ,
+        "stripNamespacePrefix" ,
+        "addUrlSuffix"         ,
+        "splitNamespaceString" ,
+        "joinNamespaceString"
+      ]
+    ]
 
-- **functionName** :  
-  
-  The Arrays first element must be a String refering to a property of
-  `LANGUAGES["language"].namespace` and this property must be a function.  The
-  function will be called with the type's value, the `namespace.separator` and
-  the remaining `"functionName"`-Array elements as arguments.
-  
-  The function can either return the URL as string, `false` if the value to
-  process shall not be linked, or `null` if the function can not handle the
-  value.
+See variant (2) above.  The difference is that every type-value will be
+processed by this definition, no matter which type or namespace it is.
 
 
-### Variant (4): *String*
+### Variant (4): A list of *Strings*
 
-    "functionName"
+    LANGUAGES.language.namespace.types = [
+      "urlPrefixOrFunction"
+    ]
 
-- **functionName** :  
-  
-  This String must refer to a property of `LANGUAGES["language"].namespace` and
-  this property must be a function.  The function will be called with the type's
-  value and `namespace.separator` as arguments.
-  
-  The function can either return the URL as string, `false` if the value to
-  process shall not be linked, or `null` if the function can not handle the
-  value.
+See variant (2) above.  The difference is that every type-value will be
+processed by this definition, no matter which type or namespace it is.
 
 
 --------------------------------
-Example: 1:1 type translations
---------------------------------
+## Example: 1:1 type translations
 
 A namespace like …
 
-    {
-        "Exact.Match": "http://…/ExactMatch.html"
-    }
+    LANGUAGES.language.namespace.types = [
+      "Exact.Match": "http://…/ExactMatch.html"
+    ]
 
 … with an input like …
 
@@ -163,296 +227,427 @@ A namespace like …
     # } @type {Exact.Match}
     dummy: null
 
-… outputs:
+… outputs …
 
-    # **Property *dummy* is of type [*Exact.Match*](http://…/ExactMatch.html)**
+    # **Property *dummy* is of type *[Exact.Match](http://…/ExactMatch.html)***
     dummy: null
 
---------------------------------
-
-A namespace like …
-
-    {
-        "Exact.Match": "http://…/docs?type={type}"
-    }
-
-… with an input like …
-
-    "Exact.Match"
-
-… outputs:
-
-    "http://…/docs?type=Exact%2EMatch"
-
-
-Example: Namespaces
---------------------------------
-
-A namespace like …
-
-    {
-        "Package.": "http://…/docs.html#doc-{type}"
-    }
-
-… with an input like …
-
-    "Package.ClassName"
-
-… outputs:
-
-    "http://…/docs.html#doc-Package%2EClassName"
-
+    # - let's prove it …
+    test_link_type 'Exact.Match', '[Exact.Match](http://…/ExactMatch.html)'
 
 --------------------------------
 
 A namespace like …
 
-    {
-        "Package.": "http://…/docs?type={type}"
-    }
+    LANGUAGES.language.namespace.types = [
+      "Exact.Match": "http://…/docs?type={type}"
+    ]
 
 … with an input like …
 
-    "Package.ClassName"
+    # } @property dummy
+    # } @type {Exact.Match}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "http://…/docs?type=Package%2EClassName"
+    # **Property *dummy* is of type *[Exact.Match](http://…/docs?type=Exact%2EMatch)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'Exact.Match', '[Exact.Match](http://…/docs?type=Exact%2EMatch)'
+
+--------------------------------
+## Example: Namespaces
+
+A namespace like …
+
+    LANGUAGES.language.namespace.types = [
+      "Package.": "http://…/docs.html#doc-{type}"
+    ]
+
+… with an input like …
+
+    # } @property dummy
+    # } @type {Package.ClassName}
+    dummy: null
+
+… outputs …
+
+    # **Property *dummy* is of type *[Package.ClassName](http://…/docs.html#doc-Package%2EClassName)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'Package.ClassName', '[Package.ClassName](http://…/docs.html#doc-Package%2EClassName)'
+
+--------------------------------
+
+A namespace like …
+
+    LANGUAGES.language.namespace.types = [
+      "Package.": "http://…/docs?package={type.0}&amp;class={type.1}{type.2}"
+    ]
+
+… with an input like …
+
+    # } @property dummy
+    # } @type {Package.ClassName}
+    dummy: null
+
+… outputs …
+
+    # **Property *dummy* is of type *[Package.ClassName](http://…/docs?package=Package&amp;class=ClassName)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'Package.ClassName', '[Package.ClassName](http://…/docs?package=Package&amp;class=ClassName)'
+
+--------------------------------
+
+A namespace like …
+
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": []
+    ]
+
+… with an input like …
+
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
+
+… outputs …
+
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](root/branch/subbranch/leaf.html)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](root/branch/subbranch/leaf.html)'
+
+… or with an input like …
+
+    # } @property dummy
+    # } @type {another.branch.subbranch.leaf}
+    dummy: null
+
+… outputs if no other namespace- or type-definition matches …
+
+    # **Property *dummy* is of type *another.branch.subbranch.leaf***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'another.branch.subbranch.leaf', 'another.branch.subbranch.leaf'
 
 
 --------------------------------
 
 A namespace like …
 
-    {
-        "link.branch.": []
-    }
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": ["something-to-prepend-to/"]
+    ]
 
 … with an input like …
 
-    "link.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "link/branch/subbranch/leaf.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](something-to-prepend-to/root/branch/subbranch/leaf.html)***
+    dummy: null
 
-… with an input like …
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](something-to-prepend-to/root/branch/subbranch/leaf.html)'
 
-    "link.another.branch.subbranch.leaf"
+… or with an input like …
 
-… outputs:
+    # } @property dummy
+    # } @type {another.branch.subbranch.leaf}
+    dummy: null
 
-    null
+… outputs if no other namespace- or type-definition matches …
+
+    # **Property *dummy* is of type *another.branch.subbranch.leaf***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'another.branch.subbranch.leaf', 'another.branch.subbranch.leaf'
+
 
 --------------------------------
 
 A namespace like …
 
-    {
-        "root.branch.": ["something-to-prepend-to/"]
-    }
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": [
+        "http://absolute.url/to/prepend/to/",
+        "root."
+      ]
+    ]
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "something-to-prepend-to/root/branch/subbranch/leaf.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](http://absolute.url/to/prepend/to/branch/subbranch/leaf.html)***
+    dummy: null
 
-… with an input like …
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](http://absolute.url/to/prepend/to/branch/subbranch/leaf.html)'
 
-    "root.another.branch.subbranch.leaf"
-
-… outputs:
-
-    null
 
 --------------------------------
 
 A namespace like …
 
-    {
-        "root.branch.": [
-            "http://absolute.url/to/prepend/to/",
-            "root."
-        ]
-    }
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": [
+        "http://absolute.url/to/prepend/to/",
+        null,
+        ".html"
+      ]
+    ]
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "http://absolute.url/to/prepend/to/branch/subbranch/leaf.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](http://absolute.url/to/prepend/to/root/branch/subbranch/leaf.html)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](http://absolute.url/to/prepend/to/root/branch/subbranch/leaf.html)'
+
 
 --------------------------------
 
 A namespace like …
 
-    {
-        "root.branch.": [
-            "http://absolute.url/to/prepend/to/",
-            null,
-            ".html"
-        ]
-    }
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": [
+        "relative/path/to/prepend/to/",
+        null,
+        "/index.html"
+      ]
+    ]
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "http://absolute.url/to/prepend/to/root/branch/subbranch/leaf.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](relative/path/to/prepend/to/root/branch/subbranch/leaf/index.html)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](relative/path/to/prepend/to/root/branch/subbranch/leaf/index.html)'
+
+
+--------------------------------
+
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": [
+        "relative/path/to/prepend/to/file",
+        "root.branch",
+        ".html"
+        null
+      ]
+    ]
+
+… with an input like …
+
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
+
+… outputs …
+
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](path/to/prepend/to/file.subbranch.leaf.html)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](root/branch/subbranch/leaf.html)'
+
 
 --------------------------------
 
 A namespace like …
 
-    {
-        "root.branch.": [
-            "relative/path/to/prepend/to/",
-            null,
-            "/index.html"
-        ]
-    }
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": [
+        "relative/path/to/prepend/to/file-",
+        "root.branch.",
+        ".html",
+        "."
+        "-"
+      ]
+    ]
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "relative/path/to/prepend/to/root/branch/subbranch/leaf/index.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](path/to/prepend/to/file-subbranch-leaf.html)***
+    dummy: null
 
---------------------------------
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](path/to/prepend/to/file-subbranch-leaf.html)'
 
-    {
-        "root.branch.": [
-            "relative/path/to/prepend/to/file",
-            "root.branch",
-            ".html"
-            null
-        ]
-    }
-
-… with an input like …
-
-    "root.branch.subbranch.leaf"
-
-… outputs:
-
-    "path/to/prepend/to/file.subbranch.leaf.html"
 
 --------------------------------
 
 A namespace like …
 
-    {
-        "root.branch.": [
-            "relative/path/to/prepend/to/file-",
-            "root.branch.",
-            ".html",
-            "."
-            "-"
-        ]
-    }
+    LANGUAGES.language.namespace.types = [
+      "root.branch.": [
+        "relative/path/to/prepend/to/",
+        "root.",
+        ".html",
+        ".split.here.",
+        "/path/../to/subbranch/../"
+      ]
+    ]
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.split.here.leaf}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "path/to/prepend/to/file-subbranch-leaf.html"
+    # **Property *dummy* is of type *[root.branch.split.here.leaf](path/to/prepend/to/branch/path/../to/subbranch/../leaf.html)***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.split.here.leaf', '[root.branch.split.here.leaf](path/to/prepend/to/branch/path/../to/subbranch/../leaf.html)'
+
 
 --------------------------------
+## Example: skip linking a type or namespace
 
 A namespace like …
 
-    {
-        "root.branch.": [
-            "relative/path/to/prepend/to/",
-             "root.",
-             ".html",
-             ".split.here.",
-             "/path/../to/subbranch/../"
-         ]
-    }
+    LANGUAGES.language.namespace.types = [
+      "branch.to.skip": false
+      "branch.to."    : "http://…/"
+    ]
 
 … with an input like …
 
-    "root.branch.split.here.leaf"
+    # } @property dummy
+    # } @type {branch.to.link}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    "path/to/prepend/to/branch/path/../to/subbranch/../leaf.html"
+    # **Property *dummy* is of type *[branch.to.link](http://…/branch/to/link.html)***
+    dummy: null
 
-
---------------------------------
-Example: skip a namespace
---------------------------------
-
-A namespace like …
-
-    {
-        "skip.branch.": false
-    }
+    # - let's prove it …
+    test_link_type 'branch.to.link', '[branch.to.link](http://…/branch/to/link.html)'
 
 … with an input like …
 
-    "skip.branch.link"
+    # } @property dummy
+    # } @type {branch.to.skip}
+    dummy: null
 
-… outputs:
+… outputs …
 
-    false
+    # **Property *dummy* is of type *branch.to.skip***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'branch.to.skip', 'branch.to.skip'
 
 
 --------------------------------
-Example: call a function
---------------------------------
+## Example: call a function
 
 If …
 
-    LANGUAGES["language"].namespace.camelize
+    LANGUAGES.language.namespace.camelize
 
 … is a function, then a namespace like …
 
-    {
-        "root.branch." : [ "camelize", "more", "arguments" ]
-    }
+    LANGUAGES.language.namespace.types = [
+      "root.branch." : [ "camelize", "more", "arguments" ]
+    ]
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
 … calls …
 
-    LANGUAGES["language"].namespace.camelize(
-        "root.branch.subbranch.leaf",
-        LANGUAGES["language"].namespace.separator,
-        "more", "arguments"
+    LANGUAGES.language.namespace.camelize(
+      "root.branch.subbranch.leaf",
+      LANGUAGES.language.namespace.separator,
+      "more", "arguments"
     )
 
-… which outputs whatever the hypothetic `camelize`-function spits out, eg.:
+… and outputs whatever the hypothetic `camelize`-function spits out …
 
-    "More/Aruments/RootBranchSubbranchLeaf.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](More/Arguments/RootBranchSubbranchLeaf.html)***
+    dummy: null
 
-Hint: This may also be `false` to skip the link-generation.
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](More/Arguments/RootBranchSubbranchLeaf.html)'
 
-And with an input like …
+… or with an input like …
 
-    "root.another.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.to.force}
+    dummy: null
 
-… the process simply skips this input and goes on with the next namespace entry.
+… it's result is `false` to skip the link-generation, so the process outputs …
+
+    # **Property *dummy* is of type *root.branch.to.force***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.to.force', 'root.branch.to.force'
+
+… or with an input like …
+
+    # } @property dummy
+    # } @type {root.branch.to.skip}
+    dummy: null
+
+… the process simply skips this input and goes on with the next namespace entry,
+so the process outputs …
+
+    # **Property *dummy* is of type *root.branch.to.skip***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.to.skip', 'root.branch.to.skip'
 
 --------------------------------
 
 If …
 
-    LANGUAGES["language"].namespace.camelize
+    LANGUAGES.language.namespace.camelize
 
 … is a function, then a namespace like …
 
@@ -460,28 +655,46 @@ If …
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
 … calls …
 
-    LANGUAGES["language"].namespace.camelize(
-        "root.branch.subbranch.leaf",
-        LANGUAGES["language"].namespace.separator,
-        "more", "arguments"
+    LANGUAGES.language.namespace.camelize(
+      "root.branch.subbranch.leaf",
+      LANGUAGES.language.namespace.separator,
+      "more", "arguments"
     )
 
-… which outputs whatever the hypothetic `camelize`-function spits out, eg.:
+… and outputs whatever the hypothetic `camelize`-function spits out …
 
-    "More/Arguments/RootBranchSubbranchLeaf.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](More/Aruments/RootBranchSubbranchLeaf.html)***
+    dummy: null
 
-Hint: This may also be `null` if the function does not know how to handle the
-given values. In this case further processing will be applied.
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](More/Arguments/RootBranchSubbranchLeaf.html)'
+
+… or if it's result is `false` to skip the link-generation, the process outputs …
+
+    # **Property *dummy* is of type *root.branch.to.force***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.to.force', 'root.branch.to.force'
+
+… or if it's result is `null` to indicate that the function does not know how to
+handle the given type, then further processing will be applied.
+
+    # - let's prove it …
+    test_link_type 'root.branch.to.skip', 'root.branch.to.skip'
+
 
 --------------------------------
 
 If …
 
-    LANGUAGES["language"].namespace.camelize
+    LANGUAGES.language.namespace.camelize
 
 … is a function, then a namespace like …
 
@@ -489,18 +702,36 @@ If …
 
 … with an input like …
 
-    "root.branch.subbranch.leaf"
+    # } @property dummy
+    # } @type {root.branch.subbranch.leaf}
+    dummy: null
 
 … calls …
 
-    LANGUAGES["language"].namespace.camelize(
-        "root.branch.subbranch.leaf",
-        LANGUAGES["language"].namespace.separator
+    LANGUAGES.language.namespace.camelize(
+      "root.branch.subbranch.leaf",
+      LANGUAGES.language.namespace.separator
     )
 
 … which outputs whatever the hypothetic `camelize`-function spits out, eg.:
 
-    "RootBranchSubbranchLeaf.html"
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](RootBranchSubbranchLeaf.html)***
+    dummy: null
 
-Hint: This may also be `null` if the function does not know how to handle the
-given values. In this case further processing will be applied.
+    # - let's prove it …
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](RootBranchSubbranchLeaf.html)'
+
+… or if it's result is `false` to skip the link-generation, the process outputs …
+
+    # **Property *dummy* is of type *root.branch.to.force***
+    dummy: null
+
+    # - let's prove it …
+    test_link_type 'root.branch.to.force', 'root.branch.to.force'
+
+… or if it's result is `null` to indicate that the function does not know how to
+handle the given type, then further processing will be applied.
+
+    # - let's prove it …
+    test_link_type 'root.branch.to.skip', 'root.branch.to.skip'
+
