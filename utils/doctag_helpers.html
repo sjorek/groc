@@ -37,15 +37,16 @@
 
     <span class="nx">caption</span> <span class="o">?=</span> <span class="nx">type</span>
 
-    <span class="k">if</span> <span class="kc">false</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">url</span><span class="o">?</span> <span class="o">and</span> <span class="nx">namespace</span><span class="o">?</span>
+    <span class="k">if</span> <span class="kc">false</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">url</span><span class="o">?</span> <span class="o">and</span> <span class="nx">namespace</span><span class="o">?</span><span class="p">.</span><span class="nx">types</span><span class="o">?</span>
       <span class="nv">url = </span><span class="kc">null</span>
       <span class="k">for</span> <span class="nx">types</span> <span class="k">in</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">types</span>
         <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">types</span>
           <span class="nv">url = </span><span class="nx">create_type_link</span><span class="p">.</span><span class="nx">apply</span> <span class="kc">null</span><span class="p">,</span> <span class="p">[</span><span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">types</span>
         <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">types</span>
-          <span class="nv">url = </span><span class="nx">create_type_link</span><span class="p">.</span><span class="nx">apply</span> <span class="kc">null</span><span class="p">,</span> <span class="p">[</span><span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">types</span>
-        <span class="k">else</span> <span class="c1"># should be an object</span>
+          <span class="nv">url = </span><span class="nx">create_type_link</span><span class="p">.</span><span class="nx">apply</span> <span class="kc">null</span><span class="p">,</span> <span class="p">[</span><span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">,</span> <span class="nx">types</span><span class="p">]</span>
+        <span class="k">else</span> <span class="c1"># should be an Object</span>
           <span class="nv">url = </span><span class="nx">do</span> <span class="nf">-&gt;</span>
+            <span class="nv">url = </span><span class="kc">null</span>
             <span class="k">for</span> <span class="k">own</span> <span class="nx">subtype</span><span class="p">,</span> <span class="nx">types</span> <span class="k">of</span> <span class="nx">types</span>
               <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">types</span>
               <span class="k">else</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span> <span class="nx">types</span>
@@ -54,6 +55,7 @@
               <span class="k">else</span>
                 <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&#39;An unsupported namespace type-definition “#{types}” occured.&#39;</span>
             <span class="nx">url</span>
+        <span class="k">break</span> <span class="k">if</span> <span class="nx">url</span><span class="o">?</span>
 
     <span class="k">if</span> <span class="nx">url</span><span class="o">?</span>
       <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">caption</span><span class="si">}</span><span class="s">](</span><span class="si">#{</span><span class="nx">url</span><span class="si">}</span><span class="s">)&quot;</span>

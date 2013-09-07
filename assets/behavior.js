@@ -2483,13 +2483,37 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 1,
-                "title": "Language Namespaces",
-                "slug": "language-namespaces",
+                "title": "Type Namespaces",
+                "slug": "type-namespaces",
                 "isFileHeader": true
               },
               "depth": 1,
               "children": [
                 {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Important notice",
+                    "slug": "important-notice"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Objectives",
+                    "slug": "objectives"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Language definitions",
+                    "slug": "language-definitions"
+                  },
+                  "depth": 2
+                }, {
                   "type": "heading",
                   "data": {
                     "level": 2,
@@ -2517,8 +2541,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "type": "heading",
                   "data": {
                     "level": 2,
-                    "title": "Example: skip a namespace",
-                    "slug": "example-skip-a-namespace"
+                    "title": "Example: skip linking a type or namespace",
+                    "slug": "example-skip-linking-a-type-or-namespace"
                   },
                   "depth": 2
                 }, {
@@ -2532,11 +2556,35 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 }
               ]
             },
-            "title": "Language Namespaces"
+            "title": "Type Namespaces"
           },
           "depth": 2,
           "outline": [
             {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Important notice",
+                "slug": "important-notice"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Objectives",
+                "slug": "objectives"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Language definitions",
+                "slug": "language-definitions"
+              },
+              "depth": 2
+            }, {
               "type": "heading",
               "data": {
                 "level": 2,
@@ -2564,8 +2612,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 2,
-                "title": "Example: skip a namespace",
-                "slug": "example-skip-a-namespace"
+                "title": "Example: skip linking a type or namespace",
+                "slug": "example-skip-linking-a-type-or-namespace"
               },
               "depth": 2
             }, {
