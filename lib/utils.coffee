@@ -450,7 +450,7 @@ module.exports = Utils =
               # a {type} is an automatically linked {value}
               if /\{type\}/.test tag.definition.markdown
                 if fileInfo?.language.namespace?
-                  type = DOCTAGHelpers.link_type tag.value, null, null, fileInfo.language.namespace
+                  type = DOCTAGHelpers.link_type tag.value, fileInfo
                 else
                   type = tag.value
                 tag.markdown = tag.markdown.replace(/\{type\}/g, type)

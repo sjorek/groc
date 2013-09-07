@@ -123,13 +123,14 @@ module.exports = DOC_TAGS =
     # @private
     # @method markdown
     #
-    # @param  {String}   value
-    # @return {String} should be in markdown syntax
-    markdown:    (value) ->
+    # @param  {String}  value
+    # @param  {Object}  fileInfo
+    # @return {String}  should be in markdown syntax
+    markdown:    (value, fileInfo) ->
       if match = collapse_space(value).match ///^\s*(.*)#(.*)\s*$///
-        "event *#{link_type match[2]} of class *#{link_type match[1]}*"
+        "event *#{link_type match[2], fileInfo} of class *#{link_type match[1], fileInfo}*"
       else
-        "event *#{link_type value}*"
+        "event *#{link_type value, fileInfo}*"
   method:
     section:     'type'
     markdown:    'method *{type}*'
@@ -184,12 +185,13 @@ module.exports = DOC_TAGS =
     # @method markdown
     #
     # @param  {String}  value
+    # @param  {Object}   fileInfo
     # @return {String}          should be in markdown syntax
-    markdown:    (value) ->
+    markdown:    (value, fileInfo) ->
       if match = collapse_space(value).match ///^\s*(.+)#(.+)\s*$///
-        "fires #{humanize.article match[2]} *#{link_type match[2]}* event on class *#{link_type match[1]}*"
+        "fires #{humanize.article match[2]} *#{link_type match[2], fileInfo}* event on class *#{link_type match[1], fileInfo}*"
       else
-        "fires #{humanize.article value} *#{link_type value}* event"
+        "fires #{humanize.article value} *#{link_type value, fileInfo}* event"
   memberof:
     section:     'metadata'
     markdown:    'is a member of *{type}*'
@@ -218,9 +220,10 @@ module.exports = DOC_TAGS =
     # Alternative: `markdown:    'is of type *{value}*'`
     #
     # @param  {String}  value
+    # @param  {Object}   fileInfo
     # @return {String}
-    markdown:     (value) ->
-      value = translate_type convert_type value
+    markdown:     (value, fileInfo) ->
+      value = translate_type convert_type(value, fileInfo), fileInfo
       if value is 'any type'
         "is of #{value}"
       else
@@ -315,10 +318,10 @@ module.exports = DOC_TAGS =
     # @param  {Boolean}  value.isSubParam=false
     # @param  {String}   [value.defaultValue]
     # @param  {String}   [value.description]
-    #
+    # @param  {Object}   fileInfo
     # @return {String} should be in markdown syntax
-    markdown:    (value) ->
-      types = (convert_parameter_type type for type in value.types)
+    markdown:    (value, fileInfo) ->
+      types = (convert_parameter_type(type, fileInfo) for type in value.types)
       fragments = []
 
       fragments.push 'is optional' if value.isOptional
@@ -327,7 +330,7 @@ module.exports = DOC_TAGS =
       if types.length > 1
         verb = 'can'
       else
-        type = translate_parameter_type types[0]
+        type = translate_parameter_type types[0], fileInfo
         if type isnt types[0]
           verb = 'can'
           types[0] = if type is 'any type' then "of #{type}" else type
@@ -345,8 +348,8 @@ module.exports = DOC_TAGS =
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
       types:       parts[1].split /\|{1,2}/g
       description: parts[2]
-    markdown:     (value) ->
-      types = (convert_type type for type in value.types)
+    markdown:     (value, fileInfo) ->
+      types = (convert_type(type, fileInfo) for type in value.types)
       if types.length is 1
         type = translate_type types[0]
         if type isnt types[0]
@@ -359,8 +362,8 @@ module.exports = DOC_TAGS =
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
       types:       parts[1].split /\|{1,2}/g
       description: parts[2]
-    markdown:    (value) ->
-      types = ("#{humanize.article type} *#{link_type type}*" for type in value.types)
+    markdown:    (value, fileInfo) ->
+      types = ("#{humanize.article type} *#{link_type type, fileInfo}*" for type in value.types)
       "**can throw #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
   throws:        'throw'
 

@@ -43,25 +43,36 @@ Object-variant's capabilities, as documented below.
       language:
         namespace:
           types    : []
-          seperator: '.'
+          separator: '.'
           
-          # Convert “a.property.name” to “APropertyName”
+          # Convert “a.property.name” to “A/Property/Name.html”
           #
           # @public
           # @method camelize
-          # @param  {String}  type  Input property string.
-          # @return {String}  Camelized property string.
+          # @param  {String}    type        Input property string
+          # @param  {String}    separator   A namespace-separator string
+          # @param  {String...} [args]      Some payload
+          # @return {String}                Camelized URL-string
           camelize : do ->
+            
             _regexp = /(^|\.)([a-z0-9])/gi
-            _camelize = (match, dot, char) -> char.toUpperCase()
-            (type) ->
+            
+            _camelize = (match, dot, char) ->
+              "#{if dot then '/' else ''}#{char.toUpperCase()}"
+            
+            (type, separator, args...) ->
               return false if /force/.test type
               return null if /skip/.test type
-              type.replace _regexp, _camelize
+              url = args.concat(type.split separator).join(separator)
+              "#{url.replace(_regexp, _camelize)}.html"
+
+    # - define a test-counter to ease indentifing the tests below
+    test_counter = 0
 
     # - define a test-function to prove that `link_type` is working porperly
     test_link_type = (input, output) ->
-      result = link_type input, null, null, LANGUAGES.language.namespace
+      result = link_type input, LANGUAGES # ATTENTION: Here it's meant to be a faked fileInfo-object !
+      console.log "---- test no. #{++test_counter} ----"
       if result is output
         console.info colors['green']("""
     Success:
@@ -80,7 +91,6 @@ Object-variant's capabilities, as documented below.
         namespace.types :
     
     """), LANGUAGES.language.namespace.types
-      console.log '----'
 
 
 --------------------------------
@@ -460,10 +470,10 @@ A namespace like …
 
     LANGUAGES.language.namespace.types = [
       "root.branch.": [
-        "relative/path/to/prepend/to/file",
+        "path/to/prepend/to/file",
         "root.branch",
         ".html"
-        null
+        false
       ]
     ]
 
@@ -479,7 +489,7 @@ A namespace like …
     dummy: null
 
     # - let's prove it …
-    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](root/branch/subbranch/leaf.html)'
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](path/to/prepend/to/file.subbranch.leaf.html)'
 
 
 --------------------------------
@@ -488,7 +498,7 @@ A namespace like …
 
     LANGUAGES.language.namespace.types = [
       "root.branch.": [
-        "relative/path/to/prepend/to/file-",
+        "path/to/prepend/to/file-",
         "root.branch.",
         ".html",
         "."
@@ -517,7 +527,7 @@ A namespace like …
 
     LANGUAGES.language.namespace.types = [
       "root.branch.": [
-        "relative/path/to/prepend/to/",
+        "path/to/prepend/to/",
         "root.",
         ".html",
         ".split.here.",
@@ -558,11 +568,11 @@ A namespace like …
 
 … outputs …
 
-    # **Property *dummy* is of type *[branch.to.link](http://…/branch/to/link.html)***
+    # **Property *dummy* is of type *[branch.to.link](http://…/)***
     dummy: null
 
     # - let's prove it …
-    test_link_type 'branch.to.link', '[branch.to.link](http://…/branch/to/link.html)'
+    test_link_type 'branch.to.link', '[branch.to.link](http://…/)'
 
 … with an input like …
 
@@ -608,11 +618,11 @@ If …
 
 … and outputs whatever the hypothetic `camelize`-function spits out …
 
-    # **Property *dummy* is of type *[root.branch.subbranch.leaf](More/Arguments/RootBranchSubbranchLeaf.html)***
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](More/Arguments/Root/Branch/Subbranch/Leaf.html)***
     dummy: null
 
     # - let's prove it …
-    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](More/Arguments/RootBranchSubbranchLeaf.html)'
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](More/Arguments/Root/Branch/Subbranch/Leaf.html)'
 
 … or with an input like …
 
@@ -651,7 +661,9 @@ If …
 
 … is a function, then a namespace like …
 
-    [ "camelize", "more", "arguments" ]
+    LANGUAGES.language.namespace.types = [
+      [ "camelize", "more", "arguments" ]
+    ]
 
 … with an input like …
 
@@ -669,11 +681,11 @@ If …
 
 … and outputs whatever the hypothetic `camelize`-function spits out …
 
-    # **Property *dummy* is of type *[root.branch.subbranch.leaf](More/Aruments/RootBranchSubbranchLeaf.html)***
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](More/Aruments/Root/Branch/Subbranch/Leaf.html)***
     dummy: null
 
     # - let's prove it …
-    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](More/Arguments/RootBranchSubbranchLeaf.html)'
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](More/Arguments/Root/Branch/Subbranch/Leaf.html)'
 
 … or if it's result is `false` to skip the link-generation, the process outputs …
 
@@ -698,7 +710,9 @@ If …
 
 … is a function, then a namespace like …
 
-    "camelize"
+    LANGUAGES.language.namespace.types = [
+      "camelize"
+    ]
 
 … with an input like …
 
@@ -715,11 +729,11 @@ If …
 
 … which outputs whatever the hypothetic `camelize`-function spits out, eg.:
 
-    # **Property *dummy* is of type *[root.branch.subbranch.leaf](RootBranchSubbranchLeaf.html)***
+    # **Property *dummy* is of type *[root.branch.subbranch.leaf](Root/Branch/Subbranch/Leaf.html)***
     dummy: null
 
     # - let's prove it …
-    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](RootBranchSubbranchLeaf.html)'
+    test_link_type 'root.branch.subbranch.leaf', '[root.branch.subbranch.leaf](Root/Branch/Subbranch/Leaf.html)'
 
 … or if it's result is `false` to skip the link-generation, the process outputs …
 
