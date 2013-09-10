@@ -142,7 +142,7 @@ over it (permissions), as well as wanting to avoid contention.</p></div></div><d
       <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">todo</span> <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">todo</span><span class="o">?</span>
 
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">params</span><span class="o">?</span>
-        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&#39;Parameters:\n\n&#39;</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;**Parameter</span><span class="si">#{</span><span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;s&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}</span><span class="s">:**\n\n&quot;</span>
         <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">params</span>
 
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">returns</span><span class="o">?</span>
@@ -152,7 +152,16 @@ over it (permissions), as well as wanting to avoid contention.</p></div></div><d
               <span class="nx">humanize</span><span class="p">.</span><span class="nx">capitalize</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
             <span class="k">else</span>
               <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
-        <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot;&lt;br/&gt;**and**&lt;br/&gt;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;\n\n&quot;</span>
+        <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot;&lt;br/&gt;**and** &quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;\n\n&quot;</span>
+
+      <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">throws</span><span class="o">?</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="p">(</span>
+          <span class="k">for</span> <span class="nx">tag</span><span class="p">,</span> <span class="nx">index</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">throws</span>
+            <span class="k">if</span> <span class="nx">index</span> <span class="o">is</span> <span class="mi">0</span>
+              <span class="nx">humanize</span><span class="p">.</span><span class="nx">capitalize</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
+            <span class="k">else</span>
+              <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
+        <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot;&lt;br/&gt;**and** &quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;\n\n&quot;</span>
 
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">howto</span><span class="o">?</span>
         <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;How-To:\n\n</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">gutterify</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">,</span> <span class="mi">0</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">howto</span>
