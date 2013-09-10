@@ -311,7 +311,7 @@ module.exports = DOC_TAGS =
 
     # converts parsed values to markdown text
     #
-    # @private
+    # @public
     # @method markdown
     #
     # @param  {Object}   value
