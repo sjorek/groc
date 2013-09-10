@@ -294,7 +294,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             },
             "namespace": {
               "section": "metadata",
-              "markdown": "is in namespace *{type}*"
+              "markdown": "is in namespace *{value}*"
             },
             "publishes": {
               "section": "metadata"
@@ -938,7 +938,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             },
             "namespace": {
               "section": "metadata",
-              "markdown": "is in namespace *{type}*"
+              "markdown": "is in namespace *{value}*"
             },
             "publishes": {
               "section": "metadata"
@@ -1498,7 +1498,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -2058,7 +2058,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -2789,7 +2789,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             },
             "namespace": {
               "section": "metadata",
-              "markdown": "is in namespace *{type}*"
+              "markdown": "is in namespace *{value}*"
             },
             "publishes": {
               "section": "metadata"
@@ -3377,7 +3377,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             },
             "namespace": {
               "section": "metadata",
-              "markdown": "is in namespace *{type}*"
+              "markdown": "is in namespace *{value}*"
             },
             "publishes": {
               "section": "metadata"
@@ -3927,7 +3927,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -4476,7 +4476,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -5026,7 +5026,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                     },
                     "namespace": {
                       "section": "metadata",
-                      "markdown": "is in namespace *{type}*"
+                      "markdown": "is in namespace *{value}*"
                     },
                     "publishes": {
                       "section": "metadata"
@@ -5796,7 +5796,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             },
             "namespace": {
               "section": "metadata",
-              "markdown": "is in namespace *{type}*"
+              "markdown": "is in namespace *{value}*"
             },
             "publishes": {
               "section": "metadata"
@@ -6346,7 +6346,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -6932,7 +6932,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -7481,7 +7481,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -8040,7 +8040,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -8589,7 +8589,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"
@@ -9148,7 +9148,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 },
                 "namespace": {
                   "section": "metadata",
-                  "markdown": "is in namespace *{type}*"
+                  "markdown": "is in namespace *{value}*"
                 },
                 "publishes": {
                   "section": "metadata"

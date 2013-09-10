@@ -193,7 +193,7 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
     <span class="nv">markdown: </span>   <span class="s">&#39;mixes *{type}* in&#39;</span>
   <span class="nv">namespace:</span>
     <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span>
-    <span class="nv">markdown: </span>   <span class="s">&#39;is in namespace *{type}*&#39;</span>
+    <span class="nv">markdown: </span>   <span class="s">&#39;is in namespace *{value}*&#39;</span>
   <span class="nv">publishes:</span>
     <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span>
   <span class="nv">requests:</span>
@@ -245,7 +245,7 @@ Alternative: <code>markdown:    'is of type *{value}*'</code></p>
 <p>Author:</p>
 
 <ul>
-<li>Stephan Jorek  (<a href="&#109;&#97;&#105;&#108;&#x74;&#111;:&#x73;&#x74;&#x65;&#x70;&#104;&#x61;&#110;&#x2e;&#106;&#111;&#x72;&#x65;&#107;&#64;g&#109;&#97;&#105;&#108;.&#99;&#x6f;&#109;">&#x73;&#x74;&#x65;&#x70;&#104;&#x61;&#110;&#x2e;&#106;&#111;&#x72;&#x65;&#107;&#64;g&#109;&#97;&#105;&#108;.&#99;&#x6f;&#109;</a>)</li>
+<li>Stephan Jorek  (<a href="&#109;&#97;&#x69;l&#116;&#x6f;:&#115;&#116;e&#112;&#104;&#97;&#110;&#46;&#106;&#x6f;&#114;&#101;&#107;&#x40;&#103;&#109;&#97;i&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#115;&#116;e&#112;&#104;&#97;&#110;&#46;&#106;&#x6f;&#114;&#101;&#107;&#x40;&#103;&#109;&#97;i&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a>)</li>
 </ul></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value) -&gt;</span>
       <span class="nv">value = </span><span class="nx">collapse_space</span> <span class="nx">value</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>the other alternatives, as <a href="link">text</a> do not (yet) encode email
 addresses - that sucks, so we leave it as it is, for now …</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nv">author = </span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^\s*(.*)&lt;([^&gt;]+)&gt;\s*$/</span>
