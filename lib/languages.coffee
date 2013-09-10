@@ -163,14 +163,7 @@ module.exports = LANGUAGES =
   JSON          : 
     nameMatchers      : ['.json']
     pygmentsLexer     : 'json'
-    # actually this is nonsense, but we need it to render the output
-    singleLineComment : ['//']
-    # actually this is nonsense, but we need it to render the output
-    multiLineComment  : ['/*', '*', '*/']
-    # actually this is nonsense, but we need it to render the output
-    ignorePrefix      : '}'
-    # actually this is nonsense, but we need it to render the output
-    foldPrefix        : '-'
+    codeOnly          : true
 
   LaTeX               : 
     nameMatchers      : ['.tex', '.latex', '.sty']
