@@ -200,7 +200,7 @@ module.exports = DOC_TAGS =
     markdown:    'mixes *{type}* in'
   namespace:
     section:     'metadata'
-    markdown:    'is in namespace *{type}*'
+    markdown:    'is in namespace *{value}*'
   publishes:
     section:     'metadata'
   requests:
