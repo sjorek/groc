@@ -138,7 +138,7 @@ module.exports = class Default extends Base
         secondPart.push tag.markdown for tag in sections.metadata if sections.metadata?
         metaOutput += " #{humanize.joinSentence secondPart}"
 
-      output += "<span class='doc-section-header'>#{metaOutput}</span>\n\n" if metaOutput?
+      output += "<span class='doc-section-header'>#{metaOutput}</span>\n\n" if metaOutput isnt ''
 
       output += "#{tag.markdown}\n\n" for tag in sections.description if sections.description?
 
@@ -155,7 +155,7 @@ module.exports = class Default extends Base
               humanize.capitalize tag.markdown
             else
               tag.markdown
-        ).join('<br/>**and** ') + '\n\n'
+        ).join("<br/>**and**<br/>") + "\n\n"
 
       if sections.howto?
         output += "How-To:\n\n#{humanize.gutterify tag.markdown, 0}\n\n" for tag in sections.howto
@@ -170,5 +170,7 @@ module.exports = class Default extends Base
       if sections.references?
         output += "Reference#{if sections.references.length is 1 then '' else 's'}:\n\n"
         output += "#{tag.markdown}\n\n" for tag in sections.references
+
+      output += "<br/><br/>\n\n" if 0 < output.length
 
       segment.comments = output.split '\n'

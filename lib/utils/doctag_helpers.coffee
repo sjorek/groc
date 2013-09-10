@@ -173,10 +173,11 @@ module.exports = DOCTAGHelpers =
   # @method create_type_url
   #
   # @param  {String}    type
-  # @param  {Object}    namespace
+  # @param  {Object.<Function,String,Array>}  namespace
   # @param  {String}    [namespace.separator]
-  # @param  {Function}  [namespace.…]   The optional function will be called
-  #                                     like: `fn(type, separator, args...)`
+  # @param  {Array}     [namespace.types]
+  # @param  {Function}  [namespace.fn]  Functions will be called as:
+  #                                     `fn(type, separator, args...)`
   # @param  {Array|String}  definition  An array as documented below or
   #                                     the URL to return
   # @param  {String}    [definition.0]  A Function in `namespace[definition.0]`

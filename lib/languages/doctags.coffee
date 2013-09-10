@@ -247,8 +247,8 @@ module.exports = DOC_TAGS =
     # @author Stephan Jorek <stephan.jorek@gmail.com>
     markdown:    (value) ->
       value = collapse_space value
-      # the other alternatives, as [text](link) do not (yet) encode email
-      # addresses - that sucks, so we leave it as it is, for now …
+      # } the other alternatives, as [text](link) do not (yet) encode email
+      # } addresses - that sucks, so we leave it as it is, for now …
       if author = value.match /^\s*(.*)<([^>]+)>\s*$/
         "* #{author[1]} (<#{author[2]}>)"
       else
@@ -302,27 +302,29 @@ module.exports = DOC_TAGS =
     # @return {Object}
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s+(\[?)([\w\.\$]+)(?:=([^\s\]]+))?(\]?)\s*(.*)$/
-      types:        (parts[1]?.split /\|{1,2}/g)
-      isOptional:   (parts[2] == '[' and parts[5] == ']')
-      varName:      parts[3]
-      isSubParam:   /\./.test parts[3]
-      defaultValue: parts[4]
-      description:  parts[6]
+
+      types         : (parts[1]?.split /\|{1,2}/g)
+      isOptional    : (parts[2] == '[' and parts[5] == ']')
+      varName       : parts[3]
+      defaultValue  : parts[4]
+      description   : parts[6]
 
     # converts parsed values to markdown text
     #
     # @public
     # @method markdown
     #
-    # @param  {Object}   value
-    # @param  {String[]} value.types
-    # @param  {Boolean}  value.isOptional=false
-    # @param  {String}   value.varName
-    # @param  {Boolean}  value.isSubParam=false
-    # @param  {String}   [value.defaultValue]
-    # @param  {String}   [value.description]
-    # @param  {Object}   fileInfo
-    # @return {String} should be in markdown syntax
+    # @param  {Object}   value                    Result of parseValue from above
+    # @param  {String[]} value.types              A list of all types the
+    #                                             parameter allows
+    # @param  {Boolean}  value.isOptional=false   A flag indicating if the
+    #                                             parameter is optional
+    # @param  {String}   value.varName            The parameter's name
+    # @param  {String}   [value.defaultValue]     The parameter's default value
+    # @param  {String}   [value.description]      The parameter's default value
+    # @param  {Object}   fileInfo                 A fileInfo-instance created by
+    #                                             the rendering process
+    # @return {String}                            Should be in markdown syntax
     markdown:    (value, fileInfo) ->
       types = (convert_parameter_type(type, fileInfo) for type in value.types)
       fragments = []
@@ -341,7 +343,18 @@ module.exports = DOC_TAGS =
       fragments.push "#{verb} be #{humanize.joinSentence types, 'or'}"
       fragments.push "has a default value of #{value.defaultValue}" if value.defaultValue?
 
-      "#{if value.isSubParam then "    *" else "*"} ***#{value.varName}* #{humanize.joinSentence fragments}.**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      # } we assume that :
+      # } 1. parameters always appear before their sub-parameters
+      # } 2. sub-parameters always have a parent parameter
+      # } 3. the dot always divides sub-parameters into its parts
+      # } 4. parameter descriptions always ran through `collapse_space`
+      parts       = value.varName.split '.'
+      varName     = parts[parts.length - 1]
+      indent      = Array(parts.length).join('    ')
+      prefix      = if 1 < parts.length then '[…].' else ''
+      description = if value.description.length then "  \n#{indent}  #{value.description}" else ""
+      "#{indent}* #{prefix}***#{varName}* #{humanize.joinSentence fragments}**#{description}"
+
   params:        'param'
   parameters:    'param'
 
@@ -349,25 +362,33 @@ module.exports = DOC_TAGS =
     section:     'returns'
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
-      types:       parts[1].split /\|{1,2}/g
+
+      types      : parts[1].split /\|{1,2}/g
       description: parts[2]
+
     markdown:     (value, fileInfo) ->
       types = (convert_type(type, fileInfo) for type in value.types)
       if types.length is 1
         type = translate_type types[0]
         if type isnt types[0]
           types[0] = type
-      "**returns #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      description = if value.description.length then "<br/>#{value.description}<br/>" else ""
+      "**returns #{humanize.joinSentence types, 'or'}**#{description}"
+
   returns:       'return'
   throw:
     section:     'returns'
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
-      types:       parts[1].split /\|{1,2}/g
+
+      types      : parts[1].split /\|{1,2}/g
       description: parts[2]
+
     markdown:    (value, fileInfo) ->
       types = ("#{humanize.article type} *#{link_type type, fileInfo}*" for type in value.types)
-      "**can throw #{humanize.joinSentence types, 'or'}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      description = if value.description.length then "<br/>#{value.description}<br/>" else ""
+      "**can throw #{humanize.joinSentence types, 'or'}**#{description}"
+
   throws:        'throw'
 
   defaultNoValue:
