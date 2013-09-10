@@ -39,12 +39,17 @@ to make this file run without failures, if one tries to do so.</p></div></div><d
 <p>Parameters:</p>
 
 <ul>
-<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong><br/>(Input property string)</p></li>
-<li><p><strong><em>separator</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong><br/>(A namespace-separator string)</p></li>
-<li><p><strong><em>args</em> is optional and must be any number of <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">Strings</a></em>.</strong><br/>(Some payload)</p></li>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+Input property string</p></li>
+<li><p><strong><em>separator</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+A namespace-separator string</p></li>
+<li><p><strong><em>args</em> is optional and must be any number of <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">Strings</a></em></strong> <br />
+Some payload</p></li>
 </ul>
 
-<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>(Camelized URL-string)</p></div></div><div class="code"><div class="wrapper">      <span class="nv">camelize : </span><span class="nx">do</span> <span class="nf">-&gt;</span>
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>Camelized URL-string<br/></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">      <span class="nv">camelize : </span><span class="nx">do</span> <span class="nf">-&gt;</span>
         
         <span class="nv">_regexp = </span><span class="sr">/(^|\.)([a-z0-9])/gi</span>
         

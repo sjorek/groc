@@ -74,7 +74,9 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
   <span class="nx">translate_parameter_type</span>
 <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span> <span class="s">&#39;../utils/doctag_helpers&#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public module <em>DOC_TAGS</em> is an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></span></p>
 
-<p>This is a sample doc tagged block comment</p></div></div><div class="code"><div class="wrapper"><span class="nv">module.exports = DOC_TAGS =</span>
+<p>This is a sample doc tagged block comment</p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper"><span class="nv">module.exports = DOC_TAGS =</span>
   <span class="nv">description:</span>
     <span class="nv">section: </span>    <span class="s">&#39;description&#39;</span>
     <span class="nv">markdown: </span>   <span class="s">&#39;{value}&#39;</span>
@@ -113,11 +115,13 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
 <p>Parameters:</p>
 
 <ul>
-<li><p><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></p></li>
-<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em>.</strong></p></li>
+<li><p><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></li>
 </ul>
 
-<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>(should be in markdown syntax)</p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value, fileInfo) -&gt;</span>
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>should be in markdown syntax<br/></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value, fileInfo) -&gt;</span>
       <span class="k">if</span> <span class="nv">match = </span><span class="nx">collapse_space</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">match</span> <span class="sr">///^\s*(.*)#(.*)\s*$///</span>
         <span class="s">&quot;event *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s"> of class *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">*&quot;</span>
       <span class="k">else</span>
@@ -176,11 +180,13 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
 <p>Parameters:</p>
 
 <ul>
-<li><p><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></p></li>
-<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em>.</strong></p></li>
+<li><p><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></li>
 </ul>
 
-<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>(should be in markdown syntax)</p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value, fileInfo) -&gt;</span>
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>should be in markdown syntax<br/></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value, fileInfo) -&gt;</span>
       <span class="k">if</span> <span class="nv">match = </span><span class="nx">collapse_space</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">match</span> <span class="sr">///^\s*(.+)#(.+)\s*$///</span>
         <span class="s">&quot;fires </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">article</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s"> *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* event on class *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">*&quot;</span>
       <span class="k">else</span>
@@ -215,11 +221,13 @@ Alternative: <code>markdown:    'is of type *{value}*'</code></p>
 <p>Parameters:</p>
 
 <ul>
-<li><p><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></p></li>
-<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em>.</strong></p></li>
+<li><p><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></li>
 </ul>
 
-<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>    <span class="nf">(value, fileInfo) -&gt;</span>
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>    <span class="nf">(value, fileInfo) -&gt;</span>
       <span class="nv">value = </span><span class="nx">translate_type</span> <span class="nx">convert_type</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="p">),</span> <span class="nx">fileInfo</span>
       <span class="k">if</span> <span class="nx">value</span> <span class="o">is</span> <span class="s">&#39;any type&#39;</span>
         <span class="s">&quot;is of </span><span class="si">#{</span><span class="nx">value</span><span class="si">}</span><span class="s">&quot;</span>
@@ -237,18 +245,21 @@ Alternative: <code>markdown:    'is of type *{value}*'</code></p>
 <p>Parameters:</p>
 
 <ul>
-<li><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></li>
+<li><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></li>
 </ul>
 
-<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>(Should be in markdown syntax)</p>
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>Should be in markdown syntax<br/></p>
 
 <p>Author:</p>
 
 <ul>
-<li>Stephan Jorek  (<a href="&#x6d;&#97;&#x69;&#108;&#x74;&#x6f;:&#x73;&#116;e&#x70;&#x68;&#x61;&#110;&#x2e;&#106;&#111;&#114;&#x65;&#107;&#64;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;">&#x73;&#116;e&#x70;&#x68;&#x61;&#110;&#x2e;&#106;&#111;&#114;&#x65;&#107;&#64;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;</a>)</li>
-</ul></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value) -&gt;</span>
-      <span class="nv">value = </span><span class="nx">collapse_space</span> <span class="nx">value</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>the other alternatives, as <a href="link">text</a> do not (yet) encode email
-addresses - that sucks, so we leave it as it is, for now …</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nv">author = </span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^\s*(.*)&lt;([^&gt;]+)&gt;\s*$/</span>
+<li>Stephan Jorek  (<a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;:&#115;&#116;&#x65;&#x70;&#x68;a&#110;&#46;&#x6a;&#111;&#114;&#x65;&#107;&#64;&#x67;&#x6d;&#97;&#x69;l&#46;&#x63;&#111;&#109;">&#115;&#116;&#x65;&#x70;&#x68;a&#110;&#46;&#x6a;&#111;&#114;&#x65;&#107;&#64;&#x67;&#x6d;&#97;&#x69;l&#46;&#x63;&#111;&#109;</a>)</li>
+</ul>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value) -&gt;</span>
+      <span class="nv">value = </span><span class="nx">collapse_space</span> <span class="nx">value</span></div></div></div><div class="segment"><div class="code"><div class="wrapper">      <span class="c1"># the other alternatives, as [text](link) do not (yet) encode email</span>
+      <span class="c1"># addresses - that sucks, so we leave it as it is, for now …</span>
+      <span class="k">if</span> <span class="nv">author = </span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^\s*(.*)&lt;([^&gt;]+)&gt;\s*$/</span>
         <span class="s">&quot;* </span><span class="si">#{</span><span class="nx">author</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s"> (&lt;</span><span class="si">#{</span><span class="nx">author</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s">&gt;)&quot;</span>
       <span class="k">else</span>
         <span class="s">&quot;* </span><span class="si">#{</span><span class="nx">value</span><span class="si">}</span><span class="s">&quot;</span>
@@ -261,16 +272,18 @@ addresses - that sucks, so we leave it as it is, for now …</p></div></div><div
 <p>Parameters:</p>
 
 <ul>
-<li><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></li>
+<li><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></li>
 </ul>
 
-<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>(Should be in markdown syntax)</p>
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>Should be in markdown syntax<br/></p>
 
 <p>Reference:</p>
 
 <ul>
 <li><a href="https://github.com/nevir/groc">https://github.com/nevir/groc</a></li>
-</ul></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value) -&gt;</span>
+</ul>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value) -&gt;</span>
       <span class="nv">value = </span><span class="nx">collapse_space</span> <span class="nx">value</span>
       <span class="k">if</span> <span class="sr">/^\s*(\[[^\]]+\]\([^\)]+\)|&lt;[^&gt;]+&gt;|\`[^\`]+\`)\s*$/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">value</span>
         <span class="s">&quot;* </span><span class="si">#{</span><span class="nx">value</span><span class="si">}</span><span class="s">&quot;</span>
@@ -301,35 +314,46 @@ addresses - that sucks, so we leave it as it is, for now …</p></div></div><div
 <p>Parameters:</p>
 
 <ul>
-<li><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong><br/>(Text that follows @param)</li>
+<li><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+Text that follows @param</li>
 </ul>
 
-<p><strong>Returns an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></div></div><div class="code"><div class="wrapper">    <span class="nv">parseValue: </span> <span class="nf">(value) -&gt;</span>
+<p><strong>Returns an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">    <span class="nv">parseValue: </span> <span class="nf">(value) -&gt;</span>
       <span class="nv">parts = </span><span class="nx">collapse_space</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">match</span> <span class="sr">/^\{([^\}]+)\}\s+(\[?)([\w\.\$]+)(?:=([^\s\]]+))?(\]?)\s*(.*)$/</span>
-      <span class="nv">types: </span>       <span class="p">(</span><span class="nx">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/\|{1,2}/g</span><span class="p">)</span>
-      <span class="nv">isOptional: </span>  <span class="p">(</span><span class="nx">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;[&#39;</span> <span class="o">and</span> <span class="nx">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;]&#39;</span><span class="p">)</span>
-      <span class="nv">varName: </span>     <span class="nx">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-      <span class="nv">isSubParam: </span>  <span class="sr">/\./</span><span class="p">.</span><span class="nx">test</span> <span class="nx">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-      <span class="nv">defaultValue: </span><span class="nx">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-      <span class="nv">description: </span> <span class="nx">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>markdown</em></span></p>
+
+      <span class="nv">types         : </span><span class="p">(</span><span class="nx">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/\|{1,2}/g</span><span class="p">)</span>
+      <span class="nv">isOptional    : </span><span class="p">(</span><span class="nx">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;[&#39;</span> <span class="o">and</span> <span class="nx">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;]&#39;</span><span class="p">)</span>
+      <span class="nv">varName       : </span><span class="nx">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+      <span class="nv">defaultValue  : </span><span class="nx">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+      <span class="nv">description   : </span><span class="nx">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>markdown</em></span></p>
 
 <p>converts parsed values to markdown text</p>
 
 <p>Parameters:</p>
 
 <ul>
-<li><p><strong><em>value</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em>.</strong></p>
+<li><p><strong><em>value</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong> <br />
+Result of parseValue from above</p>
 
-<ul><li><p><strong><em>value.types</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em> of <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">Strings</a></em>.</strong></p></li>
-<li><p><strong><em>value.isOptional</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></em> and has a default value of false.</strong></p></li>
-<li><p><strong><em>value.varName</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></p></li>
-<li><p><strong><em>value.isSubParam</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></em> and has a default value of false.</strong></p></li>
-<li><p><strong><em>value.defaultValue</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></p></li>
-<li><p><strong><em>value.description</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>.</strong></p></li></ul></li>
-<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em>.</strong></p></li>
+<ul><li><p>[…].<strong><em>types</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em> of <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">Strings</a></em></strong> <br />
+A list of all types the parameter allows</p></li>
+<li><p>[…].<strong><em>isOptional</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></em> and has a default value of false</strong> <br />
+A flag indicating if the parameter is optional</p></li>
+<li><p>[…].<strong><em>varName</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+The parameter's name</p></li>
+<li><p>[…].<strong><em>defaultValue</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+The parameter's default value</p></li>
+<li><p>[…].<strong><em>description</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+The parameter's default value</p></li></ul></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong> <br />
+A fileInfo-instance created by the rendering process</p></li>
 </ul>
 
-<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>(should be in markdown syntax)</p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value, fileInfo) -&gt;</span>
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>Should be in markdown syntax<br/></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value, fileInfo) -&gt;</span>
       <span class="nv">types = </span><span class="p">(</span><span class="nx">convert_parameter_type</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="p">)</span> <span class="k">for</span> <span class="nx">type</span> <span class="k">in</span> <span class="nx">value</span><span class="p">.</span><span class="nx">types</span><span class="p">)</span>
       <span class="nv">fragments = </span><span class="p">[]</span>
 
@@ -345,9 +369,18 @@ addresses - that sucks, so we leave it as it is, for now …</p></div></div><div
           <span class="nx">types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">if</span> <span class="nx">type</span> <span class="o">is</span> <span class="s">&#39;any type&#39;</span> <span class="k">then</span> <span class="s">&quot;of </span><span class="si">#{</span><span class="nx">type</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">else</span> <span class="nx">type</span>
 
       <span class="nx">fragments</span><span class="p">.</span><span class="nx">push</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">verb</span><span class="si">}</span><span class="s"> be </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">types</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="si">}</span><span class="s">&quot;</span>
-      <span class="nx">fragments</span><span class="p">.</span><span class="nx">push</span> <span class="s">&quot;has a default value of </span><span class="si">#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">defaultValue</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">defaultValue</span><span class="o">?</span>
+      <span class="nx">fragments</span><span class="p">.</span><span class="nx">push</span> <span class="s">&quot;has a default value of </span><span class="si">#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">defaultValue</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">defaultValue</span><span class="o">?</span></div></div></div><div class="segment"><div class="code"><div class="wrapper">      <span class="c1"># we assume that :</span>
+      <span class="c1"># 1. parameters always appear before their sub-parameters</span>
+      <span class="c1"># 2. sub-parameters always have a parent parameter</span>
+      <span class="c1"># 3. the dot always divides sub-parameters into its parts</span>
+      <span class="c1"># 4. parameter descriptions always ran through `collapse_space`</span>
+      <span class="nv">parts       = </span><span class="nx">value</span><span class="p">.</span><span class="nx">varName</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39;.&#39;</span>
+      <span class="nv">varName     = </span><span class="nx">parts</span><span class="p">[</span><span class="nx">parts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+      <span class="nv">indent      = </span><span class="nb">Array</span><span class="p">(</span><span class="nx">parts</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&#39;    &#39;</span><span class="p">)</span>
+      <span class="nv">prefix      = </span><span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;[…].&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span>
+      <span class="nv">description = </span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&quot;  \n</span><span class="si">#{</span><span class="nx">indent</span><span class="si">}</span><span class="s">  </span><span class="si">#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+      <span class="s">&quot;</span><span class="si">#{</span><span class="nx">indent</span><span class="si">}</span><span class="s">* </span><span class="si">#{</span><span class="nx">prefix</span><span class="si">}</span><span class="s">***</span><span class="si">#{</span><span class="nx">varName</span><span class="si">}</span><span class="s">* </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">fragments</span><span class="si">}</span><span class="s">**</span><span class="si">#{</span><span class="nx">description</span><span class="si">}</span><span class="s">&quot;</span>
 
-      <span class="s">&quot;</span><span class="si">#{</span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">isSubParam</span> <span class="k">then</span> <span class="s">&quot;    *&quot;</span> <span class="k">else</span> <span class="s">&quot;*&quot;</span><span class="si">}</span><span class="s"> ***</span><span class="si">#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">varName</span><span class="si">}</span><span class="s">* </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">fragments</span><span class="si">}</span><span class="s">.**</span><span class="si">#{</span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;&lt;br/&gt;(&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="si">}#{</span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;)&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}</span><span class="s">&quot;</span>
   <span class="nv">params: </span>       <span class="s">&#39;param&#39;</span>
   <span class="nv">parameters: </span>   <span class="s">&#39;param&#39;</span>
 
@@ -355,25 +388,33 @@ addresses - that sucks, so we leave it as it is, for now …</p></div></div><div
     <span class="nv">section: </span>    <span class="s">&#39;returns&#39;</span>
     <span class="nv">parseValue: </span> <span class="nf">(value) -&gt;</span>
       <span class="nv">parts = </span><span class="nx">collapse_space</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">match</span> <span class="sr">/^\{([^\}]+)\}\s*(.*)$/</span>
-      <span class="nv">types: </span>      <span class="nx">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">split</span> <span class="sr">/\|{1,2}/g</span>
+
+      <span class="nv">types      : </span><span class="nx">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">split</span> <span class="sr">/\|{1,2}/g</span>
       <span class="nv">description: </span><span class="nx">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
     <span class="nv">markdown: </span>    <span class="nf">(value, fileInfo) -&gt;</span>
       <span class="nv">types = </span><span class="p">(</span><span class="nx">convert_type</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="p">)</span> <span class="k">for</span> <span class="nx">type</span> <span class="k">in</span> <span class="nx">value</span><span class="p">.</span><span class="nx">types</span><span class="p">)</span>
       <span class="k">if</span> <span class="nx">types</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
         <span class="nv">type = </span><span class="nx">translate_type</span> <span class="nx">types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="nx">type</span> <span class="o">isnt</span> <span class="nx">types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
           <span class="nx">types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">type</span>
-      <span class="s">&quot;**returns </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">types</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="si">}</span><span class="s">**</span><span class="si">#{</span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;&lt;br/&gt;(&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="si">}#{</span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;)&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}</span><span class="s">&quot;</span>
+      <span class="nv">description = </span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&quot;&lt;br/&gt;</span><span class="si">#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="s">&lt;br/&gt;&quot;</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+      <span class="s">&quot;**returns </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">types</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="si">}</span><span class="s">**</span><span class="si">#{</span><span class="nx">description</span><span class="si">}</span><span class="s">&quot;</span>
+
   <span class="nv">returns: </span>      <span class="s">&#39;return&#39;</span>
   <span class="k">throw</span><span class="o">:</span>
     <span class="nv">section: </span>    <span class="s">&#39;returns&#39;</span>
     <span class="nv">parseValue: </span> <span class="nf">(value) -&gt;</span>
       <span class="nv">parts = </span><span class="nx">collapse_space</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">match</span> <span class="sr">/^\{([^\}]+)\}\s*(.*)$/</span>
-      <span class="nv">types: </span>      <span class="nx">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">split</span> <span class="sr">/\|{1,2}/g</span>
+
+      <span class="nv">types      : </span><span class="nx">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">split</span> <span class="sr">/\|{1,2}/g</span>
       <span class="nv">description: </span><span class="nx">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
     <span class="nv">markdown: </span>   <span class="nf">(value, fileInfo) -&gt;</span>
       <span class="nv">types = </span><span class="p">(</span><span class="s">&quot;</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">article</span> <span class="nx">type</span><span class="si">}</span><span class="s"> *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">*&quot;</span> <span class="k">for</span> <span class="nx">type</span> <span class="k">in</span> <span class="nx">value</span><span class="p">.</span><span class="nx">types</span><span class="p">)</span>
-      <span class="s">&quot;**can throw </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">types</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="si">}</span><span class="s">**</span><span class="si">#{</span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;&lt;br/&gt;(&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="si">}#{</span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;)&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}</span><span class="s">&quot;</span>
+      <span class="nv">description = </span><span class="k">if</span> <span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&quot;&lt;br/&gt;</span><span class="si">#{</span><span class="nx">value</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="s">&lt;br/&gt;&quot;</span> <span class="k">else</span> <span class="s">&quot;&quot;</span>
+      <span class="s">&quot;**can throw </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">types</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="si">}</span><span class="s">**</span><span class="si">#{</span><span class="nx">description</span><span class="si">}</span><span class="s">&quot;</span>
+
   <span class="nv">throws: </span>       <span class="s">&#39;throw&#39;</span>
 
   <span class="nv">defaultNoValue:</span>
