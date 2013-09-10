@@ -145,7 +145,7 @@ module.exports = class Default extends Base
       output += "#{tag.markdown}\n\n" for tag in sections.todo if sections.todo?
 
       if sections.params?
-        output += 'Parameters:\n\n'
+        output += "**Parameter#{if 1 < sections.params.length then 's' else ''}:**\n\n"
         output += "#{tag.markdown}\n\n" for tag in sections.params
 
       if sections.returns?
@@ -155,7 +155,16 @@ module.exports = class Default extends Base
               humanize.capitalize tag.markdown
             else
               tag.markdown
-        ).join("<br/>**and**<br/>") + "\n\n"
+        ).join("<br/>**and** ") + "\n\n"
+
+      if sections.throws?
+        output += (
+          for tag, index in sections.throws
+            if index is 0
+              humanize.capitalize tag.markdown
+            else
+              tag.markdown
+        ).join("<br/>**and** ") + "\n\n"
 
       if sections.howto?
         output += "How-To:\n\n#{humanize.gutterify tag.markdown, 0}\n\n" for tag in sections.howto

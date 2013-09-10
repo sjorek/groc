@@ -80,11 +80,13 @@ humanize = require '../utils/humanize'
   translate_parameter_type
 } = require '../utils/doctag_helpers'
 
-# This is a sample doc tagged block comment
-#
-# @public
-# @module DOC_TAGS
-# @type   {Object}
+###
+This is a sample doc tagged block comment
+
+@public
+@module DOC_TAGS
+@type   {Object}
+###
 module.exports = DOC_TAGS =
   description:
     section:     'description'
@@ -377,7 +379,7 @@ module.exports = DOC_TAGS =
 
   returns:       'return'
   throw:
-    section:     'returns'
+    section:     'throws'
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
 
