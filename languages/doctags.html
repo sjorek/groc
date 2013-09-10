@@ -106,7 +106,7 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
     <span class="nv">section: </span>    <span class="s">&#39;type&#39;</span>
     <span class="nv">markdown: </span>   <span class="s">&#39;class *{type}*&#39;</span>
   <span class="nv">event:</span>
-    <span class="nv">section: </span>    <span class="s">&#39;type&#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-private"><div class="wrapper"><p><span class='doc-section-header'>Private method <em>markdown</em></span></p>
+    <span class="nv">section: </span>    <span class="s">&#39;type&#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>markdown</em></span></p>
 
 <p>renders <code>@event</code>-doctags</p>
 
@@ -169,7 +169,7 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
     <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span>
     <span class="nv">markdown: </span>   <span class="s">&#39;extends *{type}*&#39;</span>
   <span class="nv">fires:</span>
-    <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-private"><div class="wrapper"><p><span class='doc-section-header'>Private method <em>markdown</em></span></p>
+    <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>markdown</em></span></p>
 
 <p>renders <code>@fires</code>-doctags</p>
 
@@ -207,7 +207,7 @@ thorough introspection capabilities.</p></div></div></div><div class="segment"><
     <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span>
     <span class="nv">markdown: </span>   <span class="s">&#39;subscribes to {type}&#39;</span>
   <span class="nv">type:</span>
-    <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p><span class='doc-section-header'></span></p>
+    <span class="nv">section: </span>    <span class="s">&#39;metadata&#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>markdown</em></span></p>
 
 <p>render <code>@type</code>-doctags
 Alternative: <code>markdown:    'is of type *{value}*'</code></p>
@@ -245,7 +245,7 @@ Alternative: <code>markdown:    'is of type *{value}*'</code></p>
 <p>Author:</p>
 
 <ul>
-<li>Stephan Jorek  (<a href="&#109;&#97;&#x69;l&#116;&#x6f;:&#115;&#116;e&#112;&#104;&#97;&#110;&#46;&#106;&#x6f;&#114;&#101;&#107;&#x40;&#103;&#109;&#97;i&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#115;&#116;e&#112;&#104;&#97;&#110;&#46;&#106;&#x6f;&#114;&#101;&#107;&#x40;&#103;&#109;&#97;i&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a>)</li>
+<li>Stephan Jorek  (<a href="&#x6d;&#97;&#x69;&#108;&#x74;&#x6f;:&#x73;&#116;e&#x70;&#x68;&#x61;&#110;&#x2e;&#106;&#111;&#114;&#x65;&#107;&#64;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;">&#x73;&#116;e&#x70;&#x68;&#x61;&#110;&#x2e;&#106;&#111;&#114;&#x65;&#107;&#64;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;</a>)</li>
 </ul></div></div><div class="code"><div class="wrapper">    <span class="nv">markdown: </span>   <span class="nf">(value) -&gt;</span>
       <span class="nv">value = </span><span class="nx">collapse_space</span> <span class="nx">value</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>the other alternatives, as <a href="link">text</a> do not (yet) encode email
 addresses - that sucks, so we leave it as it is, for now …</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nv">author = </span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^\s*(.*)&lt;([^&gt;]+)&gt;\s*$/</span>
@@ -311,7 +311,7 @@ addresses - that sucks, so we leave it as it is, for now …</p></div></div><div
       <span class="nv">varName: </span>     <span class="nx">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
       <span class="nv">isSubParam: </span>  <span class="sr">/\./</span><span class="p">.</span><span class="nx">test</span> <span class="nx">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
       <span class="nv">defaultValue: </span><span class="nx">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-      <span class="nv">description: </span> <span class="nx">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-private"><div class="wrapper"><p><span class='doc-section-header'>Private method <em>markdown</em></span></p>
+      <span class="nv">description: </span> <span class="nx">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>markdown</em></span></p>
 
 <p>converts parsed values to markdown text</p>
 
