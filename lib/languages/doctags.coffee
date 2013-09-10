@@ -120,7 +120,7 @@ module.exports = DOC_TAGS =
     section:     'type'
     # renders `@event`-doctags
     #
-    # @private
+    # @public
     # @method markdown
     #
     # @param  {String}  value
@@ -181,7 +181,7 @@ module.exports = DOC_TAGS =
     section:     'metadata'
     # renders `@fires`-doctags
     #
-    # @private
+    # @public
     # @method markdown
     #
     # @param  {String}  value
@@ -218,6 +218,9 @@ module.exports = DOC_TAGS =
     # render `@type`-doctags
     #
     # Alternative: `markdown:    'is of type *{value}*'`
+    #
+    # @public
+    # @method markdown
     #
     # @param  {String}  value
     # @param  {Object}   fileInfo
