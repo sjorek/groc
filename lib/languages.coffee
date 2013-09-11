@@ -160,7 +160,7 @@ module.exports = LANGUAGES =
     ignorePrefix      : '}'
     foldPrefix        : '-'
 
-  JSON          : 
+  JSON                :
     nameMatchers      : ['.json']
     pygmentsLexer     : 'json'
     codeOnly          : true
