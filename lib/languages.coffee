@@ -1,6 +1,7 @@
 # # Supported Languages
 
 module.exports = LANGUAGES =
+
   Markdown            : 
     nameMatchers      : ['.md']
     commentsOnly      : true
@@ -10,7 +11,7 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'c'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   CSharp              : 
     nameMatchers      : ['.cs']
@@ -18,7 +19,7 @@ module.exports = LANGUAGES =
     singleLineComment : ['//']
     multiLineComment  : ['/*', '*', '*/']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '.'
       types           : []
@@ -28,7 +29,7 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'cpp'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '::'
       types           : []
@@ -38,7 +39,7 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'clojure'
     singleLineComment : [';;']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '.'
       types           : []
@@ -61,7 +62,7 @@ module.exports = LANGUAGES =
     ]
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     doctags           : require './doctags'
     namespace         :
       separator       : '.'
@@ -90,7 +91,7 @@ module.exports = LANGUAGES =
     ]
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     doctags           : require './doctags'
     namespace         :
       separator       : '.'
@@ -104,7 +105,7 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'go'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Handlebars          : 
     nameMatchers      : ['.handlebars', '.hbs']
@@ -114,28 +115,28 @@ module.exports = LANGUAGES =
       '{{!',  '', '}}'   # Actual handlebars block comments
     ]
     ignorePrefix      : '#'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Haskell             : 
     nameMatchers      : ['.hs']
     pygmentsLexer     : 'haskell'
     singleLineComment : ['--']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Jade                : 
     nameMatchers      : ['.jade']
     pygmentsLexer     : 'jade'
     singleLineComment : ['//', '//-']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Java                : 
     nameMatchers      : ['.java']
     pygmentsLexer     : 'java'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '.'
       types           : []
@@ -146,7 +147,7 @@ module.exports = LANGUAGES =
     singleLineComment : ['//']
     multiLineComment  : ['/*', '*', '*/']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     doctags           : require './doctags'
     namespace         :
       separator       : '.'
@@ -160,7 +161,7 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'javascript'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   JSON                :
     nameMatchers      : ['.json']
@@ -172,21 +173,21 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'latex'
     singleLineComment : ['%']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   LESS                : 
     nameMatchers      : ['.less']
     pygmentsLexer     : 'sass' # TODO: is there a less lexer? No. Maybe in the future.
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Lua                 : 
     nameMatchers      : ['.lua']
     pygmentsLexer     : 'lua'
     singleLineComment : ['--']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '.'
       types           : []
@@ -196,28 +197,28 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'make'
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Mustache            : 
     nameMatchers      : ['.mustache']
     pygmentsLexer     : 'html' # TODO: is there a handlebars/mustache lexer? Nope. Lame.
     multiLineComment  : ['{{!', '', '}}']
     ignorePrefix      : '#'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   'Objective-C'       : 
     nameMatchers      : ['.m', '.mm']
     pygmentsLexer     : 'objc'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Perl                : 
     nameMatchers      : ['.pl', '.pm']
     pygmentsLexer     : 'perl'
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '::'
       types           : []
@@ -227,7 +228,7 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'php'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '\\'
       types           : []
@@ -237,14 +238,14 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'puppet'
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Python              : 
     nameMatchers      : ['.py']
     pygmentsLexer     : 'python'
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '.'
       types           : []
@@ -254,7 +255,7 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'ruby'
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
     namespace         :
       separator       : '.'
       types           : []
@@ -264,32 +265,32 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'sass'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   SCSS                : 
     nameMatchers      : ['.scss']
     pygmentsLexer     : 'scss'
     singleLineComment : ['//']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   Shell               : 
     nameMatchers      : ['.sh']
     pygmentsLexer     : 'sh'
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   SQL                 : 
     nameMatchers      : ['.sql']
     pygmentsLexer     : 'sql'
     singleLineComment : ['--']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
 
   YAML                : 
     nameMatchers      : ['.yml', '.yaml']
     pygmentsLexer     : 'yaml'
     singleLineComment : ['#']
     ignorePrefix      : '}'
-    foldPrefix        : '-'
+    foldPrefix        : '~'
