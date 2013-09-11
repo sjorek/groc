@@ -69,7 +69,7 @@
 # _@version_  
 
 # -imports
-humanize = require '../utils/humanize'
+humanize = require './utils/humanize'
 
 {
   collapse_space,
@@ -78,7 +78,7 @@ humanize = require '../utils/humanize'
   translate_type,
   convert_parameter_type,
   translate_parameter_type
-} = require '../utils/doctag_helpers'
+} = require './utils/doctag_helpers'
 
 ###
 This is a sample doc tagged block comment

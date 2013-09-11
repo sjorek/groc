@@ -1,8 +1,8 @@
-Type Namespaces
+Supported Namespaces
 ================================
 
     # - import the type-link generating function for testing purposes
-    {link_type} = require '../utils/doctag_helpers'
+    {link_type} = require './utils/doctag_helpers'
     
     # - … and some pretty colors
     colors = require 'colors'

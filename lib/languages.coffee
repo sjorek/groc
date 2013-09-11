@@ -60,12 +60,12 @@ module.exports = LANGUAGES =
     singleLineComment : ['#']
     ignorePrefix      : '}'
     foldPrefix        : '-'
-    doctags           : require './languages/doctags'
+    doctags           : require './doctags'
     namespace         :
       separator       : '.'
       types           : [
-        require './languages/namespace/javascript_globals.json'
-        require './languages/namespace/javascript_dom.json'
+        require './namespace/javascript_globals.json'
+        require './namespace/javascript_dom.json'
       ]
 
   # @see http://ashkenas.com/literate-coffeescript
@@ -89,12 +89,12 @@ module.exports = LANGUAGES =
     singleLineComment : ['#']
     ignorePrefix      : '}'
     foldPrefix        : '-'
-    doctags           : require './languages/doctags'
+    doctags           : require './doctags'
     namespace         :
       separator       : '.'
       types           : [
-        require './languages/namespace/javascript_globals.json'
-        require './languages/namespace/javascript_dom.json'
+        require './namespace/javascript_globals.json'
+        require './namespace/javascript_dom.json'
       ]
 
   Go                  : 
@@ -145,12 +145,12 @@ module.exports = LANGUAGES =
     multiLineComment  : ['/*', '*', '*/']
     ignorePrefix      : '}'
     foldPrefix        : '-'
-    doctags           : require './languages/doctags'
+    doctags           : require './doctags'
     namespace         :
       separator       : '.'
       types           : [
-        require './languages/namespace/javascript_globals.json'
-        require './languages/namespace/javascript_dom.json'
+        require './namespace/javascript_globals.json'
+        require './namespace/javascript_dom.json'
       ]
 
   Jake                : 
