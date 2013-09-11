@@ -47,15 +47,17 @@ module.exports = LANGUAGES =
     nameMatchers      : ['.coffee', 'Cakefile']
     pygmentsLexer     : 'coffee-script'
     multiLineComment  : [
-      # The block-comment line-matcher `' '` also works on lines not starting
-      # with space-chars, because we add unmatched lines to the comments once
-      # we are in a multi-line comment-block and until we left them …
-      '###',     ' ',    '###'
+      # This kind of comment is not yet enabled here, but works, if foldPrefix
+      # has been set to something else than '-'.  Then we can use '-' for
+      # bullet-lists instead of '*' to distinguish bullet-lists from this kind
+      # of block comments.  A patch to switch from '-' to '~' has been prepared
+      # and waits for merging.
+      # } '###*',    ' *',   '###',
 
-      # not implemented here, but works, if you set foldPrefix to something
-      # else than '-'.  Then we can use '-' for bullet-lists instead of '*' to
-      # distinguish bullet-lists from this kind of block comments.
-      #} '###*',    ' *',   '###',
+      # The block-comment line-matcher `'#'` also works on lines not starting
+      # with `'#'`, because we add unmatched lines to the comments once we are
+      # in a multi-line comment-block and until we left them …
+      '###',     '#',    '###'
     ]
     singleLineComment : ['#']
     ignorePrefix      : '}'
