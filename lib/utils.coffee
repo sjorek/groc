@@ -101,13 +101,13 @@ module.exports = Utils =
     # Special case: If the language is code-only, we can shorten the process
     return [new @Segment lines, []] if language.codeOnly
 
-    # this flag is used to signal literate source code
     segments = []
     currSegment = new @Segment
 
     # Enforced whitespace after the comment token
     whitespaceMatch = if options.requireWhitespaceAfterToken then '\\s' else '\\s?'
 
+    # this flag is used to signal literate source code
     isLiterateCode = false
     if language.literateCodeLines?
       isLiterateCode = true
