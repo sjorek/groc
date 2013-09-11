@@ -33,8 +33,8 @@ module.exports = LANGUAGES =
       separator       : '::'
       types           : []
 
-  Clojure             : 
-    nameMatchers      : ['.clj']
+  Clojure             :
+    nameMatchers      : ['.clj', '.cljs']
     pygmentsLexer     : 'clojure'
     singleLineComment : [';;']
     ignorePrefix      : '}'
