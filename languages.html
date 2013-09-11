@@ -31,8 +31,8 @@
       <span class="nv">separator       : </span><span class="s">&#39;::&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
 
-  <span class="nv">Clojure             : </span>
-    <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.clj&#39;</span><span class="p">]</span>
+  <span class="nv">Clojure             :</span>
+    <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.clj&#39;</span><span class="p">,</span> <span class="s">&#39;.cljs&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;clojure&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;;;&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
@@ -44,21 +44,23 @@
   <span class="nv">CoffeeScript        : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.coffee&#39;</span><span class="p">,</span> <span class="s">&#39;Cakefile&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;coffee-script&#39;</span>
-    <span class="nv">multiLineComment  : </span><span class="p">[</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The block-comment line-matcher <code>' '</code> also works on lines not starting
-with space-chars, because we add unmatched lines to the comments once
-we are in a multi-line comment-block and until we left them …</p></div></div><div class="code"><div class="wrapper">      <span class="s">&#39;###&#39;</span><span class="p">,</span>     <span class="s">&#39; &#39;</span><span class="p">,</span>    <span class="s">&#39;###&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>not implemented here, but works, if you set foldPrefix to something
-else than '-'.  Then we can use '-' for bullet-lists instead of '*' to
-distinguish bullet-lists from this kind of block comments.</p></div></div><div class="code"><div class="wrapper">      <span class="c1">#} &#39;###*&#39;,    &#39; *&#39;,   &#39;###&#39;,</span>
+    <span class="nv">multiLineComment  : </span><span class="p">[</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This kind of comment is not yet enabled here, but works, if foldPrefix
+has been set to something else than '-'.  Then we can use '-' for
+bullet-lists instead of '*' to distinguish bullet-lists from this kind
+of block comments.  A patch to switch from '-' to '~' has been prepared
+and waits for merging.</p></div></div><div class="code"><div class="wrapper">      <span class="c1"># &#39;###*&#39;,    &#39; *&#39;,   &#39;###&#39;,</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The block-comment line-matcher <code>'#'</code> also works on lines not starting
+with <code>'#'</code>, because we add unmatched lines to the comments once we are
+in a multi-line comment-block and until we left them …</p></div></div><div class="code"><div class="wrapper">      <span class="s">&#39;###&#39;</span><span class="p">,</span>     <span class="s">&#39;#&#39;</span><span class="p">,</span>    <span class="s">&#39;###&#39;</span>
     <span class="p">]</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
     <span class="nv">foldPrefix        : </span><span class="s">&#39;-&#39;</span>
-    <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./languages/doctags&#39;</span>
+    <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./doctags&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[</span>
-        <span class="nx">require</span> <span class="s">&#39;./languages/namespace/javascript_globals.json&#39;</span>
-        <span class="nx">require</span> <span class="s">&#39;./languages/namespace/javascript_dom.json&#39;</span>
+        <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_globals.json&#39;</span>
+        <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_dom.json&#39;</span>
       <span class="p">]</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>References:</p>
 
 <ul>
@@ -78,12 +80,12 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
     <span class="nv">foldPrefix        : </span><span class="s">&#39;-&#39;</span>
-    <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./languages/doctags&#39;</span>
+    <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./doctags&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[</span>
-        <span class="nx">require</span> <span class="s">&#39;./languages/namespace/javascript_globals.json&#39;</span>
-        <span class="nx">require</span> <span class="s">&#39;./languages/namespace/javascript_dom.json&#39;</span>
+        <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_globals.json&#39;</span>
+        <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_dom.json&#39;</span>
       <span class="p">]</span>
 
   <span class="nv">Go                  : </span>
@@ -134,12 +136,12 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">multiLineComment  : </span><span class="p">[</span><span class="s">&#39;/*&#39;</span><span class="p">,</span> <span class="s">&#39;*&#39;</span><span class="p">,</span> <span class="s">&#39;*/&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
     <span class="nv">foldPrefix        : </span><span class="s">&#39;-&#39;</span>
-    <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./languages/doctags&#39;</span>
+    <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./doctags&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[</span>
-        <span class="nx">require</span> <span class="s">&#39;./languages/namespace/javascript_globals.json&#39;</span>
-        <span class="nx">require</span> <span class="s">&#39;./languages/namespace/javascript_dom.json&#39;</span>
+        <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_globals.json&#39;</span>
+        <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_dom.json&#39;</span>
       <span class="p">]</span>
 
   <span class="nv">Jake                : </span>
@@ -149,7 +151,7 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
     <span class="nv">foldPrefix        : </span><span class="s">&#39;-&#39;</span>
 
-  <span class="nv">JSON          : </span>
+  <span class="nv">JSON                :</span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.json&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;json&#39;</span>
     <span class="nv">codeOnly          : </span><span class="kc">true</span>

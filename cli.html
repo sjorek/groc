@@ -72,7 +72,7 @@ impression with nicely formatted and readable output.</p></div></div><div class=
       <span class="nv">alias                  : </span><span class="s">&#39;i&#39;</span>
       <span class="nv">default                : </span><span class="s">&#39;README.md&#39;</span>
 
-    <span class="nv">title                    :</span>
+    <span class="s">&#39;index-page-title&#39;</span>       <span class="o">:</span>
       <span class="nv">describe               : </span><span class="s">&quot;The index&#39;s page title in the generated documentation.&quot;</span>
       <span class="nv">default                : </span><span class="s">&#39;index&#39;</span>
 
@@ -159,7 +159,7 @@ generate its documentation.</p></div></div><div class="code"><div class="wrapper
   <span class="nv">project.files = </span><span class="p">(</span><span class="nx">f</span> <span class="k">for</span> <span class="nx">f</span> <span class="k">of</span> <span class="nx">files</span><span class="p">)</span>
   <span class="nv">project.stripPrefixes = </span><span class="nx">argv</span><span class="p">.</span><span class="nx">strip</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>Project#generate</code> can take some options, such as which style to use.  Since we're generating
 differently depending on whether or not github is enabled, let's set those up now:</p></div></div><div class="code"><div class="wrapper">  <span class="nv">options =</span>
-    <span class="nv">title: </span><span class="nx">argv</span><span class="p">.</span><span class="nx">title</span>
+    <span class="nv">indexPageTitle: </span><span class="nx">argv</span><span class="p">[</span><span class="s">&#39;index-page-title&#39;</span><span class="p">]</span>
     <span class="nv">style: </span><span class="nx">styles</span><span class="p">[</span><span class="nx">argv</span><span class="p">.</span><span class="nx">style</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Good to go!</p></div></div><div class="code"><div class="wrapper">  <span class="k">unless</span> <span class="nx">argv</span><span class="p">.</span><span class="nx">github</span>
     <span class="nx">project</span><span class="p">.</span><span class="nx">generate</span> <span class="nx">options</span><span class="p">,</span> <span class="nf">(error) -&gt;</span>
       <span class="nx">callback</span> <span class="nx">error</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="github">GitHub</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper">  <span class="k">else</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We want to be able to annotate generated documentation with the project's GitHub URL.  This is
