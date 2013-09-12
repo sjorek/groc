@@ -55,21 +55,23 @@ user.  So we wrap git and do error handling ourselves...</p></div></div><div cla
 
 <span class="k">else</span>
 <span class="k">  </span>exec_git checkout <span class="nv">$TARGET_BRANCH</span>
-<span class="k">fi</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We want to keep in complete sync (deleting old docs, or cruft from previous documentation output)</p></div></div><div class="code"><div class="wrapper">exec_git ls-files | xargs rm</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This solution fails to copy .dot-files, therefore we utilize <code>find</code> which in
-turn makes the <code>if</code>-statement obsolete
-    cp -Rf $DOCS<em>PATH/* .
-   if [[ -e $DOCS</em>PATH/.gitignore ]]; then
-     cp $DOCS<em>PATH/.gitignore .gitignore
-   fi
-Alternative solution (a) using *tar* <br />
-    ( cd $DOCS</em>PATH ; tar --excude .git cf - . ) | tar xkpvvf -
-tar options legend: <br />
-- <em>c</em>reate <br />
-- <em>f</em>ile <br />
-- e<em>x</em>tract <br />
-- <em>k</em> ~ don't overwrite existing <br />
-- <em>v</em>erbose <br />
-- <em>p</em>reserve file attributes, permission, ownership, ACLs etc.  </p></div></div><div class="code"><div class="wrapper">find <span class="nv">$DOCS_PATH</span> -maxdepth 1 -not -path <span class="nv">$DOCS_PATH</span> -and -not -path <span class="nv">$DOCS_PATH</span>/.git -exec cp -Rf <span class="s2">&quot;{}&quot;</span> . <span class="se">\;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Do nothing unless we actually have changes</p></div></div><div class="code"><div class="wrapper"><span class="k">if</span> <span class="o">[[</span> <span class="sb">`</span>git status -s<span class="sb">`</span> !<span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">fi</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We want to keep in complete sync (deleting old docs, or cruft from previous documentation output)</p></div></div><div class="code"><div class="wrapper">exec_git ls-files | xargs rm</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The previous solution below fails to copy .dot-files, therefore we utilize
+<code>find</code>, which in turn also made the <code>if</code>-statement obsolete.</p>
+
+<blockquote>
+<pre><code>cp -Rf $DOCS_PATH/* .
+if [[ -e $DOCS_PATH/.gitignore ]]; then
+  cp $DOCS_PATH/.gitignore .gitignore
+fi
+</code></pre>
+</blockquote>
+
+<p>Alternative solution using <code>tar</code></p>
+
+<blockquote>
+<pre><code>( cd $DOCS_PATH ; tar --excude .git cf - . ) | tar xkpvvf -
+</code></pre>
+</blockquote></div></div><div class="code"><div class="wrapper">find <span class="nv">$DOCS_PATH</span> -maxdepth 1 -not -path <span class="nv">$DOCS_PATH</span> -and -not -path <span class="nv">$DOCS_PATH</span>/.git -exec cp -Rf <span class="s2">&quot;{}&quot;</span> . <span class="se">\;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Do nothing unless we actually have changes</p></div></div><div class="code"><div class="wrapper"><span class="k">if</span> <span class="o">[[</span> <span class="sb">`</span>git status -s<span class="sb">`</span> !<span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
 <span class="k">  </span>exec_git add -A
   exec_git commit -m <span class="s2">&quot;Generated documentation for $CURRENT_COMMIT&quot;</span>
   exec_git push <span class="nv">$TARGET_REMOTE</span> <span class="nv">$TARGET_BRANCH</span>
