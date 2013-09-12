@@ -9,7 +9,7 @@
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;c&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">CSharp              : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.cs&#39;</span><span class="p">]</span>
@@ -17,7 +17,7 @@
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">multiLineComment  : </span><span class="p">[</span><span class="s">&#39;/*&#39;</span><span class="p">,</span> <span class="s">&#39;*&#39;</span><span class="p">,</span> <span class="s">&#39;*/&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -27,7 +27,7 @@
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;cpp&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;::&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -37,7 +37,7 @@
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;clojure&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;;;&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -55,7 +55,7 @@ in a multi-line comment-block and until we left them …</p></div></div><div cla
     <span class="p">]</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./doctags&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
@@ -80,7 +80,7 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="p">]</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./doctags&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
@@ -94,7 +94,7 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;go&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Handlebars          : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.handlebars&#39;</span><span class="p">,</span> <span class="s">&#39;.hbs&#39;</span><span class="p">]</span>
@@ -104,28 +104,28 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
       <span class="s">&#39;{{!&#39;</span><span class="p">,</span>  <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;}}&#39;</span>   <span class="c1"># Actual handlebars block comments</span>
     <span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;#&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Haskell             : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.hs&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;haskell&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;--&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Jade                : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.jade&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;jade&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">,</span> <span class="s">&#39;//-&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Java                : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.java&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;java&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -136,7 +136,7 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">multiLineComment  : </span><span class="p">[</span><span class="s">&#39;/*&#39;</span><span class="p">,</span> <span class="s">&#39;*&#39;</span><span class="p">,</span> <span class="s">&#39;*/&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">doctags           : </span><span class="nx">require</span> <span class="s">&#39;./doctags&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
@@ -150,7 +150,7 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;javascript&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">JSON                :</span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.json&#39;</span><span class="p">]</span>
@@ -162,21 +162,21 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;latex&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;%&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">LESS                : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.less&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;sass&#39;</span> <span class="c1"># TODO: is there a less lexer? No. Maybe in the future.</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Lua                 : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.lua&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;lua&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;--&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -186,28 +186,28 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;make&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Mustache            : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.mustache&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;html&#39;</span> <span class="c1"># TODO: is there a handlebars/mustache lexer? Nope. Lame.</span>
     <span class="nv">multiLineComment  : </span><span class="p">[</span><span class="s">&#39;{{!&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;}}&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;#&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="s">&#39;Objective-C&#39;</span>       <span class="o">:</span> 
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.m&#39;</span><span class="p">,</span> <span class="s">&#39;.mm&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;objc&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Perl                : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.pl&#39;</span><span class="p">,</span> <span class="s">&#39;.pm&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;perl&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;::&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -217,7 +217,7 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;php&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;\\&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -227,14 +227,14 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;puppet&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Python              : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.py&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;python&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -244,7 +244,7 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;ruby&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
     <span class="nv">namespace         :</span>
       <span class="nv">separator       : </span><span class="s">&#39;.&#39;</span>
       <span class="nv">types           : </span><span class="p">[]</span>
@@ -254,32 +254,32 @@ distinguish bullet-lists from this kind of block comments.</p></div></div><div c
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;sass&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">SCSS                : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.scss&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;scss&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;//&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">Shell               : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.sh&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;sh&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">SQL                 : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.sql&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;sql&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;--&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span>
 
   <span class="nv">YAML                : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.yml&#39;</span><span class="p">,</span> <span class="s">&#39;.yaml&#39;</span><span class="p">]</span>
     <span class="nv">pygmentsLexer     : </span><span class="s">&#39;yaml&#39;</span>
     <span class="nv">singleLineComment : </span><span class="p">[</span><span class="s">&#39;#&#39;</span><span class="p">]</span>
     <span class="nv">ignorePrefix      : </span><span class="s">&#39;}&#39;</span>
-    <span class="nv">foldPrefix        : </span><span class="s">&#39;~&#39;</span></div></div></div></div></body></html>
+    <span class="nv">foldPrefix        : </span><span class="s">&#39;^&#39;</span></div></div></div></div></body></html>
