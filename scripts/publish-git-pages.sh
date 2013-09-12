@@ -77,25 +77,17 @@ fi
 # We want to keep in complete sync (deleting old docs, or cruft from previous documentation output)
 exec_git ls-files | xargs rm
 
-# This solution fails to copy .dot-files, therefore we utilize `find` which in
-# turn makes the `if`-statement obsolete
-# 
-#     cp -Rf $DOCS_PATH/* .
-#    if [[ -e $DOCS_PATH/.gitignore ]]; then
-#      cp $DOCS_PATH/.gitignore .gitignore
-#    fi
-# 
-# Alternative solution (a) using *tar*  
-# 
-#     ( cd $DOCS_PATH ; tar --excude .git cf - . ) | tar xkpvvf -
-# 
-# tar options legend:  
-# - _c_reate  
-# - _f_ile  
-# - e_x_tract  
-# - _k_ ~ don't overwrite existing  
-# - _v_erbose  
-# - _p_reserve file attributes, permission, ownership, ACLs etc.  
+# The previous solution below fails to copy .dot-files, therefore we utilize
+# `find`, which in turn also made the `if`-statement obsolete.
+#
+# >     cp -Rf $DOCS_PATH/* .
+# >     if [[ -e $DOCS_PATH/.gitignore ]]; then
+# >       cp $DOCS_PATH/.gitignore .gitignore
+# >     fi
+#   
+# Alternative solution using `tar`
+#
+# >     ( cd $DOCS_PATH ; tar --excude .git cf - . ) | tar xkpvvf -
 #
 find $DOCS_PATH -maxdepth 1 -not -path $DOCS_PATH -and -not -path $DOCS_PATH/.git -exec cp -Rf "{}" . \;
 
