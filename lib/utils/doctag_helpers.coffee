@@ -1,7 +1,7 @@
 # Doctag Helpers
 # ================================
 
-# -imports …
+# ^ imports …
 _ = require 'underscore'
 humanize = require './humanize'
 

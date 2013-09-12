@@ -68,7 +68,7 @@
 # _@variation_  
 # _@version_  
 
-# -imports
+# ^ imports
 humanize = require './utils/humanize'
 
 {
