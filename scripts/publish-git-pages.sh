@@ -97,7 +97,7 @@ exec_git ls-files | xargs rm
 # - _v_erbose  
 # - _p_reserve file attributes, permission, ownership, ACLs etc.  
 #
-find $DOCS_PATH -maxdepth 1 -not -path $DOCS_PATH -and -not -path $DOCS_PATH/.git -exec cp -Rf "{}" .
+find $DOCS_PATH -maxdepth 1 -not -path $DOCS_PATH -and -not -path $DOCS_PATH/.git -exec cp -Rf "{}" . \;
 
 # Do nothing unless we actually have changes
 if [[ `git status -s` != "" ]]; then
