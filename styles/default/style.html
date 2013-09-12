@@ -115,7 +115,6 @@ Scaling starts once the toolbar is flush with the main column</p></div></div><di
     <span class="na">margin</span><span class="o">:</span> <span class="mi">0</span> <span class="no">auto</span>
 
   <span class="nt">hr</span>
-    <span class="na">padding</span><span class="o">:</span> <span class="mi">0</span><span class="err">;</span><span class="no">margin</span><span class="o">:</span><span class="mi">0</span><span class="err">;</span><span class="no">border</span><span class="o">:</span> <span class="mi">0</span><span class="err">;</span><span class="no">height</span><span class="o">:</span> <span class="mi">1</span><span class="kt">px</span><span class="err">;</span><span class="no">border</span><span class="o">:</span> <span class="no">none</span><span class="err">;</span>
     <span class="na">padding</span><span class="o">:</span> <span class="mi">0</span>
     <span class="na">margin</span><span class="o">:</span> <span class="mi">0</span>
     <span class="na">border</span><span class="o">:</span> <span class="mi">0</span>
@@ -143,7 +142,14 @@ Scaling starts once the toolbar is flush with the main column</p></div></div><di
       <span class="na">overflow-x</span><span class="o">:</span> <span class="no">auto</span>
 
       <span class="nc">.wrapper</span>
-        <span class="na">display</span><span class="o">:</span> <span class="no">inline</span><span class="o">-</span><span class="no">block</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="navigation">Navigation</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="na">$tools-padding</span><span class="o">:</span> <span class="p">(</span><span class="nv">$tools-height</span> <span class="o">-</span> <span class="mi">1</span><span class="kt">em</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="na">display</span><span class="o">:</span> <span class="no">inline</span><span class="o">-</span><span class="no">block</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Fit the meta info into on screen, removing any overflow it creates</p></div></div><div class="code"><div class="wrapper">  <span class="nn">#meta</span>
+    <span class="na">position</span><span class="o">:</span>   <span class="no">static</span>
+    <span class="na">margin</span><span class="o">:</span>     <span class="nv">$common-margin</span> <span class="o">*</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+    <span class="na">overflow-y</span><span class="o">:</span> <span class="no">hidden</span>
+    <span class="na">overflow-x</span><span class="o">:</span> <span class="no">auto</span>
+
+    <span class="nc">.file-path</span>
+      <span class="na">display</span><span class="o">:</span> <span class="no">inline</span><span class="o">-</span><span class="no">block</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="navigation">Navigation</h2></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="na">$tools-padding</span><span class="o">:</span> <span class="p">(</span><span class="nv">$tools-height</span> <span class="o">-</span> <span class="mi">1</span><span class="kt">em</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 
 <span class="nt">nav</span>
   <span class="na">position</span><span class="o">:</span> <span class="no">fixed</span>
