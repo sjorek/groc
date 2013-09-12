@@ -10,7 +10,7 @@ humanize = require './humanize'
 #
 # @package  DOCTAGHelpers
 # @type     {Object}
-# @see [Supported Doctags](../languages/doctags.html)
+# @see [Supported Doctags](../languages/doc_tags.html)
 module.exports = DOCTAGHelpers =
 
   # * * *
