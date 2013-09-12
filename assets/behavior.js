@@ -183,7 +183,18 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "projectPath": ".groc.json",
         "targetPath": ".groc",
         "pageTitle": ".groc",
-        "title": ".groc"
+        "markdown": "# Project configuration\n\nIf not explicitly excluded, every commandline-option as described in [Command \nLine Interface](cli.html) or and summarized via `groc -h`  can be given to ease\nthe (re-)generation of the project's documentation. Arguments must be specified\nvia a configuration file in the current directory named `.groc.json` (like this\nfile). It should contain a mapping between groc's option names and their values,\nhence you must preserve the option's type.\n\n",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Project configuration",
+            "slug": "project-configuration",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "Project configuration"
       },
       "depth": 1,
       "outline": []
@@ -2692,7 +2703,18 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "projectPath": "package.json",
         "targetPath": "package",
         "pageTitle": "package",
-        "title": "package"
+        "markdown": "# Package configuration\n\nThis is a [node package manager (npm)](https://npmjs.org) configuration file.\nIt's JSON-syntax is [documented here](https://npmjs.org/doc/json.html).\n",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Package configuration",
+            "slug": "package-configuration",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "Package configuration"
       },
       "depth": 1,
       "outline": []
