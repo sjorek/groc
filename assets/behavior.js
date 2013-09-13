@@ -1383,10 +1383,10 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           },
           "name": "CoffeeScript"
         },
-        "sourcePath": "/Users/sjorek/Documents/Projects/Mesch/Workspace (Aptana)/groc/lib/doctags.coffee",
-        "projectPath": "lib/doctags.coffee",
-        "targetPath": "doctags",
-        "pageTitle": "doctags",
+        "sourcePath": "/Users/sjorek/Documents/Projects/Mesch/Workspace (Aptana)/groc/lib/doc_tags.coffee",
+        "projectPath": "lib/doc_tags.coffee",
+        "targetPath": "doc_tags",
+        "pageTitle": "doc_tags",
         "firstHeader": {
           "type": "heading",
           "data": {
