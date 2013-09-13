@@ -5,6 +5,7 @@ tableOfContents = <%= JSON.stringify(tableOfContents) %>
 # ## Table of Contents
 
 # Global jQuery references to navigation components we care about.
+html$ = null
 nav$ = null
 toc$ = null
 
@@ -175,9 +176,14 @@ buildNav = (metaInfo) ->
   nav$ = $("""
     <nav>
       <ul class="tools">
-        <li class="toggle">Table of Contents</li>
+        <li class="toggle toc-toggle toc-toggle1">
+          <a title="Show or hide table of contents">Table of Contents</a>
+        </li>
         <li class="search">
           <input id="search" type="search" autocomplete="off"/>
+        </li>
+        <li class="toggle layout-toggle layout-toggle1">
+          <a title="Resize documentation to fullscreen or vice versa">Resize left column</a>
         </li>
       </ul>
       <ol class="toc"/>
@@ -186,15 +192,15 @@ buildNav = (metaInfo) ->
   """).appendTo $('body')
   toc$ = nav$.find '.toc'
 
-  if metaInfo.githubURL
+  if metaInfo.githubURL or true
     # Special case the index to go to the project root
     if metaInfo.documentPath == 'index'
-      sourceURL = metaInfo.githubURL
+      sourceURL = metaInfo.githubURL || ''
     else
-      sourceURL = "#{metaInfo.githubURL}/blob/master/#{metaInfo.projectPath}"
+      sourceURL = "#{metaInfo.githubURL || ''}/blob/master/#{metaInfo.projectPath}"
 
     nav$.find('.tools').prepend """
-      <li class="github">
+      <li class="toggle github-toggle">
         <a href="#{sourceURL}" title="View source on GitHub">
           View source on GitHub
         </a>
@@ -209,13 +215,13 @@ buildNav = (metaInfo) ->
 buildTOCNode = (node, metaInfo) ->
   node$ = $("""<li class="#{node.type}"/>""")
 
-  #} just to clarify: we use it in the `clickLabel`-method below, but can
-  #} reference the first time after initializing it a few more lines below
+  # } just to clarify: we use it in the `clickLabel`-method below, but can
+  # } reference the first time after initializing it a few more lines below
   discloser = null
 
   switch node.type
     when 'file'
-      #} Single line to avoid extra whitespace
+      # } Single line to avoid extra whitespace
       node$.append """<a class="label" href="#{metaInfo.relativeRoot}#{node.data.targetPath}.html" title="#{node.data.projectPath}"><span class="text">#{node.data.title}</span></a>"""
       clickLabel = (evt) ->
         if evt.target is discloser
@@ -258,6 +264,7 @@ $ ->
     documentPath: $('meta[name="groc-document-path"]').attr('content')
     projectPath:  $('meta[name="groc-project-path"]').attr('content')
 
+  html$   = $('html')
   nav$    = buildNav metaInfo
   toc$    = nav$.find '.toc'
   search$ = $('#search')
@@ -274,7 +281,7 @@ $ ->
   # The blur event doesn't give us the previous event, sadly, so we first trap mousedown events
   lastMousedownTimestamp = null
   nav$.mousedown (evt) ->
-    lastMousedownTimestamp = evt.timeStamp unless evt.target == toggle$[0]
+    lastMousedownTimestamp = evt.timeStamp unless evt.target == tocToggle$[0]
 
   # And we refocus search if we are within a very short duration between the last mousedown in nav$.
   search$.blur (evt) ->
@@ -284,13 +291,33 @@ $ ->
       setTableOfContentsActive false
 
   # Set up the table of contents toggle
-  toggle$ = nav$.find '.toggle'
-  toggle$.click (evt) ->
+  tocToggle$ = nav$.find '.toc-toggle'
+  tocToggle$.click (evt) ->
     if search$.is ':focus' then search$.blur() else search$.focus()
     evt.preventDefault()
 
-  # Prevent text selection if the user taps quickly
-  toggle$.mousedown (evt) ->
+  # Note: the following CSS prevents text-selection:
+  #
+  # >     -webkit-touch-callout: none;
+  # >     -webkit-user-select: none;
+  # >     -khtml-user-select: none;
+  # >     -moz-user-select: none;
+  # >     -ms-user-select: none;
+  # >     user-select: none;
+  #
+  # Nevertheless, the text-selection prevention is obsolete, as we use an icon.
+  #
+  # - # Prevent text selection if the user taps quickly
+  # } tocToggle$.mousedown (evt) ->
+  # }   evt.preventDefault()
+
+  # Set up the layout toggle
+  layoutToggle$ = nav$.find '.layout-toggle'
+  layoutToggle$.click (evt) ->
+    if html$.hasClass('auto-column-layout')
+      html$.removeClass('auto-column-layout').addClass('comment-column-layout')
+    else
+      html$.removeClass('comment-column-layout').addClass('auto-column-layout')
     evt.preventDefault()
 
   # Arrow keys navigate the table of contents whenever it is visible

@@ -15,7 +15,7 @@ $column-padding: 1em
 // * The `line length` of the commentary column in both modes.
 $commentary-width: 29em
 // * Width of the tools pulldown in two-column mode.  NOT scaled by tools-font.
-$tools-width: 20em
+$tools-width: 22em
 // * Height of the main toolbar, scaled by the size of tools-font
 $tools-height: 2.1em
 
@@ -86,7 +86,7 @@ $inline-code-background-color: #fbf8f3
 
 // ## Two-Column Layout
 
-// As a general tenet, we try to avoid using margins, as they get us into trouble.  Pparticularly,
+// As a general tenet, we try to avoid using margins, as they get us into trouble.  Particularly,
 // when ensuring that our `html`/`body`/`#document` are full height and do not induce scrolling
 // unless their content grows past the page.
 $commentary-column-width: $commentary-width + ($common-margin + $column-padding) * 2
@@ -97,8 +97,8 @@ html, body
 #document
   min-height: 100%
 
-// Conceptually, the layout focuses the user on the commentary first, so we lay out that column.
-body
+// Conceptually, the automatic layout focuses the user on the commentary first, so we lay out that column.
+html.auto-column-layout body
   max-width: $commentary-column-width
 
 // In two-column mode, the segment is actually shifted over a full column to favor code fragments.
@@ -154,46 +154,60 @@ $scale-stop-width:  $scale-start-width * $scale-min
 // We swap over to the single column layout once we hit the edge of the scaling
 $single-column-toggle-width: $scale-stop-width
 
-// Switch modes at a little wider than a full (padded) column
-@media (max-width: #{$single-column-toggle-width})
+=comment-column-layout($segment-max-width, $segment-padding...)
 
-  html
-    font-size: 1em
+  font-size: 1em
 
   body
     margin: 0 auto
 
-  .segment
-    padding:     0
-    white-space: normal
-    max-width:   $commentary-width
-    margin:      0 auto
+    .segment
+      padding:     $segment-padding
+      white-space: normal
+      max-width:   $segment-max-width
+      margin:      0 auto
 
-    .comments, .code
-      display: block
-      padding: $common-margin
+      .comments, .code
+        display: block
+        padding: $common-margin
 
-    .comments
-      margin-left: 0
-      width:       auto
+      .comments
+        margin-left: 0
+        width:       auto
 
-    .code
-      display:    block
+      .code
+        display:    block
+        overflow-y: hidden
+        overflow-x: auto
+
+        .wrapper
+          display: inline-block
+
+    // Fit the meta info into on screen, removing any overflow it creates
+    #meta
+      position:   static
+      margin:     $common-margin * 2 0 0 0
       overflow-y: hidden
       overflow-x: auto
 
-      .wrapper
+      .file-path
         display: inline-block
 
-  // Fit the meta info into on screen, removing any overflow it creates
-  #meta
-    position:   static
-    margin:     $common-margin * 2 0 0 0
-    overflow-y: hidden
-    overflow-x: auto
+html.comment-column-layout
+  +comment-column-layout(auto, 0 $common-margin 0 $common-margin)
 
-    .file-path
-      display: inline-block
+  body
+    max-width: auto
+
+// Switch modes at a little wider than a full (padded) column
+@media (max-width: #{$single-column-toggle-width})
+
+  html.auto-column-layout
+    +comment-column-layout($commentary-width, 0)
+
+// not yet implemented
+// } html.code-column-layout
+// }   +code-column-layout
 
 // ## Navigation
 $tools-padding: ($tools-height - 1em) / 2
@@ -221,7 +235,7 @@ nav
       height:         $tools-height
       padding:        0 $tools-padding
 
-    .github
+    .toggle
       padding: 0
 
       a
@@ -274,7 +288,7 @@ $navigation-shift-duration: 150ms
 nav
   +transition(height 0 $navigation-shift-duration)
 
-  .tools .toggle
+  .tools .toc-toggle
     +transition(background $navigation-shift-duration)
 
   &.active
@@ -429,12 +443,26 @@ html
   background: $code-background-color // Degrade gracefully
 
 // We cheat and use #document to display the shadow
-#document
+html.auto-column-layout #document
   +background($commentary-background-color $background-gradient $commentary-column-width no-repeat)
   margin-right: -$code-column-shadow-width
   padding-right: $code-column-shadow-width
 
-  @media (max-width: #{$single-column-toggle-width})
+html.comment-column-layout #document
+  background: $commentary-background-color
+  margin-left:   -$code-column-shadow-width
+  padding-left:  $code-column-shadow-width
+  margin-right:  -$code-column-shadow-width
+  padding-right: $code-column-shadow-width
+
+@media (max-width: #{$single-column-toggle-width})
+  html.auto-column-layout #document
+    margin-right:  0
+    padding-right: 0
+
+  html.comment-column-layout #document
+    margin-left:   0
+    padding-left:  0
     margin-right:  0
     padding-right: 0
 
@@ -462,17 +490,27 @@ html
     +text-shadow($code-shadow-color 1px 1px 0)
     color: $code-foreground-color
 
-  @media (max-width: #{$single-column-toggle-width})
-    +border-radius(0.4em)
-    +box-shadow(darken($code-background-color, 15%) 0 0 0.5em 0.2em inset)
+=comment-column-code
+  +border-radius(0.4em)
+  +box-shadow(darken($code-background-color, 15%) 0 0 0.5em 0.2em inset)
+  background: $code-background-color
+
+  .wrapper
+    +box-shadow($code-background-color 0 0 0.25em 0.75em)
     background: $code-background-color
 
-    .wrapper
-      +box-shadow($code-background-color 0 0 0.25em 0.75em)
-      background: $code-background-color
+html.comment-column-layout .code
+  +comment-column-code
 
-  @media (max-width: #{$commentary-width})
+@media (max-width: #{$single-column-toggle-width})
+  html.auto-column-layout .code
+    +comment-column-code
+
+@media (max-width: #{$commentary-width})
+  html.auto-column-layout .code, html.comment-column-layout .code
     +border-radius(0)
+  html.comment-column-layout body .segment
+    padding: 0
 
 nav
   +text-shadow($tools-shadow-color 1px 1px 0)
@@ -497,24 +535,70 @@ nav
       &:last-child
         border-right: none
 
-    .toggle
-      cursor: pointer
-
-    .github a
+    .toggle a
       +transition(opacity 200ms)
       +opacity(0.5)
-      background:      inline-image('github-icon.png') center center no-repeat
-      background-size: 19.5px 24px
+      cursor: pointer
+      background-position: center center
+      background-repeat: no-repeat
+      // actually we don't need to prevent text-selection, because there
+      // is no (visible) text left to select, but we leave for now
+      -webkit-touch-callout: none
+      -webkit-user-select: none
+      -khtml-user-select: none
+      -moz-user-select: none
+      -ms-user-select: none
+      user-select: none
 
       &:hover
         +opacity(0.9)
 
+    .github-toggle a
+      background-size: 19.5px 24px
+      background-image: inline-image('github-icon.png')
+
+    .toc-toggle1 a
+      background-size: 19px 23px
+      background-image: inline-image('toc-close-icon.png')
+
+    .toc-toggle2 a
+      background-size: 20px 24px  // original 21px x 25px
+      background-image: inline-image('toc-close-icon-ds.png')
+
+    .toc-toggle3 a
+      background-size: 20px 24px  // original 21px x 25px
+      background-image: inline-image('toc-close-icon-ds2.png')
+
+    .toc-toggle4 a
+      background-size: 20px 24px  // original 21px x 25px
+      background-image: inline-image('toc-close-icon-ds3.png')
+
+    //.layout-toggle a
+      // background-size defined below !
+      // background-image defined below !
+
   &.active .tools
     +border-bottom-left-radius(0)
 
-    .toggle
+    .toc-toggle
       background:  darken($tools-background-color, 10%)
       position:    relative
+
+    .toc-toggle1 a
+      background-size: 24px 20px
+      background-image: inline-image('toc-open-icon.png')
+
+    .toc-toggle2 a
+      background-size: 24px 20px // original 26px x 22px
+      background-image: inline-image('toc-open-icon-ds.png')
+
+    .toc-toggle3 a
+      background-size: 24px 20px // original 26px x 22px
+      background-image: inline-image('toc-open-icon-ds2.png')
+
+    .toc-toggle4 a
+      background-size: 24px 20px // original 26px x 22px
+      background-image: inline-image('toc-open-icon-ds3.png')
 
   .toc
     +box-shadow(rgba(0,0,0,0.3) 0 0 0.5em 0.1em)
@@ -563,6 +647,132 @@ nav
 
     .toc
       background: $opaque-tools-background-color
+
+
+html.auto-column-layout nav .tools .layout-toggle1 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-full-icon.png')
+
+html.comment-column-layout nav .tools .layout-toggle1 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-small-icon.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle2 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-full-icon2.png')
+
+html.comment-column-layout nav .tools .layout-toggle2 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-small-icon2.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle3 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-full-icon3.png')
+
+html.comment-column-layout nav .tools .layout-toggle3 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-small-icon3.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle4 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-full-icon4.png')
+
+html.comment-column-layout nav .tools .layout-toggle4 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-small-icon4.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle5 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-full-icon5.png')
+
+html.comment-column-layout nav .tools .layout-toggle5 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-small-icon5.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle6 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-full-icon6.png')
+
+html.comment-column-layout nav .tools .layout-toggle6 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-small-icon6.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle7 a
+  background-size: 20px 20px
+  background-image: inline-image('resize-full-icon7.png')
+
+html.comment-column-layout nav .tools .layout-toggle7 a
+  background-size: 20px 20px
+  background-image: inline-image('resize-small-icon7.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle8 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-full-icon-ds.png')
+
+html.comment-column-layout nav .tools .layout-toggle8 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-small-icon-ds.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle9 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-full-icon2-ds.png')
+
+html.comment-column-layout nav .tools .layout-toggle9 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-small-icon2-ds.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle10 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-full-icon3-ds.png')
+
+html.comment-column-layout nav .tools .layout-toggle10 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-small-icon3-ds.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle11 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-full-icon4-ds.png')
+
+html.comment-column-layout nav .tools .layout-toggle11 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-small-icon4-ds.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle12 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-full-icon5-ds.png')
+
+html.comment-column-layout nav .tools .layout-toggle12 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-small-icon5-ds.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle13 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-full-icon6-ds.png')
+
+html.comment-column-layout nav .tools .layout-toggle13 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-small-icon6-ds.png')
+
+
+html.auto-column-layout nav .tools .layout-toggle14 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-full-icon7-ds.png')
+
+html.comment-column-layout nav .tools .layout-toggle14 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-small-icon7-ds.png')
 
 // ### Commentary Elements
 
