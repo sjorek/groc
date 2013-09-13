@@ -14,15 +14,33 @@ $common-margin: 1em
 $column-padding: 1em
 // * The `line length` of the commentary column in both modes.
 $commentary-width: 29em
+// * Width of the commentary column.  As a general tenet, we try to avoid using
+//   margins, as they get us into trouble.  Particularly, when ensuring that our
+//   `html`/`body`/`#document` are full height and do not induce scrolling
+//   unless their content grows past the page.
+$commentary-column-width: $commentary-width + ($common-margin + $column-padding) * 2
 // * Width of the tools pulldown in two-column mode.  NOT scaled by tools-font.
-$tools-width: 20em
+$tools-width: 22em
 // * Height of the main toolbar, scaled by the size of tools-font
 $tools-height: 2.1em
+// * Radius of the code-window's and comment-column's border for one-column-layout
+$border-radius: 0.4em
+// * Width of the `$code-background-gradient` shadow below, applied to code-column
+//   in double-column-view.  Also applied shadow-width and left and right margin to
+//   comment-column in single-comment-view 
+$column-shadow-width: 1em
 
 // Smooth-scale the page in viewports that are between ideal widths for two-column and one-column
 // modes.  Scaling starts at the same width as $tools-width into the code column.
 $scale-steps: 136 // Approx 1 per pixel on a desktop (8.5em distance & 16px per em)
 $scale-min:   0.85
+
+// Scaling starts once the toolbar is flush with the main column
+$scale-start-width: $commentary-column-width + $tools-width
+$scale-stop-width:  $scale-start-width * $scale-min
+// We swap over to the single column layout once we hit the edge of the scaling
+$single-column-toggle-width: $scale-stop-width
+
 
 //     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam cursus lorem at mi hendrerit pretium. Maecenas ultrices dolor dictum orci lobortis fringilla. Integer ut sem at libero scelerisque commodo quis a dui. Nulla pellentesque, purus non ultricies porta, diam est fringilla orci, dignissim mattis leo erat a urna. Donec fermentum orci nec magna vehicula consectetur. Vivamus a dui eget orci malesuada elementum. Cras tempor mi sit amet ligula mollis porta. Nulla eu purus eget dui aliquet iaculis in quis massa. Phasellus sed lectus ac augue tincidunt blandit. Pellentesque et aliquam neque. Donec faucibus ultricies sem, ut mattis ante consectetur sed. In sollicitudin consectetur nisl, nec malesuada diam dictum ut. Duis feugiat, lorem in pulvinar interdum, nibh turpis lobortis erat, dictum hendrerit massa nibh molestie odio. Ut ultricies, dui a lobortis aliquam, massa diam tempus eros, eu ornare risus mi vitae elit. Integer pretium vulputate eros vitae luctus. Mauris in rhoncus nisi.
 
@@ -46,6 +64,9 @@ $tools-foreground-color: #4a525a
 $tools-shadow-color:     #f0f0f0
 
 $inline-code-background-color: #fbf8f3
+
+// We want a bit of depth between the columns, so make the code appear inset
+$code-background-gradient: linear-gradient(left, darken($code-background-color, 15%), darken($code-background-color, 5%) 0.3 * $column-shadow-width, $code-background-color $column-shadow-width)
 
 // ### Typography
 
@@ -84,13 +105,16 @@ $inline-code-background-color: #fbf8f3
   h6
     font-size: 1.2em
 
+=disable-text-selection
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: -moz-none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
 
 // ## Two-Column Layout
-
-// As a general tenet, we try to avoid using margins, as they get us into trouble.  Pparticularly,
-// when ensuring that our `html`/`body`/`#document` are full height and do not induce scrolling
-// unless their content grows past the page.
-$commentary-column-width: $commentary-width + ($common-margin + $column-padding) * 2
 
 html, body
   height: 100%
@@ -98,21 +122,16 @@ html, body
 #document
   min-height: 100%
 
-// Conceptually, the layout focuses the user on the commentary first, so we lay out that column.
-body
+// Conceptually, the automatic layout focuses the user on the commentary first, so we lay out that column.
+html.two-column-layout body
   max-width: $commentary-column-width
 
 // In two-column mode, the segment is actually shifted over a full column to favor code fragments.
 // We may or may not have either .comment or .code sections, so we need to handle all three cases.
-.segment
+html.one-column-layout .segment,
+html.two-column-layout .segment
   padding:     ($common-margin / 2) 0 ($common-margin / 2) $commentary-column-width
   white-space: nowrap
-
-  &:first-child
-    padding-top: $common-margin + $column-padding + $tools-height
-
-  &:last-child
-    padding-bottom: $common-margin + $column-padding
 
   .comments, .code
     display:        inline-block
@@ -127,21 +146,41 @@ body
   .code
     white-space: pre
 
+html.one-column-layout .segment
+  &:first-child
+    padding-top: $common-margin
+
+  &:last-child
+    padding-bottom: $common-margin
+
+html.two-column-layout .segment
+  &:first-child
+    padding-top: $common-margin + $column-padding + $tools-height
+
+  &:last-child
+    padding-bottom: $common-margin + $column-padding
+
+  @media (max-width: #{$single-column-toggle-width})
+
+    &:first-child
+      padding-top: $common-margin
+  
+    &:last-child
+      padding-bottom: $common-margin
+
+
 // Fit the meta info into the code column
 #meta
-  position: absolute
-  left:     $commentary-column-width
-  padding:  $common-margin / 4 $common-margin
+  position:   absolute
+  left:       $commentary-column-width + $common-margin
+  padding:    $common-margin / 4 $common-margin
+  margin-top: $common-margin / 2
 
 
 // ## Two-Column Scaling
 
 // Before we swap over to a single column layout, we scale the page down a little bit in an effort
 // to squeeze some extra life out of it.
-//
-// Scaling starts once the toolbar is flush with the main column
-$scale-start-width: $commentary-column-width + $tools-width
-$scale-stop-width:  $scale-start-width * $scale-min
 
 @for $i from 0 through $scale-steps - 2 // Skip the last step; it's exactly $scale-stop-width
   $scale: 1.0 - (1.0 - $scale-min) * ($i / ($scale-steps - 1))
@@ -152,57 +191,74 @@ $scale-stop-width:  $scale-start-width * $scale-min
 
 // ## Single-Column Layout
 
-// We swap over to the single column layout once we hit the edge of the scaling
-$single-column-toggle-width: $scale-stop-width
+=comment-column-layout($segment-max-width, $segment-padding...)
 
-// Switch modes at a little wider than a full (padded) column
-@media (max-width: #{$single-column-toggle-width})
-
-  html
-    font-size: 1em
+  font-size: 1em
 
   body
     margin: 0 auto
 
-  hr
-    padding: 0
-    margin: 0
-    border: 0
-    height: 1px
-    border: none
-    background-image: linear-gradient(left, rgba(0,0,0,0.5), rgba(0,0,0,0.33), rgba(0,0,0,0)) 
+    .segment
+      padding:     $segment-padding
+      white-space: normal
+      max-width:   $segment-max-width
+      margin:      0 auto
 
-  .segment
-    padding:     0
-    white-space: normal
-    max-width:   $commentary-width
-    margin:      0 auto
+      .comments, .code
+        display: block
+        padding: $common-margin
 
-    .comments, .code
-      display: block
-      padding: $common-margin
+      .comments
+        margin-left: 0
+        width:       auto
 
-    .comments
-      margin-left: 0
-      width:       auto
+      .code
+        overflow-y: hidden
+        overflow-x: auto
 
-    .code
-      display:    block
-      overflow-y: hidden
-      overflow-x: auto
-
-      .wrapper
-        display: inline-block
+        .wrapper
+          display: inline-block
 
   // Fit the meta info into on screen, removing any overflow it creates
   #meta
-    position:   static
-    margin:     $common-margin * 2 0 0 0
-    overflow-y: hidden
-    overflow-x: auto
+    margin-bottom:  $common-margin / 2
+    left:           0
+    position:       static
+    overflow-y:     hidden
+    overflow-x:     auto
 
     .file-path
       display: inline-block
+
+html.one-column-layout
+  +comment-column-layout(auto, 0 $common-margin 0 $common-margin)
+
+  body
+    max-width: auto
+
+  #meta
+    margin-left: $column-shadow-width + $common-margin // delibratly used these widths !
+
+// Switch modes at a little wider than a full (padded) column
+@media (max-width: #{$single-column-toggle-width})
+
+  html.two-column-layout
+    +comment-column-layout($commentary-width, 0)
+
+    #meta
+      margin-left: $common-margin * 2
+
+  html.one-column-layout #meta
+    margin-left: $common-margin
+
+  // Fit the meta info into on screen, moving it below the nav-tag
+  html.one-column-layout #meta,
+  html.two-column-layout #meta
+    margin-top: $common-margin * 2.5
+
+@media (max-width: #{$commentary-column-width})
+  html.two-column-layout #meta
+    margin-left: $common-margin
 
 // ## Navigation
 $tools-padding: ($tools-height - 1em) / 2
@@ -230,7 +286,7 @@ nav
       height:         $tools-height
       padding:        0 $tools-padding
 
-    .github
+    .toggle
       padding: 0
 
       a
@@ -250,6 +306,7 @@ nav
   .toc
     +box-sizing(border-box)
     position:   absolute
+    z-index:    99
     top:        $tools-height
     bottom:     0
     width:      100%
@@ -283,7 +340,7 @@ $navigation-shift-duration: 150ms
 nav
   +transition(height 0 $navigation-shift-duration)
 
-  .tools .toggle
+  .tools .toc-toggle
     +transition(background $navigation-shift-duration)
 
   &.active
@@ -430,22 +487,38 @@ nav.searching .toc .discloser
 
 // ## Visual Design
 
-// We want a bit of depth between the columns, so make the code appear inset
-$code-column-shadow-width: 1em
-$background-gradient: linear-gradient(left, darken($code-background-color, 15%), darken($code-background-color, 5%) 0.3 * $code-column-shadow-width, $code-background-color $code-column-shadow-width)
-
 html
   background: $code-background-color // Degrade gracefully
 
 // We cheat and use #document to display the shadow
-#document
-  +background($commentary-background-color $background-gradient $commentary-column-width no-repeat)
-  margin-right: -$code-column-shadow-width
-  padding-right: $code-column-shadow-width
+html.two-column-layout #document
+  +background($commentary-background-color $code-background-gradient $commentary-column-width no-repeat)
+  margin-right: -$column-shadow-width
+  padding-right: $column-shadow-width
 
-  @media (max-width: #{$single-column-toggle-width})
+html.one-column-layout #document
+  background:      $commentary-background-color
+  margin-left:     $column-shadow-width
+  margin-right:    $column-shadow-width
+  padding-right:   0
+  +border-radius($border-radius)
+  +box-shadow(darken($code-background-color, 15%) 0 0 0.5em 0.2em)
+
+@media (max-width: #{$single-column-toggle-width})
+  html.two-column-layout #document
+    margin-right:   0
+    padding-right:  0
+    +border-radius($border-radius)
+    +box-shadow(darken($code-background-color, 15%) 0 0 0.5em 0.2em)
+
+  html.one-column-layout #document
+    margin-left:   0
     margin-right:  0
-    padding-right: 0
+    +border-radius(0)
+
+@media (max-width: #{$commentary-column-width})
+  html.two-column-layout #document
+    +border-radius(0)
 
 #meta > *
   +commentary-font
@@ -470,18 +543,26 @@ html
     +code-font
     +text-shadow($code-shadow-color 1px 1px 0)
     color: $code-foreground-color
-
-  @media (max-width: #{$single-column-toggle-width})
-    +border-radius(0.4em)
-    +box-shadow(darken($code-background-color, 15%) 0 0 0.5em 0.2em inset)
     background: $code-background-color
+    +box-shadow($code-background-color 0 0 0.25em 0.75em)
 
-    .wrapper
-      +box-shadow($code-background-color 0 0 0.25em 0.75em)
-      background: $code-background-color
+=comment-column-code
+  +border-radius($border-radius)
+  +box-shadow(darken($code-background-color, 15%) 0 0 0.5em 0.2em inset)
+  background: $code-background-color
 
-  @media (max-width: #{$commentary-width})
+html.one-column-layout .code
+  +comment-column-code
+
+@media (max-width: #{$single-column-toggle-width})
+  html.two-column-layout .code
+    +comment-column-code
+
+@media (max-width: #{$commentary-width})
+  html.two-column-layout .code, html.one-column-layout .code
     +border-radius(0)
+  html.one-column-layout body .segment
+    padding: 0
 
 nav
   +text-shadow($tools-shadow-color 1px 1px 0)
@@ -497,8 +578,9 @@ nav
     border-bottom: 1px solid $tools-foreground-color
     border-left:   1px solid $tools-foreground-color
 
-    @media (max-width: #{$scale-start-width})
-      +border-bottom-left-radius(0)
+    // This tiny snippet moved a few lines down, to handle it per layout
+    // } @media (max-width: #{$scale-start-width})
+    // }   +border-bottom-left-radius(0)
 
     li
       border-right: 1px solid $tools-foreground-color
@@ -506,24 +588,73 @@ nav
       &:last-child
         border-right: none
 
-    .toggle
-      cursor: pointer
-
-    .github a
+    .toggle a
       +transition(opacity 200ms)
       +opacity(0.5)
-      background:      inline-image('github-icon.png') center center no-repeat
-      background-size: 19.5px 24px
+      cursor: pointer
+      background-position: center center
+      background-repeat: no-repeat
+      // actually we don't need to prevent text-selection, because there
+      // is no (visible) text left to select, but we leave for now
+      +disable-text-selection
 
       &:hover
         +opacity(0.9)
 
+    .github-toggle a
+      background-size: 19.5px 24px
+      background-image: inline-image('github-icon.png')
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle1 a
+      background-size: 19px 23px
+      background-image: inline-image('toc-close-icon.png')
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle2 a
+      background-size: 20px 24px  // original 21px x 25px
+      background-image: inline-image('toc-close-icon-ds.png')
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle3 a
+      background-size: 20px 24px  // original 21px x 25px
+      background-image: inline-image('toc-close-icon-ds2.png')
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle4 a
+      background-size: 20px 24px  // original 21px x 25px
+      background-image: inline-image('toc-close-icon-ds3.png')
+
+    // } .layout-toggle a //  defined below !
+    // }   background-size
+    // }   background-image
+
   &.active .tools
     +border-bottom-left-radius(0)
 
-    .toggle
+    .toc-toggle
       background:  darken($tools-background-color, 10%)
       position:    relative
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle1 a
+      background-size: 24px 20px
+      background-image: inline-image('toc-open-icon.png')
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle2 a
+      background-size: 24px 20px // original 26px x 22px
+      background-image: inline-image('toc-open-icon-ds.png')
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle3 a
+      background-size: 24px 20px // original 26px x 22px
+      background-image: inline-image('toc-open-icon-ds2.png')
+
+    // TODO: decide which toc-toggle-icon to keep, rename it and remove the others
+    .toc-toggle4 a
+      background-size: 24px 20px // original 26px x 22px
+      background-image: inline-image('toc-open-icon-ds3.png')
 
   .toc
     +box-shadow(rgba(0,0,0,0.3) 0 0 0.5em 0.1em)
@@ -573,6 +704,158 @@ nav
     .toc
       background: $opaque-tools-background-color
 
+@media (max-width: #{$commentary-column-width})
+  nav .tools .layout-toggle
+    display: none
+
+@media (max-width: #{$scale-start-width})
+  html.two-column-layout nav .tools
+    +border-bottom-left-radius(0)
+
+@media (max-width: #{$single-column-toggle-width})
+  html.one-column-layout nav .tools
+    +border-bottom-left-radius(0)
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle1 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-full-icon.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle1 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-small-icon.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle2 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-full-icon2.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle2 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-small-icon2.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle3 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-full-icon3.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle3 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-small-icon3.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle4 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-full-icon4.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle4 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-small-icon4.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle5 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-full-icon5.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle5 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-small-icon5.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle6 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-full-icon6.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle6 a
+  background-size: 24px 24px // real size 30 x 30
+  background-image: inline-image('resize-small-icon6.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle7 a
+  background-size: 20px 20px
+  background-image: inline-image('resize-full-icon7.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle7 a
+  background-size: 20px 20px
+  background-image: inline-image('resize-small-icon7.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle8 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-full-icon-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle8 a
+  background-size: 24px 24px // real size 26 x 26
+  background-image: inline-image('resize-small-icon-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle9 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-full-icon2-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle9 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-small-icon2-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle10 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-full-icon3-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle10 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-small-icon3-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle11 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-full-icon4-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle11 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-small-icon4-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle12 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-full-icon5-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle12 a
+  background-size: 24px 24px
+  background-image: inline-image('resize-small-icon5-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle13 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-full-icon6-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle13 a
+  background-size: 24px 24px // real size 32 x 32
+  background-image: inline-image('resize-small-icon6-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.two-column-layout nav .tools .layout-toggle14 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-full-icon7-ds.png')
+
+// TODO: decide which layout-toggle-icon to keep, rename it and remove the others
+html.one-column-layout nav .tools .layout-toggle14 a
+  background-size: 22px 22px
+  background-image: inline-image('resize-small-icon7-ds.png')
+
 // ### Commentary Elements
 
 .comments .wrapper
@@ -589,7 +872,7 @@ nav
     border: 1px solid darken(desaturate($inline-code-background-color, 25%), 10%)
 
   pre, code
-    +border-radius(0.4em)
+    +border-radius($border-radius)
     background: $inline-code-background-color
 
   pre
@@ -643,37 +926,37 @@ input[type="search"]
     font-size: 18px
 
 // ## Code folding
+html.one-column-layout body .segment, html.two-column-layout body .segment
+  .code .marker
+    display:  block
+    position: relative
+    +box-shadow(none)
 
-.code.folded
-  .wrapper
-    display: none
-
-  .marker
-    +border-radius(0.2em)
-    +box-shadow(#2f3539 1px 1px 1px 0)
-    display: block
-    border: 1px solid #73787f
-    padding: 0.2em 0.5em
-    background: #58616b
-    font: 12px 'Droid Sans Mono', Menlo, Monaco, monospace
-    text-shadow: #2f3539 1px 1px 0px
-    cursor: pointer
-    -webkit-touch-callout: none
-    -webkit-user-select: none
-    -khtml-user-select: none
-    -moz-user-select: -moz-none
-    -ms-user-select: none
-    user-select: none
-
-    .c1
-      color: #73787f
-      font-style: normal
-
-  .marker:hover
-    background: #5f6872
-
-    .c1
-      color: #7b8087
-
-  .marker .c1:after
-    content: " …"
+  .code.folded
+    .wrapper
+      display: none
+  
+    .marker
+      +border-radius(0.2em)
+      +box-shadow(#2f3539 1px 1px 1px 0)
+      display: inline-block
+      border: 1px solid #73787f
+      padding: 0.2em 0.5em
+      background: #58616b
+      font: 12px 'Droid Sans Mono', Menlo, Monaco, monospace
+      text-shadow: #2f3539 1px 1px 0px
+      cursor: pointer
+      +disable-text-selection
+  
+      .c1
+        color: #73787f
+        font-style: normal
+  
+    .marker:hover
+      background: #5f6872
+  
+      .c1
+        color: #7b8087
+  
+    .marker .c1:after
+      content: " …"

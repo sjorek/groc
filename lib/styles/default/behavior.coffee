@@ -5,6 +5,7 @@ tableOfContents = <%= JSON.stringify(tableOfContents) %>
 # ## Table of Contents
 
 # Global jQuery references to navigation components we care about.
+html$ = null
 nav$ = null
 toc$ = null
 
@@ -175,9 +176,14 @@ buildNav = (metaInfo) ->
   nav$ = $("""
     <nav>
       <ul class="tools">
-        <li class="toggle">Table of Contents</li>
+        <li class="toggle toc-toggle toc-toggle1">
+          <a title="Show or hide table of contents">Table of Contents</a>
+        </li>
         <li class="search">
           <input id="search" type="search" autocomplete="off"/>
+        </li>
+        <li class="toggle layout-toggle layout-toggle1">
+          <a title="Toogle documentation column to full-width (= switch between single- and two-column layout)">Toogle full-width</a>
         </li>
       </ul>
       <ol class="toc"/>
@@ -194,10 +200,8 @@ buildNav = (metaInfo) ->
       sourceURL = "#{metaInfo.githubURL}/blob/master/#{metaInfo.projectPath}"
 
     nav$.find('.tools').prepend """
-      <li class="github">
-        <a href="#{sourceURL}" title="View source on GitHub">
-          View source on GitHub
-        </a>
+      <li class="toggle github-toggle">
+        <a href="#{sourceURL}" title="View source on GitHub">View source on GitHub</a>
       </li>
     """
 
@@ -209,13 +213,13 @@ buildNav = (metaInfo) ->
 buildTOCNode = (node, metaInfo) ->
   node$ = $("""<li class="#{node.type}"/>""")
 
-  #} just to clarify: we use it in the `clickLabel`-method below, but can
-  #} reference the first time after initializing it a few more lines below
+  # } just to clarify: we use it in the `clickLabel`-method below, but can
+  # } reference the first time after initializing it a few more lines below
   discloser = null
 
   switch node.type
     when 'file'
-      #} Single line to avoid extra whitespace
+      # } Single line to avoid extra whitespace
       node$.append """<a class="label" href="#{metaInfo.relativeRoot}#{node.data.targetPath}.html" title="#{node.data.projectPath}"><span class="text">#{node.data.title}</span></a>"""
       clickLabel = (evt) ->
         if evt.target is discloser
@@ -258,9 +262,10 @@ $ ->
     documentPath: $('meta[name="groc-document-path"]').attr('content')
     projectPath:  $('meta[name="groc-project-path"]').attr('content')
 
-  nav$    = buildNav metaInfo
-  toc$    = nav$.find '.toc'
-  search$ = $('#search')
+  html$      = $('html')
+  nav$       = buildNav metaInfo
+  toc$       = nav$.find '.toc'
+  search$    = $('#search')
 
   # Select the current file, and expand up to it
   selectNodeByDocumentPath metaInfo.documentPath, window.location.hash.replace '#', ''
@@ -274,7 +279,7 @@ $ ->
   # The blur event doesn't give us the previous event, sadly, so we first trap mousedown events
   lastMousedownTimestamp = null
   nav$.mousedown (evt) ->
-    lastMousedownTimestamp = evt.timeStamp unless evt.target == toggle$[0]
+    lastMousedownTimestamp = evt.timeStamp unless evt.target == tocToggle$[0]
 
   # And we refocus search if we are within a very short duration between the last mousedown in nav$.
   search$.blur (evt) ->
@@ -284,14 +289,64 @@ $ ->
       setTableOfContentsActive false
 
   # Set up the table of contents toggle
-  toggle$ = nav$.find '.toggle'
-  toggle$.click (evt) ->
+  tocToggle$ = nav$.find '.toc-toggle'
+  tocToggle$.click (evt) ->
     if search$.is ':focus' then search$.blur() else search$.focus()
     evt.preventDefault()
 
-  # Prevent text selection if the user taps quickly
-  toggle$.mousedown (evt) ->
+  # Note: the following CSS prevents text-selection:
+  #
+  # >     -webkit-touch-callout: none;
+  # >     -webkit-user-select: none;
+  # >     -khtml-user-select: none;
+  # >     -moz-user-select: none;
+  # >     -ms-user-select: none;
+  # >     user-select: none;
+
+  # Nevertheless, the text-selection prevention is obsolete, as we use an icon.
+  # ^ # Prevent text selection if the user taps quickly
+  # } tocToggle$.mousedown (evt) ->
+  # }   evt.preventDefault()
+
+  # Crazy hack, ensuring that the defaults of multiple projects published
+  # to the same github account don't overlap with each other, hence every
+  # project gets its own cookie per path …
+  if location?.pathname
+    cookiePath = location?.pathname.split('/')[0...(
+      -1 * metaInfo.relativeRoot.split('/').length
+    )].join('/') + '/'
+  # We get here if we're looking locally at the project or publish the
+  # project to the root of an webserver, hence clashes of defaults might
+  # occur; to fix this, we need to do more …  
+  #   
+  # FIXME: If `cookiePath is null`, prefix the cookie's name with project name.
+  else
+    cookiePath = null
+
+  # Switches the layout class and stores the `layout` in a cookie or removes the
+  #  cookie if an unknown or no `layout` has been given …
+  #
+  # @private
+  # @method setColumnLayout
+  # @param {String} [layout]
+  setColumnLayout = (layout) ->
+    switch layout
+      when 'one', 'two'
+        html$.removeClass('one-column-layout').removeClass('two-column-layout').addClass "#{layout}-column-layout"
+        $.cookie 'column-layout', layout, { expires: 365, path: cookiePath }
+        # } console.log 'saved layout-cookie', layout, 'for path', cookiePath
+      else
+        $.removeCookie 'column-layout', if cookiePath? then path: cookiePath else {}
+        # } console.log 'removed layout-cookie for path', cookiePath
+
+  # Set up the layout toggle
+  layoutToggle$ = nav$.find '.layout-toggle'
+  layoutToggle$.click (evt) ->
+    setColumnLayout if html$.hasClass('two-column-layout') then 'one' else 'two'
     evt.preventDefault()
+
+  # Initialize the layout from the cookie
+  setColumnLayout($.cookie 'column-layout')
 
   # Arrow keys navigate the table of contents whenever it is visible
   $('body').keydown (evt) ->

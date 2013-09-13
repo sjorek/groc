@@ -98,20 +98,33 @@ module.exports = class Default extends Base
   concatenateScripts: (scriptSource, callback) ->
     @log.trace 'styles.Default#concatenateScripts(..., ...)'
 
-    jqueryPath = path.join @sourceAssets, 'jquery.min.js'
+    sources           = []
+    jqueryPath        = path.join @sourceAssets, 'jquery.min.js'
+    jqueryCookiePath  = path.join @sourceAssets, 'jquery.cookie.js'
+    outputPath        = path.join @targetAssets, 'behavior.js'
+
     fs.readFile jqueryPath, 'utf-8', (error, data) =>
       if error
         @log.error 'Failed to read %s: %s', jqueryPath, error.message
         return callback error
 
-      outputPath = path.join @targetAssets, 'behavior.js'
-      fs.writeFile outputPath, data + scriptSource, (error) =>
-        if error
-          @log.error 'Failed to write %s: %s', outputPath, error.message
-          return callback error
-        @log.trace 'Wrote %s', outputPath
+      sources.push data
 
-        callback()
+      fs.readFile jqueryCookiePath, 'utf-8', (error, data) =>
+        if error
+          @log.error 'Failed to read %s: %s', jqueryCookiePath, error.message
+          return callback error
+
+        sources.push data
+        sources.push scriptSource
+
+        fs.writeFile outputPath, sources.join("\n"), (error) =>
+          if error
+            @log.error 'Failed to write %s: %s', outputPath, error.message
+            return callback error
+          @log.trace 'Wrote %s', outputPath
+  
+          callback()
 
   renderDocTags: (segments, fileInfo) ->
     for segment, segmentIndex in segments when segment.tagSections?
