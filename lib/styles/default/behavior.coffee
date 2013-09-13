@@ -183,7 +183,7 @@ buildNav = (metaInfo) ->
           <input id="search" type="search" autocomplete="off"/>
         </li>
         <li class="toggle layout-toggle layout-toggle1">
-          <a title="Resize documentation to fullscreen or vice versa">Resize left column</a>
+          <a title="Toogle documentation column to full-width (= switch between single- and two-column layout)">Toogle full-width</a>
         </li>
       </ul>
       <ol class="toc"/>
@@ -201,9 +201,7 @@ buildNav = (metaInfo) ->
 
     nav$.find('.tools').prepend """
       <li class="toggle github-toggle">
-        <a href="#{sourceURL}" title="View source on GitHub">
-          View source on GitHub
-        </a>
+        <a href="#{sourceURL}" title="View source on GitHub">View source on GitHub</a>
       </li>
     """
 
@@ -264,10 +262,10 @@ $ ->
     documentPath: $('meta[name="groc-document-path"]').attr('content')
     projectPath:  $('meta[name="groc-project-path"]').attr('content')
 
-  html$   = $('html')
-  nav$    = buildNav metaInfo
-  toc$    = nav$.find '.toc'
-  search$ = $('#search')
+  html$      = $('html')
+  nav$       = buildNav metaInfo
+  toc$       = nav$.find '.toc'
+  search$    = $('#search')
 
   # Select the current file, and expand up to it
   selectNodeByDocumentPath metaInfo.documentPath, window.location.hash.replace '#', ''
@@ -304,21 +302,51 @@ $ ->
   # >     -moz-user-select: none;
   # >     -ms-user-select: none;
   # >     user-select: none;
-  #
+
   # Nevertheless, the text-selection prevention is obsolete, as we use an icon.
-  #
-  # - # Prevent text selection if the user taps quickly
+  # ^ # Prevent text selection if the user taps quickly
   # } tocToggle$.mousedown (evt) ->
   # }   evt.preventDefault()
+
+  # Crazy hack, ensuring that the defaults of multiple projects published
+  # to the same github account don't overlap with each other, hence every
+  # project gets its own cookie per path …
+  if location?.pathname
+    cookiePath = location?.pathname.split('/')[0...(
+      -1 * metaInfo.relativeRoot.split('/').length
+    )].join('/') + '/'
+  # We get here if we're looking locally at the project or publish the
+  # project to the root of an webserver, hence clashes of defaults might
+  # occur; to fix this, we need to do more …  
+  #   
+  # FIXME: If `cookiePath is null`, prefix the cookie's name with project name.
+  else
+    cookiePath = null
+
+  # Switches the layout class and stores the `layout` in a cookie or removes the
+  #  cookie if an unknown or no `layout` has been given …
+  #
+  # @private
+  # @method setColumnLayout
+  # @param {String} [layout]
+  setColumnLayout = (layout) ->
+    switch layout
+      when 'one', 'two'
+        html$.removeClass('one-column-layout').removeClass('two-column-layout').addClass "#{layout}-column-layout"
+        $.cookie 'column-layout', layout, { expires: 365, path: cookiePath }
+        # } console.log 'saved layout-cookie', layout, 'for path', cookiePath
+      else
+        $.removeCookie 'column-layout', if cookiePath? then path: cookiePath else {}
+        # } console.log 'removed layout-cookie for path', cookiePath
 
   # Set up the layout toggle
   layoutToggle$ = nav$.find '.layout-toggle'
   layoutToggle$.click (evt) ->
-    if html$.hasClass('auto-column-layout')
-      html$.removeClass('auto-column-layout').addClass('comment-column-layout')
-    else
-      html$.removeClass('comment-column-layout').addClass('auto-column-layout')
+    setColumnLayout if html$.hasClass('two-column-layout') then 'one' else 'two'
     evt.preventDefault()
+
+  # Initialize the layout from the cookie
+  setColumnLayout($.cookie 'column-layout')
 
   # Arrow keys navigate the table of contents whenever it is visible
   $('body').keydown (evt) ->

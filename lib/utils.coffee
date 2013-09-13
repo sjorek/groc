@@ -198,11 +198,11 @@ module.exports = Utils =
           if stripIgnorePrefix? and value.indexOf(language.ignorePrefix) is 0
 
             # **Unfold this code ->**
-            # ^ The previous cycle contained code, so lets start a new segment,
-            # } but only if the previous code-line isn't a comment forced to be
-            # } part of the code, as implemented here.  This allows embedding a
-            # } series of code-comments, even folded like this one.
-            if currSegment.code.length > 0 and \
+            # ^ The previous cycle contained code and comments, so lets start a
+            # } new segment, but only if the previous code-line isn't a comment
+            # } forced to be part of the code, as implemented here.  This allows
+            # } embedding a series of code-comments, even folded like this one.
+            if currSegment.code.length > 0 and not currSegment.comments.length is 0 and \
                not (currSegment.code[currSegment.code.length - 1].match singleLineMatcher)?
               segments.push currSegment
               currSegment = new @Segment
@@ -212,20 +212,26 @@ module.exports = Utils =
 
           else
 
-            # The previous cycle contained code, so lets start a new segment
-            if currSegment.code.length > 0
-              segments.push currSegment
-              currSegment = new @Segment
-
             # ^ … if we start this comment with “^” instead of “}” it and all
             # } code up to the next segment's first comment starts folded
             if stripFoldPrefix? and value.indexOf(language.foldPrefix) is 0
 
-              # } … so folding stopped above, as this is a new segment !
+              # } … so folding stopped below, as this is a new segment !
+              # The previous cycle contained code, lets start a new segment
+              if currSegment.code.length > 0
+                 segments.push currSegment
+                 currSegment = new @Segment
+  
               # Let's strip the “^” character from our documentation
               currSegment.foldMarker = line.replace stripFoldPrefix, match[1]
 
             else
+
+              # The previous cycle contained code, so lets start a new segment
+              if currSegment.code.length > 0
+                segments.push currSegment
+                currSegment = new @Segment
+  
               currSegment.comments.push value
 
       else
