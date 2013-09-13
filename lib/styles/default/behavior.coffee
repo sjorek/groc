@@ -192,12 +192,12 @@ buildNav = (metaInfo) ->
   """).appendTo $('body')
   toc$ = nav$.find '.toc'
 
-  if metaInfo.githubURL or true
+  if metaInfo.githubURL
     # Special case the index to go to the project root
     if metaInfo.documentPath == 'index'
-      sourceURL = metaInfo.githubURL || ''
+      sourceURL = metaInfo.githubURL
     else
-      sourceURL = "#{metaInfo.githubURL || ''}/blob/master/#{metaInfo.projectPath}"
+      sourceURL = "#{metaInfo.githubURL}/blob/master/#{metaInfo.projectPath}"
 
     nav$.find('.tools').prepend """
       <li class="toggle github-toggle">
