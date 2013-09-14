@@ -142,7 +142,7 @@ module.exports = Utils =
       # No need to match for any particular real content in `aBlockStart`, as
       # either `aBlockLine`, `aBlockEnd` or the `isBlock` catch-all fallback
       # handles the real content, in the implementation below.
-      aBlockStart = ///^\s*(?:#{blockStarts}(?:#{blockLines}#{whitespaceMatch})?)///
+      aBlockStart = ///^\s*(?:#{blockStarts}(?:#{blockLines})?(?:#{whitespaceMatch}|$))///
       aBlockLine  = ///^\s*(?:#{blockLines}#{whitespaceMatch})(.*)$///
       aBlockEnd   = ///^\s*(?:#{blockLines}#{whitespaceMatch})?(.*)(?:#{blockEnds})$///
       aEmptyLine  = ///^\s*(?:#{blockLines})$///
@@ -269,33 +269,37 @@ module.exports = Utils =
         # `line` itself, as we might need it.
         blockline = line.replace aBlockStart, ''
 
-        ### ^
-        In block-comments only `aBlockStart` may initiate the collapsing.  This
-        comment utilizes such a syntax.
-        ###
         if foldPrefix? and blockline.indexOf(foldPrefix) is 0
+          ### ^ collapsing block-comments:
+          # In block-comments only `aBlockStart` may initiate the collapsing.
+          # This comment utilizes this syntax, by starting the comment with `^`.
+          ###
 
           # Let's strip the “^” character from our documentation,
           # using the untouched original `line`
-          blockline = line.replace blockStrip, match[1]
+          blockline = line.replace blockStrip, '$1'
           isFolded  = true
 
-        ### }
-        In block-comments only `aBlockStart` may initiate the embedding.  This
-        comment utilizes such a syntax.
-        ###
         else if ignorePrefix? and blockline.indexOf(ignorePrefix) is 0
+          ### } embedded block-comments:
+          # In block-comments only `aBlockStart` may initiate the embedding.
+          # This comment utilizes this syntax, by starting the comment with `}`.
+          ###
 
           # Let's strip the “}” character from our documentation,
           # using the untouched original `line`
-          blockline = line.replace blockStrip, match[1]
+          blockline = line.replace blockStrip, '$1'
           isIgnored = true
 
       # This flag is triggered above.
       if isBlock
 
-        # Catch all lines, in the case there is no `blockline` from above.
-        blockline = line if not blockline?
+        # Catch all lines, unless there is a `blockline` from above.
+        # These lines have all leading spaces stripped - this should be enhanced
+        # to stripped only as many whitespaces as the initial `aBlockStart` has
+        # as indent.
+        # blockline = line.replace /^\s+/, '' unless blockline?
+        blockline = line unless blockline?
 
         # Match a block-comment's end, even when `isFolded or isIgnored` flags
         # are true …
@@ -308,7 +312,7 @@ module.exports = Utils =
           blockline = match[1] unless isFolded or isIgnored
 
         # Match a block-comment's line, when `isFolded or isIgnored` are false.
-        else if not (isFolded or isIgnored) and (match = line.match aBlockLine)?
+        else if not (isFolded or isIgnored) and (match = blockline.match aBlockLine)?
           # Strip any `blockline`-prefixes or -suffixes and continue below.
           blockline = match[1]
 
@@ -322,20 +326,20 @@ module.exports = Utils =
         else
           # The previous cycle contained code, so lets start a new segment, but
           # only if the `isFolded` flag is false or if this is the first line to
-          # fold (= no foldMarker exists).
-          if currSegment.code.length > 0 and (not isFolded or not currSegment.foldMarker?)
+          # fold (= foldMarker is empty).
+          if currSegment.code.length > 0 and (not isFolded or currSegment.foldMarker is '')
             segments.push currSegment
             currSegment = new @Segment
 
           if isFolded
 
-            # If we have a foldMarker collect the `blockline` as code …
-            if currSegment.foldMarker?
-              currSegment.code.push blockline
-
-            # … else if we the `blockline` gets assigned to the `foldMarker`.
-            else
+            # If the foldMarker is empty assign `blockline` to `foldMarker` …
+            if currSegment.foldMarker is ''
               currSegment.foldMarker = blockline
+
+            # … else collect the `blockline` as code.
+            else
+              currSegment.code.push blockline
 
           else
 
@@ -360,11 +364,11 @@ module.exports = Utils =
             if aEmptyLine.test line
               currSegment.comments.push ""
 
-            ###
-            Collect all but start- and end-block-comment lines, but include
-            single-line block-comments that match `aBlockStart` and `aBlockEnd`,
-            having the `isBlock` flag set to false at this point.
-            ###
+              ###
+              Collect all but start- and end-block-comment lines, but include
+              single-line block-comments that match `aBlockStart` and
+              `aBlockEnd`, having the `isBlock` flag set to false at this point.
+              ###
             else if (not isBlock and aBlockStart.test line) or not aBlockEnd.test line
               currSegment.comments.push blockline
 
@@ -391,7 +395,7 @@ module.exports = Utils =
             # } the narrowed single-column-view.
 
             # Let's strip the “}” character from our documentation
-            currSegment.code.push line.replace singleStrip, match[1]
+            currSegment.code.push line.replace singleStrip, '$1'
 
           else
 
@@ -409,16 +413,16 @@ module.exports = Utils =
             # follow the above's code segment, which looks visually not so
             # appealing in the narrowed single-column-view.  
             #   
-            # TODO: Alternative (a): Improve folded comments to not start a new segment, like embedded comments from above. (preferred solution)  
-            # TODO: Alternative (b): Improve folded comments visual appearance in single-column view. (easy solution)  
-
+            # TODO: _Alternative (a)_: Improve folded comments to not start a new segment, like embedded comments from above. _(preferred solution)_    
+            # TODO: _Alternative (b)_: Improve folded comments visual appearance in single-column view. _(easy solution)_  
+            #
             # ^ … if we start this comment with “^” instead of “}” it and all
             # } code up to the next segment's first comment starts folded
             if foldPrefix? and singleline.indexOf(foldPrefix) is 0
 
               # } … so folding stops below, as this is a new segment !
               # Let's strip the “^” character from our documentation
-              currSegment.foldMarker = line.replace singleStrip, match[1]
+              currSegment.foldMarker = line.replace singleStrip, '$1'
 
             else
               currSegment.comments.push singleline
