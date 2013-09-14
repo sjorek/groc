@@ -9965,7 +9965,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
 
   buildNav = function(metaInfo) {
     var node, sourceURL, _i, _len;
-    nav$ = $("<nav>\n  <ul class=\"tools\">\n    <li class=\"toggle toc-toggle toc-toggle1\">\n      <a title=\"Show or hide table of contents\">Table of Contents</a>\n    </li>\n    <li class=\"search\">\n      <input id=\"search\" type=\"search\" autocomplete=\"off\"/>\n    </li>\n    <li class=\"toggle layout-toggle layout-toggle1\">\n      <a title=\"Toogle documentation column to full-width (= switch between single- and two-column layout)\">Toogle full-width</a>\n    </li>\n  </ul>\n  <ol class=\"toc\"/>\n  </div>\n</nav>").appendTo($('body'));
+    nav$ = $("<nav>\n  <ul class=\"tools\">\n    <li class=\"toggle toc-toggle toc-toggle4\">\n      <a title=\"Show or hide the table of contents\">Table of Contents</a>\n    </li>\n    <li class=\"search\">\n      <input id=\"search\" type=\"search\" autocomplete=\"off\"/>\n    </li>\n    <li class=\"toggle layout-toggle layout-toggle9\">\n      <a title=\"Toogle documentation column to full-width (= switch between single- and two-column layout)\">Toogle full-width</a>\n    </li>\n  </ul>\n  <ol class=\"toc\"/>\n  </div>\n</nav>").appendTo($('body'));
     toc$ = nav$.find('.toc');
     if (metaInfo.githubURL) {
       if (metaInfo.documentPath === 'index') {
