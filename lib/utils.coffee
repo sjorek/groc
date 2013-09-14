@@ -17,15 +17,26 @@ Logger               = require './utils/logger'
 DOCTAGHelpers        = require './utils/doctag_helpers'
 
 module.exports = Utils =
-  # Escape regular expression characters in a string
-  #
-  # Code from http://zetafleet.com/ via http://simonwillison.net/2006/Jan/20/escape/
-  regexpEscape: (string) ->
-    string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+
+  # Code from <http://zetafleet.com/>
+  # via <http://blog.simonwillison.net/post/57956816139/escape>
+  regexpEscapePattern : /[-[\]{}()*+?.,\\^$|#\s]/g
+  regexpEscapeReplace : '\\$&'
+
+  # Escape regular expression characters in a String, an Array of Strings or
+  # any Object having a proper toString-method
+  regexpEscape: (obj) ->
+    if _.isArray obj
+      _.invoke(obj, 'replace', @regexpEscapePattern, @regexpEscapeReplace)
+    else if _.isString obj
+      obj.replace(@regexpEscapePattern, @regexpEscapeReplace)
+    else
+      @regexpEscape "#{obj}"
 
   # Detect and return the language that a given file is written in.
   #
-  # The language is also annotated with a name property, matching the laguages key in LANGUAGES.
+  # The language is also annotated with a name property, matching the language's
+  # key in LANGUAGES.
   getLanguage: (filePath, languageDefinitions = './languages') ->
     unless @_languageDetectionCache?
       @_languageDetectionCache = []
@@ -36,7 +47,8 @@ module.exports = Utils =
         language.name = name
 
         for matcher in language.nameMatchers
-          # If the matcher is a string, we assume that it's a file extension.  Stick it in a regex:
+          # If the matcher is a string, we assume that it's a file extension.
+          # Stick it in a regex:
           matcher = ///#{@regexpEscape matcher}$/// if _.isString matcher
 
           @_languageDetectionCache.push [matcher, language]
@@ -46,14 +58,17 @@ module.exports = Utils =
     for pair in @_languageDetectionCache
       return pair[1] if baseName.match pair[0]
 
-  # Map a list of file paths to relative target paths by stripping prefixes off of them.
+  # Map a list of file paths to relative target paths by stripping prefixes.
   mapFiles: (resolveRoot, files, stripPrefixes) ->
-    # Ensure that we're dealing with absolute paths across the board
+    # Ensure that we're dealing with absolute paths across the board.
     files = files.map (f) -> path.resolve resolveRoot, f
-    # And that the strip prefixes all end with a /, to avoid a target path being absolute.
-    stripPrefixes = stripPrefixes.map (p) -> path.join( "#{path.resolve resolveRoot, p}#{CompatibilityHelpers.pathSep}" )
 
-    # Prefixes are stripped in order of most specific to least (# of directories deep)
+    # And that the strip prefixes all end with a /, avoids absolute target path.
+    stripPrefixes = stripPrefixes.map (p) ->
+      path.join "#{path.resolve resolveRoot, p}#{CompatibilityHelpers.pathSep}"
+
+    # Prefixes are stripped in the order of most specific to least
+    # (# of directories deep)
     prefixes = stripPrefixes.sort (a,b) => @pathDepth(b) - @pathDepth(a)
 
     result = {}
@@ -62,11 +77,11 @@ module.exports = Utils =
       file = absPath
 
       for stripPath in stripPrefixes
-        file = file[stripPath.length..] if file[0...stripPath.length] == stripPath
+        file = file[stripPath.length..] if file[0...stripPath.length] is stripPath
 
-      # We also strip the extension under the assumption that the consumer of this path map is going
-      # to substitute in their own.  Plus, if they care about the extension, they can get it from
-      # the keys of the map.
+      # We also strip the extension under the assumption that the consumer of
+      # this path map is going to substitute in their own.  Plus, if they care
+      # about the extension, they can get it from the keys of the map.
       result[absPath] = if not path.extname(file) then file else file[0...-path.extname(file).length]
 
     result
@@ -80,9 +95,9 @@ module.exports = Utils =
 
       result.push arg if arg.slice(-1) == CompatibilityHelpers.pathSep
 
-    # For now, we try to avoid ambiguous situations by guessing the FIRST directory given.  The
-    # assumption is that you don't want merged paths, but probably did specify the most important
-    # source directory first.
+    # For now, we try to avoid ambiguous situations by guessing the FIRST
+    # directory given.  The assumption is that you don't want merged paths,
+    # but probably did specify the most important source directory first.
     result = _(result).uniq()[...1]
 
   # How many directories deep is a given path?
@@ -93,9 +108,9 @@ module.exports = Utils =
   splitSource: (data, language, options={}) ->
     lines = data.split /\r?\n/
 
-    # Always strip shebangs - but don't shift it off the array to avoid the perf hit of walking the
-    # array to update indices.
-    lines[0] = '' if lines[0][0..1] == '#!'
+    # Always strip shebangs - but don't shift it off the array to
+    # avoid the perf hit of walking the array to update indices.
+    lines[0] = '' if lines[0][0..1] is '#!'
 
     # Special case: If the language is comments-only, we can skip pygments
     return [new @Segment [], lines] if language.commentsOnly
@@ -116,34 +131,62 @@ module.exports = Utils =
       codeLineMatcher = ///^(#{language.literateCodeLines.join('|')})(?:(.*))?$///
 
     if language.singleLineComment?
-      singleLineMatcher = ///^\s*(#{language.singleLineComment.join('|')})(?:#{whitespaceMatch}(.*))?$///
+      singleLines = @regexpEscape(language.singleLineComment).join '|'
+      aSingleLine = ///^\s*(?:#{singleLines})(?:#{whitespaceMatch}(.*))?$///
 
     if language.multiLineComment?
       mlc = language.multiLineComment
 
-      blockStarts = _.invoke _.select(mlc, (v, i) -> i % 3 == 0), 'replace', /([\\\*\{\}])/g, '\\\$1'
-      blockLines  = _.invoke _.select(mlc, (v, i) -> i % 3 == 1), 'replace', /([\\\*\{\}])/g, '\\\$1'
-      blockEnds   = _.invoke _.select(mlc, (v, i) -> i % 3 == 2), 'replace', /([\\\*\{\}])/g, '\\\$1'
+      blockStarts = @regexpEscape(_.select mlc, (v, i) -> i % 3 == 0).join '|'
+      blockLines  = @regexpEscape(_.select mlc, (v, i) -> i % 3 == 1).join '|'
+      blockEnds   = @regexpEscape(_.select mlc, (v, i) -> i % 3 == 2).join '|'
 
-
-      blockStartMatcher = ///^\s*(#{blockStarts.join '|'})(?:#{blockLines.join '|'})?(?:#{whitespaceMatch}(.*))?$///
-      blockLineMatcher =  ///^\s*(#{blockLines.join '|'})#{whitespaceMatch}(.*)$///
-      blockEndMatcher =   ///^\s*(?:#{blockLines.join '|'})?(.*)(#{blockEnds.join '|'})$///
-
-      blockSingleLineMatcher = ///^\s*(#{blockStarts.join '|'})#{whitespaceMatch}(.*)#{whitespaceMatch}(#{blockEnds.join '|'})///
-
-      if language.singleLineComment?
-        singleLineMatcher = ///#{singleLineMatcher.source}|#{blockSingleLineMatcher.source}///
-      else
-        singleLineMatcher = blockSingleLineMatcher
+      # No need to match for any particular real content in `aBlockStart`, as
+      # either `aBlockLine`, `aBlockEnd` or the `isBlock` catch-all fallback
+      # handles the real content, in the implementation below.
+      aBlockStart = ///^\s*(?:#{blockStarts}(?:#{blockLines}#{whitespaceMatch})?)///
+      aBlockLine  = ///^\s*(?:#{blockLines}#{whitespaceMatch})(.*)$///
+      aBlockEnd   = ///^\s*(?:#{blockLines}#{whitespaceMatch})?(.*)(?:#{blockEnds})$///
+      aEmptyLine  = ///^\s*(?:#{blockLines})$///
 
     if language.ignorePrefix?
-      stripIgnorePrefix = ///(#{language.singleLineComment.join '|'})#{whitespaceMatch}#{Utils.regexpEscape language.ignorePrefix}///
+      {ignorePrefix} = language
 
     if language.foldPrefix?
-      stripFoldPrefix = ///(#{language.singleLineComment.join '|'})#{whitespaceMatch}#{Utils.regexpEscape language.foldPrefix}///
+      {foldPrefix} = language
 
-    inBlock = false
+    if (ignorePrefix? or foldPrefix?) and (singleLines? or blockStarts?)
+      stripMarks = []
+      stripMarks.push ignorePrefix if ignorePrefix?
+      stripMarks.push foldPrefix if foldPrefix?
+      stripMarks = @regexpEscape(stripMarks).join '|'
+
+      # The dirty stuff happens here …
+      singleStrip = ///
+        (
+          #{singleLines}                    # The comment marker(s) to keep …
+          #{whitespaceMatch}                # … plus whitespace
+        )
+        (?:#{stripMarks})                   # The marker(s) to strip from result
+      /// if singleLines?
+
+      # … and here. 8-)
+      blockStrip = ///
+        (
+          #{blockStarts}                    # The comment marker(s) to keep …
+          (?:#{blockLines})?                # … optionally plus one more mark
+          #{whitespaceMatch}                # … plus whitespace
+        )
+        (?:#{stripMarks})                   # The marker(s) to strip from result
+      /// if blockStarts?
+
+
+    isBlock   = false
+    isFolded  = false
+    isIgnored = false
+
+    blockline = null
+
     inLiterateBlock = isLiterateCode is true
 
     # This flag indicates if the previous line was empty, hence literate code
@@ -153,6 +196,7 @@ module.exports = Utils =
     # of code.  The initial value `true` allows us to immediately start with
     # code, although this is quite unusual.
     literateCodePossible = isLiterateCode is true
+
 
     # Now iterate over each line
     for line in lines
@@ -204,75 +248,153 @@ module.exports = Utils =
           # we skip further processing this line, as if `commentsOnly` is true
           continue
 
-      if inBlock
-        if (match = line.match blockEndMatcher)?
-          currSegment.comments.push match[1]
-          inBlock = false
+      # Match that line to the language's block-comment syntax, if it exists
+      if aBlockStart? and not isBlock and aBlockStart.test line
 
-        else if (match = line.match blockLineMatcher)?
-          currSegment.comments.push match[2]
-
-        else
-          ###
-          # We are in a multi-line block-comment, hence the whole line is part
-          # of the comment.  This is especially needed for multi-line comment
-          # contents starting immediately at the beginning of a line (without
-          # indention, like those in CoffeeScripts).  The `blockLineMatcher`
-          # from above can not catch those comments due to the `whitespaceMatch`
-          # restrictions from above.  Empty block-comment lines, like the one
-          # after this paragraph have no `whitespaceMatch` restriction …
-          #
-          # @description This comment itself is a multi-line block-comment with
-          #             `@doctags`, indention and (needlessly) prefixed by `'#'`.
-          # @description The very first comment in this file would render it's
-          #              content as code if this `else`-clause is missing.
-          ###
-          if ///^\s*(#{blockLines.join '|'})$///.test line
-            currSegment.comments.push ""
-          else
-            currSegment.comments.push line
-
-      # Match that line to the language's multi line comment syntax, if it exists
-      else if language.multiLineComment? and (match = line.match blockStartMatcher)?
+        isBlock = true
 
         if currSegment.code.length > 0
           segments.push currSegment
-          currSegment = new @Segment
+          currSegment   = new @Segment
+          isFolded      = false
 
-        if line[line.length - 1] == language.foldPrefix
-          currSegment.hide = yes
+        # After stripping the block-comments start, preserving any inline stuff,
+        # we continue at the `if isBlock` statement below.  We don't touch the
+        # `line` itself, as we might need it.
+        blockline = line.replace aBlockStart, ''
 
-        currSegment.comments.push match[2]
-        inBlock = true
+        ### ^
+        In block-comments only `aBlockStart` may initiate the collapsing.  This
+        comment utilizes such a syntax.
+        ###
+        if foldPrefix? and blockline.indexOf(foldPrefix) is 0
+
+          # Let's strip the “^” character from our documentation,
+          # using the untouched original `line`
+          blockline = line.replace blockStrip, match[1]
+          isFolded  = true
+
+        ### }
+        In block-comments only `aBlockStart` may initiate the embedding.  This
+        comment utilizes such a syntax.
+        ###
+        else if ignorePrefix? and blockline.indexOf(ignorePrefix) is 0
+
+          # Let's strip the “}” character from our documentation,
+          # using the untouched original `line`
+          blockline = line.replace blockStrip, match[1]
+          isIgnored = true
+
+      # This flag is triggered above.
+      if isBlock
+
+        # Catch all lines, in the case there is no `blockline` from above.
+        blockline = line if not blockline?
+
+        # Match a block-comment's end, even when `isFolded or isIgnored` flags
+        # are true …
+        if (match = blockline.match aBlockEnd)?
+          ### … to ensure that we finally leave the block-comment, especially the ones on a single-line like this one. ###
+          isBlock = false
+
+          # Strip any `blockline`-prefixes or -suffixes when
+          # `isFolded or isIgnored` flags are false.
+          blockline = match[1] unless isFolded or isIgnored
+
+        # Match a block-comment's line, when `isFolded or isIgnored` are false.
+        else if not (isFolded or isIgnored) and (match = line.match aBlockLine)?
+          # Strip any `blockline`-prefixes or -suffixes and continue below.
+          blockline = match[1]
+
+        if isIgnored
+          currSegment.code.push blockline
+
+          # Make sure that the next cycle starts fresh, 
+          # if we are going to leave the block.
+          isIgnored = false if not isBlock
+
+        else
+          # The previous cycle contained code, so lets start a new segment, but
+          # only if the `isFolded` flag is false or if this is the first line to
+          # fold (= no foldMarker exists).
+          if currSegment.code.length > 0 and (not isFolded or not currSegment.foldMarker?)
+            segments.push currSegment
+            currSegment = new @Segment
+
+          if isFolded
+
+            # If we have a foldMarker collect the `blockline` as code …
+            if currSegment.foldMarker?
+              currSegment.code.push blockline
+
+            # … else if we the `blockline` gets assigned to the `foldMarker`.
+            else
+              currSegment.foldMarker = blockline
+
+          else
+
+            ###
+            # Implements the default handler for the `blockline` from above as
+            # well as a catch-all fallback handling anything in a block-comment
+            # that doesn't match anything above.
+            #
+            # So are in a multi-line block-comment, hence the whole line is part
+            # of the comment.  This is especially needed for multi-line comment
+            # contents starting immediately at the beginning of a line (without
+            # indention, like those in CoffeeScripts).  The `aBlockLine` from
+            # above can not catch those comments due to the `whitespaceMatch`
+            # restrictions from above.  Empty block-comment lines, like the one
+            # after this paragraph have no `whitespaceMatch` restriction …
+            #
+            # @description This comment is a block-comment with `@doctags`,
+            #              indention and (needlessly) prefixed by `'#'`.
+            # @description The very first comment in this file would render it's
+            #              content as code if this `else`-clause is missing.
+            ###
+            if aEmptyLine.test line
+              currSegment.comments.push ""
+
+            ###
+            Collect all but start- and end-block-comment lines, but include
+            single-line block-comments that match `aBlockStart` and `aBlockEnd`,
+            having the `isBlock` flag set to false at this point.
+            ###
+            else if (not isBlock and aBlockStart.test line) or not aBlockEnd.test line
+              currSegment.comments.push blockline
+
+        # Make sure the next cycle starts fresh.
+        blockline = null
 
       # Match that line to the language's single line comment syntax.
       #
       # However, we treat all comments beginning with } as inline code commentary
       # and comments starting with ^ cause that comment and the following code
       # block to start folded.
-      else if (match = line.match singleLineMatcher)?
+      else if (match = line.match aSingleLine)?
 
-        value = (match[2] || match[4])
+        singleline = match[1]
 
-        if value? and value isnt ''
+        if singleline? and singleline isnt ''
 
           # } For example, this comment should be treated as part of our code.
           # } Achieved by prefixing the comment's content with “}”
-          if stripIgnorePrefix? and value.indexOf(language.ignorePrefix) is 0
+          if ignorePrefix? and singleline.indexOf(ignorePrefix) is 0
 
             # } Hint: never start a new segment here, these comments are code !
             # } If we would do so the segments look visually not so appealing in
             # } the narrowed single-column-view.
 
             # Let's strip the “}” character from our documentation
-            currSegment.code.push line.replace stripIgnorePrefix, match[1]
+            currSegment.code.push line.replace singleStrip, match[1]
 
           else
 
-            # The previous cycle contained code, lets start a new segment
+            # The previous cycle contained code, so lets start a new segment
+            # and stop any folding.
             if currSegment.code.length > 0
               segments.push currSegment
-              currSegment = new @Segment
+              currSegment   = new @Segment
+              isFolded      = false
 
             # It's always a good idea to put a comment before folded content
             # like this one here, because folded comments always have their
@@ -286,13 +408,14 @@ module.exports = Utils =
 
             # ^ … if we start this comment with “^” instead of “}” it and all
             # } code up to the next segment's first comment starts folded
-            if stripFoldPrefix? and value.indexOf(language.foldPrefix) is 0
-              # } … so folding stops below, as this is a new segment !
+            if foldPrefix? and singleline.indexOf(foldPrefix) is 0
 
+              # } … so folding stops below, as this is a new segment !
               # Let's strip the “^” character from our documentation
-              currSegment.foldMarker = line.replace stripFoldPrefix, match[1]
+              currSegment.foldMarker = line.replace singleStrip, match[1]
+
             else
-              currSegment.comments.push value
+              currSegment.comments.push singleline
 
       else
         currSegment.code.push line
