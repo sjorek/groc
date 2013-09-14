@@ -176,13 +176,13 @@ buildNav = (metaInfo) ->
   nav$ = $("""
     <nav>
       <ul class="tools">
-        <li class="toggle toc-toggle toc-toggle1">
-          <a title="Show or hide table of contents">Table of Contents</a>
+        <li class="toggle toc-toggle toc-toggle4">
+          <a title="Show or hide the table of contents">Table of Contents</a>
         </li>
         <li class="search">
           <input id="search" type="search" autocomplete="off"/>
         </li>
-        <li class="toggle layout-toggle layout-toggle1">
+        <li class="toggle layout-toggle layout-toggle9">
           <a title="Toogle documentation column to full-width (= switch between single- and two-column layout)">Toogle full-width</a>
         </li>
       </ul>
