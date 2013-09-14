@@ -124,11 +124,9 @@ module.exports = Utils =
     # Enforced whitespace after the comment token
     whitespaceMatch = if options.requireWhitespaceAfterToken then '\\s' else '\\s?'
 
-    # this flag is used to signal literate source code
-    isLiterateCode = false
     if language.literateCodeLines?
-      isLiterateCode = true
-      codeLineMatcher = ///^(#{language.literateCodeLines.join('|')})(?:(.*))?$///
+      codeLines  = @regexpEscape(language.literateCodeLines).join '|'
+      aCodeLine  = ///^(?:#{codeLines})(?:(.*))?$///
 
     if language.singleLineComment?
       singleLines = @regexpEscape(language.singleLineComment).join '|'
@@ -181,13 +179,12 @@ module.exports = Utils =
       /// if blockStarts?
 
 
+    isLiteral = aCodeLine? # If available we start in literal parsing mode.
     isBlock   = false
     isFolded  = false
     isIgnored = false
 
     blockline = null
-
-    inLiterateBlock = isLiterateCode is true
 
     # This flag indicates if the previous line was empty, hence literate code
     # must always be surrounded (or at least introduced) by an empty line, ie.
@@ -195,57 +192,66 @@ module.exports = Utils =
     # bullet-lists or the like, which may accidently match the start of a line
     # of code.  The initial value `true` allows us to immediately start with
     # code, although this is quite unusual.
-    literateCodePossible = isLiterateCode is true
-
+    canCode = aCodeLine?
 
     # Now iterate over each line
     for line in lines
 
-      if isLiterateCode
-        if literateCodePossible and (match = line.match codeLineMatcher)?
-          value = (match[2] || match[4])
-          continue if not value? or value is ''
+      if aCodeLine?
+
+        if canCode and (match = line.match aCodeLine)?
+          codeline = match[1]
+
+          # Skip empty code-lines (often used to close a code-block).
+          # TODO: Skipping empty code-lines is certainly not perfect yet!
+          continue if not codeline? or codeline is ''
 
           # The previous cycle contained literate comments - in literate mode
           # we absolutely want to separate code from comments into independent
-          # segments, as overlapping will make no sense in most cases
-          if inLiterateBlock and currSegment.comments.length > 0
+          # segments, as overlapping will make no sense in most cases.  Really!?
+          if isLiteral and currSegment.comments.length > 0
             segments.push currSegment
-            currSegment = new @Segment
+            currSegment   = new @Segment
+            isFolded      = false # Make sure to reset folding state.
 
-          inLiterateBlock = false
+          isLiteral = false
 
           # Process the matching literate code as if it isn't literate, hence
           # we continue further processing of this line and therefore no
           # `continue`-statement occurs here.  Compare this to the following
-          # `else`-statement
-          line = value
+          # `else`-statement.
+          line = codeline
 
         else
-          # code-block requires an introducing empty line,
-          # also see`literateCodePossible` initialization above
-          literateCodePossible = line is ''
+          # A code-block requires an introducing empty line, to distinguish code
+          # from nested bullet-list or the like, as described in the `canCode` 
+          # flag initialization above.
+          canCode = line is ''
 
-          unless inLiterateBlock
-            inLiterateBlock = true
+          if isLiteral
+            # The previous cycle contained literate code, so let's start a new
+            # segment, as in literate mode we separate code from comments in
+            # independent segments, as overlapping makes no sense in most cases.
+            if currSegment.code.length > 0
+              segments.push currSegment
+              currSegment   = new @Segment
+              isFolded      = false # Make sure to reset folding state.
+
+          # Switch to plain literal comments
+          else
+            isLiteral = true
 
             # From the previous cycle are comments left not being literate,
-            # so let's start a new segment
+            # so let's start a new segment and reset folding state.
             if currSegment.comments.length > 0
               segments.push currSegment
-              currSegment = new @Segment
+              currSegment   = new @Segment
+              isFolded      = false
 
-          # The previous cycle contained literate code,
-          # so let's start a new segment, as in literate mode
-          # we separate code from comments into independent
-          # segments, as overlapping makes no sense in most cases
-          else if currSegment.code.length > 0
-            segments.push currSegment
-            currSegment = new @Segment
-
+          # Collect this line, even empty ones. Really ?
           currSegment.comments.push line
 
-          # we skip further processing this line, as if `commentsOnly` is true
+          # We skip further processing this line.  A literal is as it is.
           continue
 
       # Match that line to the language's block-comment syntax, if it exists
