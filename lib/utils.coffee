@@ -206,8 +206,8 @@ module.exports = Utils =
 
             # The previous cycle contained code, lets start a new segment
             if currSegment.code.length > 0
-               segments.push currSegment
-               currSegment = new @Segment
+              segments.push currSegment
+              currSegment = new @Segment
 
             # It's always a good idea to put a comment before folded content
             # like this one here, because folded comments always have their
