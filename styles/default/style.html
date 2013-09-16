@@ -461,8 +461,8 @@ we are relying on for layout.</p></div></div><div class="code"><div class="wrapp
     <span class="nd">+background</span><span class="p">(</span><span class="nf">linear-gradient</span><span class="p">(</span><span class="no">top</span><span class="o">,</span> <span class="nf">lighten</span><span class="p">(</span><span class="nv">$tools-background-color</span><span class="o">,</span> <span class="mi">10</span><span class="kt">%</span><span class="p">)</span><span class="o">,</span> <span class="nf">darken</span><span class="p">(</span><span class="nv">$tools-background-color</span><span class="o">,</span> <span class="mi">10</span><span class="kt">%</span><span class="p">)))</span>
     <span class="nd">+border-bottom-left-radius</span><span class="p">(</span><span class="mi">0</span><span class="mf">.4</span><span class="kt">em</span><span class="p">)</span>
     <span class="na">border-bottom</span><span class="o">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="no">solid</span> <span class="nv">$tools-foreground-color</span>
-    <span class="na">border-left</span><span class="o">:</span>   <span class="mi">1</span><span class="kt">px</span> <span class="no">solid</span> <span class="nv">$tools-foreground-color</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This tiny snippet moved a few lines down, to handle it per layout</p></div></div><div class="code"><div class="wrapper">    <span class="c1">// @media (max-width: #{$scale-start-width})</span>
-    <span class="c1">//   +border-bottom-left-radius(0)</span>
+    <span class="na">border-left</span><span class="o">:</span>   <span class="mi">1</span><span class="kt">px</span> <span class="no">solid</span> <span class="nv">$tools-foreground-color</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This tiny snippet moved a few lines down, to handle it per layout</p></div></div><div class="code"><div class="wrapper">    <span class="c1">//  @media (max-width: #{$scale-start-width})</span>
+    <span class="c1">//    +border-bottom-left-radius(0)</span>
 
     <span class="nt">li</span>
       <span class="na">border-right</span><span class="o">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="no">solid</span> <span class="nv">$tools-foreground-color</span>
@@ -493,9 +493,9 @@ is no (visible) text left to select, but we leave for now</p></div></div><div cl
       <span class="na">background-size</span><span class="o">:</span> <span class="mi">20</span><span class="kt">px</span> <span class="mi">24</span><span class="kt">px</span>  <span class="c1">// original 21px x 25px</span>
       <span class="na">background-image</span><span class="o">:</span> <span class="nf">inline-image</span><span class="p">(</span><span class="s1">&#39;</span><span class="s2">toc-close-icon-ds3.png&#39;</span><span class="p">)</span>
 
-    <span class="c1">// .layout-toggle a //  defined below !</span>
-    <span class="c1">//   background-size</span>
-    <span class="c1">//   background-image</span>
+    <span class="c1">//  .layout-toggle a //  defined below !</span>
+    <span class="c1">//    background-size</span>
+    <span class="c1">//    background-image</span>
 
   <span class="k">&amp;</span><span class="nc">.active</span> <span class="nc">.tools</span>
     <span class="nd">+border-bottom-left-radius</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>

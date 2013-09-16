@@ -8,7 +8,7 @@ user.  So we wrap git and do error handling ourselves...</p></div></div><div cla
   <span class="k">for</span> <span class="o">((</span> <span class="nv">i</span> <span class="o">=</span> 1; i &lt;<span class="o">=</span> <span class="nv">$#;</span> i++ <span class="o">))</span>; <span class="k">do</span>
 <span class="k">    </span><span class="nb">eval </span><span class="nv">arg</span><span class="o">=</span><span class="se">\$</span><span class="nv">$i</span>
     <span class="k">if</span> <span class="o">[[</span> <span class="nv">$arg</span> <span class="o">==</span> *<span class="se">\ </span>* <span class="o">]]</span>; <span class="k">then</span>
-      <span class="c"># We assume that double quotes will not be used as part of argument values.</span>
+      <span class="c">#  We assume that double quotes will not be used as part of argument values.</span>
       <span class="nv">args</span><span class="o">=</span><span class="s2">&quot;$args \&quot;$arg\&quot;&quot;</span>
     <span class="k">else</span>
 <span class="k">      </span><span class="nv">args</span><span class="o">=</span><span class="s2">&quot;$args $arg&quot;</span>
@@ -16,7 +16,7 @@ user.  So we wrap git and do error handling ourselves...</p></div></div><div cla
 <span class="k">  done</span>
 
 <span class="k">  </span><span class="nb">set</span> +e
-  <span class="c"># Even though we wrap the arguments in quotes, bash is splitting on whitespace within.  Why?</span>
+  <span class="c">#  Even though we wrap the arguments in quotes, bash is splitting on whitespace within.  Why?</span>
   <span class="nv">result</span><span class="o">=</span><span class="sb">`</span><span class="nb">eval </span>git <span class="nv">$args</span> 2&gt;&amp;1<span class="sb">`</span>
   <span class="nv">status</span><span class="o">=</span><span class="nv">$?</span>
   <span class="nb">set</span> -e
