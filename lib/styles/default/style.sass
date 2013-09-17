@@ -927,10 +927,9 @@ input[type="search"]
 
 // ## Code folding
 html.one-column-layout body .segment, html.two-column-layout body .segment
+
   .code .marker
-    display:  block
-    position: relative
-    +box-shadow(none)
+    display:  none
 
   .code.folded
     .wrapper
@@ -939,7 +938,8 @@ html.one-column-layout body .segment, html.two-column-layout body .segment
     .marker
       +border-radius(0.2em)
       +box-shadow(#2f3539 1px 1px 1px 0)
-      display: inline-block
+      display: block
+      position: relative
       border: 1px solid #73787f
       padding: 0.2em 0.5em
       background: #58616b
