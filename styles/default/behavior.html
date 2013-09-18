@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="en" class="two-column-layout"><head><title>styles/default/behavior</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="styles/default/behavior"><meta name="groc-project-path" content="lib/styles/default/behavior.coffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/styles/default/behavior.coffee">lib/styles/default/behavior.coffee</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="nv">tableOfContents = </span><span class="o">&lt;%=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">tableOfContents</span><span class="p">)</span> <span class="o">%&gt;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="page-behavior">Page Behavior</h1></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="table-of-contents">Table of Contents</h2></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Global jQuery references to navigation components we care about.</p></div></div><div class="code"><div class="wrapper"><span class="nv">html$ = </span><span class="kc">null</span>
-<span class="nv">nav$ = </span><span class="kc">null</span>
+<!DOCTYPE html><html lang="en"><head><title>styles/default/behavior</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="styles/default/behavior"><meta name="groc-project-path" content="lib/styles/default/behavior.coffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/styles/default/behavior.coffee">lib/styles/default/behavior.coffee</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="nv">tableOfContents = </span><span class="o">&lt;%=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">tableOfContents</span><span class="p">)</span> <span class="o">%&gt;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h1 id="page-behavior">Page Behavior</h1></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="table-of-contents">Table of Contents</h2></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Global jQuery references to navigation components we care about.</p></div></div><div class="code"><div class="wrapper"><span class="nv">nav$ = </span><span class="kc">null</span>
 <span class="nv">toc$ = </span><span class="kc">null</span>
 
 <span class="nv">setTableOfContentsActive = </span><span class="nf">(active) -&gt;</span>
@@ -131,14 +130,9 @@ a user to quickly spam left to move up the tree.</p></div></div><div class="code
   <span class="nv">nav$ = </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">    &lt;nav&gt;</span>
 <span class="s">      &lt;ul class=&quot;tools&quot;&gt;</span>
-<span class="s">        &lt;li class=&quot;toggle toc-toggle toc-toggle4&quot;&gt;</span>
-<span class="s">          &lt;a title=&quot;Show or hide the table of contents&quot;&gt;Table of Contents&lt;/a&gt;</span>
-<span class="s">        &lt;/li&gt;</span>
+<span class="s">        &lt;li class=&quot;toggle&quot;&gt;Table of Contents&lt;/li&gt;</span>
 <span class="s">        &lt;li class=&quot;search&quot;&gt;</span>
 <span class="s">          &lt;input id=&quot;search&quot; type=&quot;search&quot; autocomplete=&quot;off&quot;/&gt;</span>
-<span class="s">        &lt;/li&gt;</span>
-<span class="s">        &lt;li class=&quot;toggle layout-toggle layout-toggle9&quot;&gt;</span>
-<span class="s">          &lt;a title=&quot;Toogle documentation column to full-width (= switch between single- and two-column layout)&quot;&gt;Toogle full-width&lt;/a&gt;</span>
 <span class="s">        &lt;/li&gt;</span>
 <span class="s">      &lt;/ul&gt;</span>
 <span class="s">      &lt;ol class=&quot;toc&quot;/&gt;</span>
@@ -153,8 +147,10 @@ a user to quickly spam left to move up the tree.</p></div></div><div class="code
       <span class="nv">sourceURL = </span><span class="s">&quot;</span><span class="si">#{</span><span class="nx">metaInfo</span><span class="p">.</span><span class="nx">githubURL</span><span class="si">}</span><span class="s">/blob/master/</span><span class="si">#{</span><span class="nx">metaInfo</span><span class="p">.</span><span class="nx">projectPath</span><span class="si">}</span><span class="s">&quot;</span>
 
     <span class="nx">nav$</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s">&#39;.tools&#39;</span><span class="p">).</span><span class="nx">prepend</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">      &lt;li class=&quot;toggle github-toggle&quot;&gt;</span>
-<span class="s">        &lt;a href=&quot;</span><span class="si">#{</span><span class="nx">sourceURL</span><span class="si">}</span><span class="s">&quot; title=&quot;View source on GitHub&quot;&gt;View source on GitHub&lt;/a&gt;</span>
+<span class="s">      &lt;li class=&quot;github&quot;&gt;</span>
+<span class="s">        &lt;a href=&quot;</span><span class="si">#{</span><span class="nx">sourceURL</span><span class="si">}</span><span class="s">&quot; title=&quot;View source on GitHub&quot;&gt;</span>
+<span class="s">          View source on GitHub</span>
+<span class="s">        &lt;/a&gt;</span>
 <span class="s">      &lt;/li&gt;</span>
 <span class="s">    &quot;&quot;&quot;</span>
 
@@ -166,13 +162,13 @@ a user to quickly spam left to move up the tree.</p></div></div><div class="code
 <span class="nv">buildTOCNode = </span><span class="nf">(node, metaInfo) -&gt;</span>
   <span class="nv">node$ = </span><span class="nx">$</span><span class="p">(</span><span class="s">&quot;&quot;&quot;&lt;li class=&quot;</span><span class="si">#{</span><span class="nx">node</span><span class="p">.</span><span class="nx">type</span><span class="si">}</span><span class="s">&quot;/&gt;&quot;&quot;&quot;</span><span class="p">)</span>
 
-  <span class="c1">#  just to clarify: we use it in the `clickLabel`-method below, but can</span>
-  <span class="c1">#  reference the first time after initializing it a few more lines below</span>
+  <span class="c1">#} just to clarify: we use it in the `clickLabel`-method below, but can</span>
+  <span class="c1">#} reference the first time after initializing it a few more lines below</span>
   <span class="nv">discloser = </span><span class="kc">null</span>
 
   <span class="k">switch</span> <span class="nx">node</span><span class="p">.</span><span class="nx">type</span>
     <span class="k">when</span> <span class="s">&#39;file&#39;</span>
-      <span class="c1">#  Single line to avoid extra whitespace</span>
+      <span class="c1">#} Single line to avoid extra whitespace</span>
       <span class="nx">node$</span><span class="p">.</span><span class="nx">append</span> <span class="s">&quot;&quot;&quot;&lt;a class=&quot;label&quot; href=&quot;</span><span class="si">#{</span><span class="nx">metaInfo</span><span class="p">.</span><span class="nx">relativeRoot</span><span class="si">}#{</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">targetPath</span><span class="si">}</span><span class="s">.html&quot; title=&quot;</span><span class="si">#{</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">projectPath</span><span class="si">}</span><span class="s">&quot;&gt;&lt;span class=&quot;text&quot;&gt;</span><span class="si">#{</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span><span class="s">&lt;/span&gt;&lt;/a&gt;&quot;&quot;&quot;</span>
       <span class="nv">clickLabel = </span><span class="nf">(evt) -&gt;</span>
         <span class="k">if</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">target</span> <span class="o">is</span> <span class="nx">discloser</span>
@@ -212,65 +208,21 @@ a user to quickly spam left to move up the tree.</p></div></div><div class="code
     <span class="nv">documentPath: </span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;meta[name=&quot;groc-document-path&quot;]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;content&#39;</span><span class="p">)</span>
     <span class="nv">projectPath: </span> <span class="nx">$</span><span class="p">(</span><span class="s">&#39;meta[name=&quot;groc-project-path&quot;]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s">&#39;content&#39;</span><span class="p">)</span>
 
-  <span class="nv">html$      = </span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;html&#39;</span><span class="p">)</span>
-  <span class="nv">nav$       = </span><span class="nx">buildNav</span> <span class="nx">metaInfo</span>
-  <span class="nv">toc$       = </span><span class="nx">nav$</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.toc&#39;</span>
-  <span class="nv">search$    = </span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;#search&#39;</span><span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Select the current file, and expand up to it</p></div></div><div class="code"><div class="wrapper">  <span class="nx">selectNodeByDocumentPath</span> <span class="nx">metaInfo</span><span class="p">.</span><span class="nx">documentPath</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&#39;#&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We use the search box's focus state to toggle the table of contents.  This ensures that search
+  <span class="nv">nav$    = </span><span class="nx">buildNav</span> <span class="nx">metaInfo</span>
+  <span class="nv">toc$    = </span><span class="nx">nav$</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.toc&#39;</span>
+  <span class="nv">search$ = </span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;#search&#39;</span><span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Select the current file, and expand up to it</p></div></div><div class="code"><div class="wrapper">  <span class="nx">selectNodeByDocumentPath</span> <span class="nx">metaInfo</span><span class="p">.</span><span class="nx">documentPath</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&#39;#&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We use the search box's focus state to toggle the table of contents.  This ensures that search
 will always be focused while the toc is up, and that it goes away once the user clicks off.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">search$</span><span class="p">.</span><span class="nx">focus</span> <span class="nf">-&gt;</span> <span class="nx">setTableOfContentsActive</span> <span class="kc">true</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>However, we don't want to hide the table of contents if you are clicking around in the nav.
 The blur event doesn't give us the previous event, sadly, so we first trap mousedown events</p></div></div><div class="code"><div class="wrapper">  <span class="nv">lastMousedownTimestamp = </span><span class="kc">null</span>
   <span class="nx">nav$</span><span class="p">.</span><span class="nx">mousedown</span> <span class="nf">(evt) -&gt;</span>
-    <span class="nv">lastMousedownTimestamp = </span><span class="nx">evt</span><span class="p">.</span><span class="nx">timeStamp</span> <span class="k">unless</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">target</span> <span class="o">==</span> <span class="nx">tocToggle$</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>And we refocus search if we are within a very short duration between the last mousedown in nav$.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">search$</span><span class="p">.</span><span class="nx">blur</span> <span class="nf">(evt) -&gt;</span>
+    <span class="nv">lastMousedownTimestamp = </span><span class="nx">evt</span><span class="p">.</span><span class="nx">timeStamp</span> <span class="k">unless</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">target</span> <span class="o">==</span> <span class="nx">toggle$</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>And we refocus search if we are within a very short duration between the last mousedown in nav$.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">search$</span><span class="p">.</span><span class="nx">blur</span> <span class="nf">(evt) -&gt;</span>
     <span class="k">if</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">timeStamp</span> <span class="o">-</span> <span class="nx">lastMousedownTimestamp</span> <span class="o">&lt;</span> <span class="mi">10</span>
       <span class="nx">search$</span><span class="p">.</span><span class="nx">focus</span><span class="p">()</span>
     <span class="k">else</span>
-      <span class="nx">setTableOfContentsActive</span> <span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set up the table of contents toggle</p></div></div><div class="code"><div class="wrapper">  <span class="nv">tocToggle$ = </span><span class="nx">nav$</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.toc-toggle&#39;</span>
-  <span class="nx">tocToggle$</span><span class="p">.</span><span class="nx">click</span> <span class="nf">(evt) -&gt;</span>
+      <span class="nx">setTableOfContentsActive</span> <span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set up the table of contents toggle</p></div></div><div class="code"><div class="wrapper">  <span class="nv">toggle$ = </span><span class="nx">nav$</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.toggle&#39;</span>
+  <span class="nx">toggle$</span><span class="p">.</span><span class="nx">click</span> <span class="nf">(evt) -&gt;</span>
     <span class="k">if</span> <span class="nx">search$</span><span class="p">.</span><span class="o">is</span> <span class="s">&#39;:focus&#39;</span> <span class="k">then</span> <span class="nx">search$</span><span class="p">.</span><span class="nx">blur</span><span class="p">()</span> <span class="k">else</span> <span class="nx">search$</span><span class="p">.</span><span class="nx">focus</span><span class="p">()</span>
-    <span class="nx">evt</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Note: the following CSS prevents text-selection:</p>
-
-<blockquote>
-<pre><code>-webkit-touch-callout: none;
--webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-</code></pre>
-</blockquote></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Nevertheless, the text-selection prevention is obsolete, as we use an icon.</p></div></div><div class="code folded"><div class="marker wrapper"><span class="c1">  #  # Prevent text selection if the user taps quickly</span></div><div class="wrapper">  <span class="c1">#  # Prevent text selection if the user taps quickly</span>
-  <span class="c1">#  tocToggle$.mousedown (evt) -&gt;</span>
-  <span class="c1">#    evt.preventDefault()</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Crazy hack, ensuring that the defaults of multiple projects published
-to the same github account don't overlap with each other, hence every
-project gets its own cookie per path …</p></div></div><div class="code"><div class="wrapper">  <span class="k">if</span> <span class="nx">location</span><span class="o">?</span><span class="p">.</span><span class="nx">pathname</span>
-    <span class="nv">cookiePath = </span><span class="nx">location</span><span class="o">?</span><span class="p">.</span><span class="nx">pathname</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">...(</span>
-      <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="nx">metaInfo</span><span class="p">.</span><span class="nx">relativeRoot</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">).</span><span class="nx">length</span>
-    <span class="p">)].</span><span class="nx">join</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We get here if we're looking locally at the project or publish the
-project to the root of an webserver, hence clashes of defaults might
-occur; to fix this, we need to do more …  </p>
-
-<p>FIXME: If <code>cookiePath is null</code>, prefix the cookie's name with project name.</p></div></div><div class="code"><div class="wrapper">  <span class="k">else</span>
-    <span class="nv">cookiePath = </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-private"><div class="wrapper"><p><span class='doc-section-header'>Private method <em>setColumnLayout</em></span></p>
-
-<p>Switches the layout class and stores the <code>layout</code> in a cookie or removes the
- cookie if an unknown or no <code>layout</code> has been given …</p>
-
-<p><strong>Parameter:</strong></p>
-
-<ul>
-<li><strong><em>layout</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></li>
-</ul>
-
-<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">setColumnLayout = </span><span class="nf">(layout) -&gt;</span>
-    <span class="k">switch</span> <span class="nx">layout</span>
-      <span class="k">when</span> <span class="s">&#39;one&#39;</span><span class="p">,</span> <span class="s">&#39;two&#39;</span>
-        <span class="nx">html$</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;one-column-layout&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s">&#39;two-column-layout&#39;</span><span class="p">).</span><span class="nx">addClass</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">layout</span><span class="si">}</span><span class="s">-column-layout&quot;</span>
-        <span class="nx">$</span><span class="p">.</span><span class="nx">cookie</span> <span class="s">&#39;column-layout&#39;</span><span class="p">,</span> <span class="nx">layout</span><span class="p">,</span> <span class="p">{</span> <span class="nv">expires: </span><span class="mi">365</span><span class="p">,</span> <span class="nv">path: </span><span class="nx">cookiePath</span> <span class="p">}</span>
-        <span class="c1">#  console.log &#39;saved layout-cookie&#39;, layout, &#39;for path&#39;, cookiePath</span>
-      <span class="k">else</span>
-        <span class="nx">$</span><span class="p">.</span><span class="nx">removeCookie</span> <span class="s">&#39;column-layout&#39;</span><span class="p">,</span> <span class="k">if</span> <span class="nx">cookiePath</span><span class="o">?</span> <span class="k">then</span> <span class="nv">path: </span><span class="nx">cookiePath</span> <span class="k">else</span> <span class="p">{}</span>
-        <span class="c1">#  console.log &#39;removed layout-cookie for path&#39;, cookiePath</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set up the layout toggle</p></div></div><div class="code"><div class="wrapper">  <span class="nv">layoutToggle$ = </span><span class="nx">nav$</span><span class="p">.</span><span class="nx">find</span> <span class="s">&#39;.layout-toggle&#39;</span>
-  <span class="nx">layoutToggle$</span><span class="p">.</span><span class="nx">click</span> <span class="nf">(evt) -&gt;</span>
-    <span class="nx">setColumnLayout</span> <span class="k">if</span> <span class="nx">html$</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="s">&#39;two-column-layout&#39;</span><span class="p">)</span> <span class="k">then</span> <span class="s">&#39;one&#39;</span> <span class="k">else</span> <span class="s">&#39;two&#39;</span>
-    <span class="nx">evt</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Initialize the layout from the cookie</p></div></div><div class="code"><div class="wrapper">  <span class="nx">setColumnLayout</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">cookie</span> <span class="s">&#39;column-layout&#39;</span><span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Arrow keys navigate the table of contents whenever it is visible</p></div></div><div class="code"><div class="wrapper">  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;body&#39;</span><span class="p">).</span><span class="nx">keydown</span> <span class="nf">(evt) -&gt;</span>
+    <span class="nx">evt</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Prevent text selection if the user taps quickly</p></div></div><div class="code"><div class="wrapper">  <span class="nx">toggle$</span><span class="p">.</span><span class="nx">mousedown</span> <span class="nf">(evt) -&gt;</span>
+    <span class="nx">evt</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Arrow keys navigate the table of contents whenever it is visible</p></div></div><div class="code"><div class="wrapper">  <span class="nx">$</span><span class="p">(</span><span class="s">&#39;body&#39;</span><span class="p">).</span><span class="nx">keydown</span> <span class="nf">(evt) -&gt;</span>
     <span class="k">if</span> <span class="nx">nav$</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s">&#39;active&#39;</span>
       <span class="k">switch</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">keyCode</span>
         <span class="k">when</span> <span class="mi">13</span> <span class="k">then</span> <span class="nx">visitCurrentNode</span><span class="p">()</span> <span class="c1"># return</span>
