@@ -44,9 +44,11 @@
 
   <span class="nv">CoffeeScript        : </span>
     <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.coffee&#39;</span><span class="p">,</span> <span class="s">&#39;Cakefile&#39;</span><span class="p">]</span>
-    <span class="nv">pygmentsLexer     : </span><span class="s">&#39;coffee-script&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>CoffeScript's multi-line block-comment variants:</p></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="cm">###* </span>
-<span class="cm">     * Variant 1</span>
-<span class="cm">     * </span>
+    <span class="nv">pygmentsLexer     : </span><span class="s">&#39;coffee-script&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>CoffeScript's multi-line block-comment styles.</strong></p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><ul>
+<li>Variant 1:
+(Variant 3 is preferred over this syntax, as soon as the pull-request
+mentioned below has been merged into coffee-script's codebase.)</li>
+</ul></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="cm">###* </span>
 <span class="cm">     * Tip: use &#39;-&#39; or &#39;+&#39; for bullet-lists instead of &#39;*&#39; to distinguish</span>
 <span class="cm">     * bullet-lists visually from this kind of block comments.  The preceding</span>
 <span class="cm">     * whitespaces in the line-matcher and end-matcher are required. Without</span>
@@ -59,16 +61,18 @@
 <span class="cm">     *      * &lt;= COMBINE THESE TWO CHARS =&gt; /</span>
 <span class="cm">     * </span>
 <span class="cm">     * (The the final comment-mark above has been TWEAKED to not raise an error)</span>
-<span class="cm">     ###</span></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="cm">### </span>
-<span class="cm">    Variant 2</span>
-<span class="cm">    </span>
+<span class="cm">     ###</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><ul>
+<li>Variant 2:</li>
+</ul></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="cm">### </span>
 <span class="cm">    Uses the the below defined syntax, without preceding `#` per line. This is</span>
 <span class="cm">    the syntax for what the definition is actually meant for !</span>
-<span class="cm">    ###</span></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="cm">###  </span>
-<span class="cm">    # Variant 3</span>
-<span class="cm">    #</span>
-<span class="cm">    # **This syntax is nonsense and strongly disencouraged !**</span>
-<span class="cm">    #</span>
+<span class="cm">    ###</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><ul>
+<li>Variant 3: <br />
+(This syntax produces arkward comments in the compiled javascript, if
+the pull-request <em>“<a href="https://github.com/jashkenas/coffee-script/pull/3132">Format block-comments
+better</a>”</em> has 
+not been applied to coffee-script's codebase …)</li>
+</ul></div></div></div><div class="segment"><div class="code"><div class="wrapper">    <span class="cm">###  </span>
 <span class="cm">    # The block-comment line-matcher `&#39;#&#39;` also works on lines not starting</span>
 <span class="cm">    # with `&#39;#&#39;`, because we add unmatched lines to the comments once we are</span>
 <span class="cm">    # in a multi-line comment-block and until we left them …</span>
