@@ -1295,15 +1295,9 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
       }
     });
     return $('.code.folded').each(function(index, code) {
-      var code$, marker$;
+      var code$;
       code$ = $(code);
-      code$.click(function(evt) {
-        code$.toggleClass('folded');
-        evt.preventDefault();
-        return false;
-      });
-      marker$ = $('.marker', code);
-      return marker$.mousedown(function(evt) {
+      return code$.click(function(evt) {
         code$.toggleClass('folded');
         evt.preventDefault();
         return false;

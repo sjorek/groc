@@ -245,9 +245,4 @@ The blur event doesn't give us the previous event, sadly, so we first trap mouse
     <span class="nx">code$</span><span class="p">.</span><span class="nx">click</span> <span class="nf">(evt) -&gt;</span>
       <span class="nx">code$</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;folded&#39;</span>
       <span class="nx">evt</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
-      <span class="k">return</span> <span class="kc">false</span>
-    
-    <span class="nv">marker$ = </span><span class="nx">$</span><span class="p">(</span><span class="s">&#39;.marker&#39;</span><span class="p">,</span> <span class="nx">code</span><span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Hack to enhance CSS text-selection prevention, if the user taps quickly.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">marker$</span><span class="p">.</span><span class="nx">mousedown</span> <span class="nf">(evt) -&gt;</span>
-      <span class="nx">code$</span><span class="p">.</span><span class="nx">toggleClass</span> <span class="s">&#39;folded&#39;</span>
-      <span class="nx">evt</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
       <span class="k">return</span> <span class="kc">false</span></div></div></div></div></body></html>
