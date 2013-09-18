@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="en" class="two-column-layout"><head><title>namespace</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="namespace"><meta name="groc-project-path" content="lib/namespace.litcoffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/namespace.litcoffee">lib/namespace.litcoffee</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="supported-namespaces">Supported Namespaces</h1></div></div></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  import the type-link generating function for testing purposes</span></div><div class="wrapper"><span class="c1">#  import the type-link generating function for testing purposes</span>
+<span class="p">{</span><span class="nx">link_type</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span> <span class="s">&#39;./utils/doctag_helpers&#39;</span></div></div></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  … and some pretty colors</span></div><div class="wrapper"><span class="c1">#  … and some pretty colors</span>
+<span class="nv">colors = </span><span class="nx">require</span> <span class="s">&#39;colors&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<h2 id="important-notice">Important notice</h2>
+
+<p>This file has been written for documentation and testing purposes only.  This
+might change in future.  So, if you're reading this file's source instead of the
+generated documentation, you should (mentally) replace every occurence of
+<code># } @…</code> below this comment with <code># @…</code> (mind the stripped <code>}</code>-bracket).</p>
+
+<hr />
+
+<h2 id="objectives">Objectives</h2>
+
+<p>The namespace json-files provide information used to determine how to link a
+type.  It consists of a list of Objects, Arrays, Strings or a mix of these
+three variants.</p>
+
+<p>The Object-variant maps types (eg. <code>Package.ClassName</code> or <code>String</code>) or
+namespaces (eg. <code>Package.</code>, mind the trailing dot) to an URL as String or 
+an Array containing the definition of how to link the namespace or specific
+type in the generated documentation.</p>
+
+<p>The Array and the String-variants provide a subset of (or shortcut to) the
+Object-variant's capabilities, as documented below.</p>
+
+<hr />
+
+<h2 id="language-definitions">Language definitions</h2></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is stub coffee-script providing a reduced reference of the related
+<a href="../languages.html">language definition file</a>'s structure.  Also required
+to make this file run without failures, if one tries to do so.</p></div></div><div class="code"><div class="wrapper"><span class="nv">LANGUAGES =</span>
+  <span class="nv">language:</span>
+    <span class="nv">namespace:</span>
+      <span class="nv">types    : </span><span class="p">[]</span>
+      <span class="nv">separator: </span><span class="s">&#39;.&#39;</span>
+      </div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>camelize</em></span></p>
+
+<p>Convert “a.property.name” to “A/Property/Name.html”</p>
+
+<p><strong>Parameters:</strong></p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+Input property string</p></li>
+<li><p><strong><em>separator</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+A namespace-separator string</p></li>
+<li><p><strong><em>args</em> is optional and must be any number of <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">Strings</a></em></strong> <br />
+Some payload</p></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong><br/>Camelized URL-string<br/></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">      <span class="nv">camelize : </span><span class="nx">do</span> <span class="nf">-&gt;</span>
+        
+        <span class="nv">_regexp = </span><span class="sr">/(^|\.)([a-z0-9])/gi</span>
+        
+        <span class="nv">_camelize = </span><span class="nf">(match, dot, char) -&gt;</span>
+          <span class="s">&quot;</span><span class="si">#{</span><span class="k">if</span> <span class="nx">dot</span> <span class="k">then</span> <span class="s">&#39;/&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}#{</span><span class="nx">char</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span>
+        
+        <span class="nf">(type, separator, args...) -&gt;</span>
+          <span class="k">return</span> <span class="kc">false</span> <span class="k">if</span> <span class="sr">/force/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">type</span>
+          <span class="k">return</span> <span class="kc">null</span> <span class="k">if</span> <span class="sr">/skip/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">type</span>
+          <span class="nv">url = </span><span class="nx">args</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">type</span><span class="p">.</span><span class="nx">split</span> <span class="nx">separator</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="nx">separator</span><span class="p">)</span>
+          <span class="s">&quot;</span><span class="si">#{</span><span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">_regexp</span><span class="p">,</span> <span class="nx">_camelize</span><span class="p">)</span><span class="si">}</span><span class="s">.html&quot;</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  define a test-counter to ease indentifing the tests below</span></div><div class="wrapper"><span class="c1">#  define a test-counter to ease indentifing the tests below</span>
+<span class="nv">test_counter = </span><span class="mi">0</span></div></div></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  define a test-function to prove that `link_type` is working porperly</span></div><div class="wrapper"><span class="c1">#  define a test-function to prove that `link_type` is working porperly</span>
+<span class="nv">test_link_type = </span><span class="nf">(input, output) -&gt;</span>
+  <span class="nv">result = </span><span class="nx">link_type</span> <span class="nx">input</span><span class="p">,</span> <span class="nx">LANGUAGES</span> <span class="c1"># ATTENTION: Here it&#39;s meant to be a faked fileInfo-object !</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;---- test no. </span><span class="si">#{</span><span class="o">++</span><span class="nx">test_counter</span><span class="si">}</span><span class="s"> ----&quot;</span>
+  <span class="k">if</span> <span class="nx">result</span> <span class="o">is</span> <span class="nx">output</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">info</span> <span class="nx">colors</span><span class="p">[</span><span class="s">&#39;green&#39;</span><span class="p">](</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">Success:</span>
+<span class="s">    input           : </span><span class="si">#{</span><span class="nx">input</span><span class="si">}</span><span class="s"></span>
+<span class="s">    desired output  : </span><span class="si">#{</span><span class="nx">output</span><span class="si">}</span><span class="s"></span>
+<span class="s">    result          : </span><span class="si">#{</span><span class="nx">result</span><span class="si">}</span><span class="s"></span>
+<span class="s">    namespace.types :</span>
+<span class="s">&quot;&quot;&quot;</span><span class="p">),</span> <span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">types</span>
+  <span class="k">else</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span> <span class="nx">colors</span><span class="p">[</span><span class="s">&#39;red&#39;</span><span class="p">](</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">Failure:</span>
+<span class="s">    input           : </span><span class="si">#{</span><span class="nx">input</span><span class="si">}</span><span class="s"></span>
+<span class="s">    desired output  : </span><span class="si">#{</span><span class="nx">output</span><span class="si">}</span><span class="s"></span>
+<span class="s">    result          : </span><span class="si">#{</span><span class="nx">result</span><span class="si">}</span><span class="s"></span>
+<span class="s">    namespace.types :</span>
+<span class="s">&quot;&quot;&quot;</span><span class="p">),</span> <span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">types</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<h2 id="synopsis">Synopsis</h2>
+
+<p>There are four variants to define how to link a type</p>
+
+<h3 id="variant1alistofobjectstringmaps">Variant (1): A list of <em>Object-String-Maps</em></h3></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;typeOrNamespace&quot;</span><span class="o">:</span> <span class="s">&quot;url?type={type}&amp;firstPart={type.0}&amp;secondPart={type.1}&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><ul>
+<li><p><strong>typeOrNamespace</strong> :  </p>
+
+<p>This key is used to match the value to process.  May either match exactly with
+the given value …  </p>
+
+<blockquote>
+<pre><code>"typeOrNamespace" === "value"
+</code></pre>
+</blockquote>
+
+<p>… or if the processed language knows namespaces and has a <code>namespace.separator</code>
+and the value ends with this separator …  </p>
+
+<blockquote>
+<pre><code>"typeOrNamespace".lastIndexOf(separator) === \
+"typeOrNamespace".length - separator.length
+</code></pre>
+</blockquote>
+
+<p>… it can also match the start of the value …</p>
+
+<blockquote>
+<pre><code>"value".indexOf("typeOrNamespace") === 0
+</code></pre>
+</blockquote></li>
+<li><p><strong>optionalUrl?type={type}</strong> :  </p>
+
+<p>This String-value represents the URL to link to.  Any occurence of <code>{type}</code>
+will be substituted with the urlencoded value of the type.  The type name's
+fragments replace any occurence of <code>{type.positionOfFragment-1}</code>.  Any of 
+those placeholders being left after substition, will be stripped from the
+resulting string.</p>
+
+<p>The whole string may be substituted by <code>false</code> to disable linking completly.</p></li>
+</ul>
+
+<h3 id="variant2alistobjectarraymaps">Variant (2): A list <em>Object-Array-Maps</em></h3></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;typeOrNamespace&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s">&quot;urlPrefixOrFunction&quot;</span>  <span class="p">,</span>
+    <span class="s">&quot;stripNamespacePrefix&quot;</span> <span class="p">,</span>
+    <span class="s">&quot;addUrlSuffix&quot;</span>         <span class="p">,</span>
+    <span class="s">&quot;splitNamespaceString&quot;</span> <span class="p">,</span>
+    <span class="s">&quot;joinNamespaceString&quot;</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><ul>
+<li><p><strong>typeOrNamespace</strong> :  </p>
+
+<p>See <em>typeOrNamespace</em> in variant (1) above.</p>
+
+<ul><li><p>If the Array is empty the value to process is used as link without touching
+it at all.</p></li>
+<li><p>The Array may be substituted by <code>false</code> to disable linking the namespace or
+specific type completly.</p></li></ul></li>
+<li><p><strong>urlPrefixOrFunction</strong> :  </p>
+
+<p>Default: <code>""</code></p>
+
+<p>If this String is a property of <code>LANGUAGES.language.namespace</code> and this
+property is a function, the function will be called with the value to process,
+the <code>namespace.separator</code> and the remaining <code>"typeOrNamespace"</code>-Array elements
+as arguments.</p>
+
+<p>The function can either return the URL as string, <code>false</code> if the value to
+process shall not be linked, or <code>null</code> if the function can not handle the
+value.</p>
+
+<p>Otherwise the value is prepended to the generated URL.</p></li>
+<li><p><strong>stripNamespacePrefix</strong> :  </p>
+
+<p>Default: <code>""</code></p>
+
+<p>A string which will be stripped of the start of the type's value</p></li>
+<li><p><strong>addUrlSuffix</strong> :  </p>
+
+<p>Default: <code>".html"</code></p>
+
+<p>A string which will be appended to the end of the URL to generate.  </p></li>
+<li><p><strong>splitNamespaceString</strong> :  </p>
+
+<p>Default: <code>LANGUAGES.language.namespace.separator</code></p>
+
+<p>A string to split the type's value or <code>null</code> to skip splitting.  The resulting
+Array will be joined with the <em>joinNamespaceString</em> described below.</p></li>
+<li><p><strong>joinNamespaceString</strong> :  </p>
+
+<p>Default: <code>"/"</code></p>
+
+<p>A string to join the splitted the type's value, as described above in
+<em>splitNamespaceString</em>.</p></li>
+</ul>
+
+<h3 id="variant3alistofarrays">Variant (3): A list of <em>Arrays</em></h3></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="p">[</span>
+    <span class="s">&quot;urlPrefixOrFunction&quot;</span>  <span class="p">,</span>
+    <span class="s">&quot;stripNamespacePrefix&quot;</span> <span class="p">,</span>
+    <span class="s">&quot;addUrlSuffix&quot;</span>         <span class="p">,</span>
+    <span class="s">&quot;splitNamespaceString&quot;</span> <span class="p">,</span>
+    <span class="s">&quot;joinNamespaceString&quot;</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>See variant (2) above.  The difference is that every type-value will be
+processed by this definition, no matter which type or namespace it is.</p>
+
+<h3 id="variant4alistofstrings">Variant (4): A list of <em>Strings</em></h3></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;urlPrefixOrFunction&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>See variant (2) above.  The difference is that every type-value will be
+processed by this definition, no matter which type or namespace it is.</p>
+
+<hr />
+
+<h2 id="example-11-type-translations">Example: 1:1 type translations</h2>
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;Exact.Match&quot;</span><span class="o">:</span> <span class="s">&quot;http://…/ExactMatch.html&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {Exact.Match}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="http://…/ExactMatch.html">Exact.Match</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;Exact.Match&#39;</span><span class="p">,</span> <span class="s">&#39;[Exact.Match](http://…/ExactMatch.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;Exact.Match&quot;</span><span class="o">:</span> <span class="s">&quot;http://…/docs?type={type}&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {Exact.Match}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="http://…/docs?type=Exact%2EMatch">Exact.Match</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;Exact.Match&#39;</span><span class="p">,</span> <span class="s">&#39;[Exact.Match](http://…/docs?type=Exact%2EMatch)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<h2 id="example-namespaces">Example: Namespaces</h2>
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;Package.&quot;</span><span class="o">:</span> <span class="s">&quot;http://…/docs.html</span><span class="err">#</span><span class="s">doc-{type}&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {Package.ClassName}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="http://…/docs.html#doc-Package%2EClassName">Package.ClassName</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;Package.ClassName&#39;</span><span class="p">,</span> <span class="s">&#39;[Package.ClassName](http://…/docs.html#doc-Package%2EClassName)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;Package.&quot;</span><span class="o">:</span> <span class="s">&quot;http://…/docs?package={type.0}&amp;amp;class={type.1}{type.2}&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {Package.ClassName}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="http://…/docs?package=Package&amp;class=ClassName">Package.ClassName</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;Package.ClassName&#39;</span><span class="p">,</span> <span class="s">&#39;[Package.ClassName](http://…/docs?package=Package&amp;amp;class=ClassName)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="root/branch/subbranch/leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](root/branch/subbranch/leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {another.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs if no other namespace- or type-definition matches …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em>another.branch.subbranch.leaf</em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;another.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;another.branch.subbranch.leaf&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s">&quot;something-to-prepend-to/&quot;</span><span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="something-to-prepend-to/root/branch/subbranch/leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](something-to-prepend-to/root/branch/subbranch/leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {another.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs if no other namespace- or type-definition matches …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em>another.branch.subbranch.leaf</em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;another.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;another.branch.subbranch.leaf&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s">&quot;http://absolute.url/to/prepend/to/&quot;</span><span class="p">,</span>
+    <span class="s">&quot;root.&quot;</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="http://absolute.url/to/prepend/to/branch/subbranch/leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](http://absolute.url/to/prepend/to/branch/subbranch/leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s">&quot;http://absolute.url/to/prepend/to/&quot;</span><span class="p">,</span>
+    <span class="kc">null</span><span class="p">,</span>
+    <span class="s">&quot;.html&quot;</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="http://absolute.url/to/prepend/to/root/branch/subbranch/leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](http://absolute.url/to/prepend/to/root/branch/subbranch/leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s">&quot;relative/path/to/prepend/to/&quot;</span><span class="p">,</span>
+    <span class="kc">null</span><span class="p">,</span>
+    <span class="s">&quot;/index.html&quot;</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="relative/path/to/prepend/to/root/branch/subbranch/leaf/index.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](relative/path/to/prepend/to/root/branch/subbranch/leaf/index.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr /></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s">&quot;path/to/prepend/to/file&quot;</span><span class="p">,</span>
+    <span class="s">&quot;root.branch&quot;</span><span class="p">,</span>
+    <span class="s">&quot;.html&quot;</span>
+    <span class="kc">false</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="path/to/prepend/to/file.subbranch.leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](path/to/prepend/to/file.subbranch.leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s">&quot;path/to/prepend/to/file-&quot;</span><span class="p">,</span>
+    <span class="s">&quot;root.branch.&quot;</span><span class="p">,</span>
+    <span class="s">&quot;.html&quot;</span><span class="p">,</span>
+    <span class="s">&quot;.&quot;</span>
+    <span class="s">&quot;-&quot;</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="path/to/prepend/to/file-subbranch-leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](path/to/prepend/to/file-subbranch-leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s">&quot;path/to/prepend/to/&quot;</span><span class="p">,</span>
+    <span class="s">&quot;root.&quot;</span><span class="p">,</span>
+    <span class="s">&quot;.html&quot;</span><span class="p">,</span>
+    <span class="s">&quot;.split.here.&quot;</span><span class="p">,</span>
+    <span class="s">&quot;/path/../to/subbranch/../&quot;</span>
+  <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.split.here.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="path/to/prepend/to/branch/path/../to/subbranch/../leaf.html">root.branch.split.here.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.split.here.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.split.here.leaf](path/to/prepend/to/branch/path/../to/subbranch/../leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<h2 id="example-skip-linking-a-type-or-namespace">Example: skip linking a type or namespace</h2>
+
+<p>A namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;branch.to.skip&quot;</span><span class="o">:</span> <span class="kc">false</span>
+  <span class="s">&quot;branch.to.&quot;</span>    <span class="o">:</span> <span class="s">&quot;http://…/&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {branch.to.link}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="http://…/">branch.to.link</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;branch.to.link&#39;</span><span class="p">,</span> <span class="s">&#39;[branch.to.link](http://…/)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {branch.to.skip}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em>branch.to.skip</em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;branch.to.skip&#39;</span><span class="p">,</span> <span class="s">&#39;branch.to.skip&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<h2 id="example-call-a-function">Example: call a function</h2>
+
+<p>If …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… is a function, then a namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;root.branch.&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="s">&quot;camelize&quot;</span><span class="p">,</span> <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span> <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
+  <span class="s">&quot;root.branch.subbranch.leaf&quot;</span><span class="p">,</span>
+  <span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">,</span>
+  <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span>
+<span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… and outputs whatever the hypothetic <code>camelize</code>-function spits out …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="More/Arguments/Root/Branch/Subbranch/Leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](More/Arguments/Root/Branch/Subbranch/Leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.to.force}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… it's result is <code>false</code> to skip the link-generation, so the process outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em>root.branch.to.force</em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.to.force&#39;</span><span class="p">,</span> <span class="s">&#39;root.branch.to.force&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.to.skip}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… the process simply skips this input and goes on with the next namespace entry,
+so the process outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em>root.branch.to.skip</em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.to.skip&#39;</span><span class="p">,</span> <span class="s">&#39;root.branch.to.skip&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>If …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… is a function, then a namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="p">[</span> <span class="s">&quot;camelize&quot;</span><span class="p">,</span> <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span> <span class="p">]</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
+  <span class="s">&quot;root.branch.subbranch.leaf&quot;</span><span class="p">,</span>
+  <span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">,</span>
+  <span class="s">&quot;more&quot;</span><span class="p">,</span> <span class="s">&quot;arguments&quot;</span>
+<span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… and outputs whatever the hypothetic <code>camelize</code>-function spits out …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="More/Aruments/Root/Branch/Subbranch/Leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](More/Arguments/Root/Branch/Subbranch/Leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or if it's result is <code>false</code> to skip the link-generation, the process outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em>root.branch.to.force</em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.to.force&#39;</span><span class="p">,</span> <span class="s">&#39;root.branch.to.force&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or if it's result is <code>null</code> to indicate that the function does not know how to
+handle the given type, then further processing will be applied.</p></div></div></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.to.skip&#39;</span><span class="p">,</span> <span class="s">&#39;root.branch.to.skip&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><hr />
+
+<p>If …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… is a function, then a namespace like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nv">LANGUAGES.language.namespace.types = </span><span class="p">[</span>
+  <span class="s">&quot;camelize&quot;</span>
+<span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… with an input like …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="c1">#  @property dummy</span>
+<span class="c1">#  @type {root.branch.subbranch.leaf}</span>
+<span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… calls …</p></div></div></div><div class="segment"><div class="code"><div class="wrapper"><span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span>
+  <span class="s">&quot;root.branch.subbranch.leaf&quot;</span><span class="p">,</span>
+  <span class="nx">LANGUAGES</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span>
+<span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… which outputs whatever the hypothetic <code>camelize</code>-function spits out, eg.:</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em><a href="Root/Branch/Subbranch/Leaf.html">root.branch.subbranch.leaf</a></em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.subbranch.leaf&#39;</span><span class="p">,</span> <span class="s">&#39;[root.branch.subbranch.leaf](Root/Branch/Subbranch/Leaf.html)&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or if it's result is <code>false</code> to skip the link-generation, the process outputs …</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>Property <em>dummy</em> is of type <em>root.branch.to.force</em></strong></p></div></div><div class="code"><div class="wrapper"><span class="nv">dummy: </span><span class="kc">null</span></div></div></div><div class="segment"></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.to.force&#39;</span><span class="p">,</span> <span class="s">&#39;root.branch.to.force&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>… or if it's result is <code>null</code> to indicate that the function does not know how to
+handle the given type, then further processing will be applied.</p></div></div></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  let's prove it …</span></div><div class="wrapper"><span class="c1">#  let&#39;s prove it …</span>
+<span class="nx">test_link_type</span> <span class="s">&#39;root.branch.to.skip&#39;</span><span class="p">,</span> <span class="s">&#39;root.branch.to.skip&#39;</span></div></div></div><div class="segment"></div></div></body></html>

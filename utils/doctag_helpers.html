@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="en" class="two-column-layout"><head><title>utils/doctag_helpers</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="utils/doctag_helpers"><meta name="groc-project-path" content="lib/utils/doctag_helpers.coffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/utils/doctag_helpers.coffee">lib/utils/doctag_helpers.coffee</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="doctag-helpers">Doctag Helpers</h1></div></div></div><div class="segment"><div class="code folded"><div class="wrapper marker"><span class="c1">#  imports …</span></div><div class="wrapper"><span class="c1">#  imports …</span>
+<span class="nv">_ = </span><span class="nx">require</span> <span class="s">&#39;underscore&#39;</span>
+<span class="nv">humanize = </span><span class="nx">require</span> <span class="s">&#39;./humanize&#39;</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p><span class='doc-section-header'>Package <em>DOCTAGHelpers</em> is an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></span></p>
+
+<hr />
+
+<p>Provides helper methods used by the <code>doctags</code>-implementation</p>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="../languages/doc_tags.html">Supported Doctags</a></li>
+</ul>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper"><span class="nv">module.exports = DOCTAGHelpers =</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>collapse_space</em></span></p>
+
+<hr />
+
+<p>This function collapses... spaces</p>
+
+<p><strong>Parameter:</strong></p>
+
+<ul>
+<li><strong><em>value</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+This is the value which will be collapsed. The primary purpose of this method is to allow multiline parameter descriptions, just like this one.</li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">collapse_space: collapse_space = </span><span class="nf">(value) -&gt;</span>
+    <span class="nx">value</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/\s+/g</span><span class="p">,</span> <span class="s">&#39; &#39;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>convert_type</em></span></p>
+
+<hr />
+
+<p>This function converts type names in <code>@return</code>- and <code>@type</code>-doctags</p>
+
+<p><strong>Parameters:</strong></p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">convert_type: convert_type = </span><span class="nf">(type, fileInfo) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span> <span class="o">is</span> <span class="s">&#39;null&#39;</span> <span class="o">or</span> <span class="nx">type</span> <span class="o">is</span> <span class="s">&#39;undefined&#39;</span>
+      <span class="s">&quot;*</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">*&quot;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nv">subtype = </span><span class="nx">type</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^([^\[]+)\[\]$/</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* of *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">fileInfo</span><span class="p">,</span> <span class="nx">humanize</span><span class="p">.</span><span class="nx">pluralize</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s">*&quot;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nv">subtype = </span><span class="nx">type</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^(Array|Object)\.&lt;([^&gt;]+)&gt;/</span>
+      <span class="nv">subtypes = </span><span class="k">for</span> <span class="nx">subtypes</span> <span class="k">in</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^(Array|Object)\.&lt;|&gt;$/g</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="sr">/,/</span><span class="p">)</span>
+        <span class="s">&quot;*</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">subtypes</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="p">,</span> <span class="nx">humanize</span><span class="p">.</span><span class="nx">pluralize</span> <span class="nx">subtypes</span><span class="si">}</span><span class="s">*&quot;</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">subtype</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* of </span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">joinSentence</span> <span class="nx">subtypes</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="si">}</span><span class="s">&quot;</span>
+    <span class="k">else</span>
+      <span class="s">&quot;</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">article</span> <span class="nx">type</span><span class="si">}</span><span class="s"> *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">*&quot;</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>translate_type</em></span></p>
+
+<hr />
+
+<p>This function translates type names in <code>@return</code>- and <code>@type</code>-doctags</p>
+
+<p><strong>Parameters:</strong></p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">translate_type: translate_type = </span><span class="nf">(type, fileInfo) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&#39;a *mixed*&#39;</span> <span class="o">or</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&#39;a ***&#39;</span>
+      <span class="s">&#39;any type&#39;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* of *mixeds*&quot;</span> <span class="o">or</span> <span class="o">\</span>
+            <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* of ***&quot;</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Array&#39;</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* of any type&quot;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Object&#39;</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* of *mixeds*&quot;</span> <span class="o">or</span> <span class="o">\</span>
+            <span class="nx">type</span> <span class="o">==</span> <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Object&#39;</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* of ***&quot;</span>
+      <span class="s">&quot;an *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="s">&#39;Object&#39;</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="si">}</span><span class="s">* with properties of any type&quot;</span>
+    <span class="k">else</span>
+      <span class="nx">type</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>convert_parameter_type</em></span></p>
+
+<hr />
+
+<p>This function converts type names in <code>@param</code>-doctags</p>
+
+<p><strong>Parameters:</strong></p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">convert_parameter_type: convert_parameter_type = </span><span class="nf">(type, fileInfo) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^\.\.\.|\.\.\.$/</span>
+      <span class="nv">type = </span><span class="nx">type</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/^\.\.\.|\.\.\.$/</span><span class="p">,</span> <span class="s">&quot;&quot;</span>
+      <span class="s">&quot;any number of *</span><span class="si">#{</span><span class="nx">link_type</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="p">,</span> <span class="nx">humanize</span><span class="p">.</span><span class="nx">pluralize</span> <span class="nx">type</span><span class="si">}</span><span class="s">*&quot;</span>
+    <span class="k">else</span>
+      <span class="nx">convert_type</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>translate_parameter_type</em></span></p>
+
+<hr />
+
+<p>This function translates type names in <code>@param</code>-doctags</p>
+
+<p><strong>Parameters:</strong></p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">translate_parameter_type: translate_parameter_type = </span><span class="nf">(type, fileInfo) -&gt;</span>
+    <span class="k">if</span> <span class="nx">type</span> <span class="o">==</span> <span class="s">&#39;any number of *mixeds*&#39;</span>
+      <span class="nv">type = </span><span class="s">&#39;any number of arguments of any type&#39;</span>
+    <span class="k">else</span>
+      <span class="nx">translate_type</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">fileInfo</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>link_type</em></span></p>
+
+<hr />
+
+<p>This function creates links to JavaScript-types for uses in <code>@doctags</code></p>
+
+<p><strong>Parameters:</strong></p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>fileInfo</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p>
+
+<ul><li><p>[…].<strong><em>language</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p>
+
+<ul><li><p>[…].<strong><em>namespace</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em></strong></p>
+
+<ul><li><p>[…].<strong><em>separator</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p>[…].<strong><em>types</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em> of <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Objects</a></em>, <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Arrays</a></em> or <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">Strings</a></em></strong></p></li></ul></li></ul></li></ul></li>
+<li><p><strong><em>caption</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>url</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p>References:</p>
+
+<ul>
+<li><p><a href="../languages.html">Supported Languages</a></p></li>
+<li><p><a href="../languages/namespace.html">Language Namespaces</a></p></li>
+</ul>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">link_type: link_type = </span><span class="nf">(type, fileInfo, caption, url) -&gt;</span>
+    <span class="k">if</span> <span class="nx">fileInfo</span><span class="o">?</span><span class="p">.</span><span class="nx">language</span><span class="o">?</span><span class="p">.</span><span class="nx">namespace</span><span class="o">?</span> 
+      <span class="nv">namespace = </span><span class="nx">fileInfo</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span>
+    <span class="k">else</span>
+      <span class="nv">namespace = </span><span class="kc">null</span>
+
+    <span class="nx">caption</span> <span class="o">?=</span> <span class="nx">type</span>
+    
+    <span class="nx">url</span> <span class="o">?=</span> <span class="kc">null</span>
+
+    <span class="k">if</span> <span class="nx">type</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">url</span><span class="o">?</span> <span class="o">and</span> <span class="nx">namespace</span><span class="o">?</span><span class="p">.</span><span class="nx">types</span><span class="o">?</span>
+      <span class="k">for</span> <span class="nx">definition</span> <span class="k">in</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">types</span>
+        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">definition</span><span class="p">)</span> <span class="o">or</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">definition</span><span class="p">)</span>
+          <span class="nv">url = </span><span class="nx">create_type_url</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">,</span> <span class="nx">definition</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">definition</span> <span class="o">is</span> <span class="kc">false</span> <span class="o">or</span> <span class="nx">definition</span> <span class="o">is</span> <span class="kc">null</span>
+          <span class="nv">url = </span><span class="nx">definition</span>
+        <span class="k">else</span> <span class="c1"># should be an Object</span>
+          <span class="k">for</span> <span class="k">own</span> <span class="nx">ns</span><span class="p">,</span> <span class="nx">subdef</span> <span class="k">of</span> <span class="nx">definition</span>
+            <span class="k">if</span> <span class="nx">type</span> <span class="o">isnt</span> <span class="nx">ns</span>
+              <span class="k">continue</span> <span class="k">unless</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span> <span class="o">and</span>
+                              <span class="nx">ns</span><span class="p">.</span><span class="nx">lastIndexOf</span><span class="p">(</span><span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">)</span> <span class="o">is</span> <span class="o">\</span>
+                              <span class="nx">ns</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">.</span><span class="nx">length</span> <span class="o">and</span> <span class="o">\</span>
+                              <span class="nx">type</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">ns</span><span class="p">)</span> <span class="o">is</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">subdef</span><span class="p">)</span> <span class="o">or</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">subdef</span><span class="p">)</span>
+              <span class="nv">url = </span><span class="nx">create_type_url</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">,</span> <span class="nx">subdef</span>
+              <span class="k">break</span> <span class="k">if</span> <span class="nx">url</span> <span class="o">isnt</span> <span class="kc">null</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="nx">subdef</span> <span class="o">is</span> <span class="kc">false</span> <span class="o">or</span> <span class="nx">subdef</span> <span class="o">is</span> <span class="kc">null</span>
+              <span class="nv">url = </span><span class="nx">subdef</span>
+              <span class="k">break</span>
+            <span class="k">else</span>
+              <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s">&#39;An unsupported namespace type-definition “#{definition}” occured.&#39;</span>
+        <span class="k">break</span> <span class="k">if</span> <span class="nx">url</span><span class="o">?</span>
+
+      <span class="k">if</span> <span class="nx">url</span> <span class="o">and</span> <span class="sr">/\{type(\.[0-9]+)?\}/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">url</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>replace the <code>{type}</code> marker</p></div></div><div class="code"><div class="wrapper">        <span class="nv">url = </span><span class="nx">url</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&#39;{type}&#39;</span><span class="p">,</span> <span class="nx">url_encode</span> <span class="nx">type</span>
+        <span class="k">if</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span>
+          <span class="k">for</span> <span class="nx">fragment</span><span class="p">,</span> <span class="nx">index</span> <span class="k">in</span> <span class="nx">type</span><span class="p">.</span><span class="nx">split</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>replace the <code>{type.index}</code> marker</p></div></div><div class="code"><div class="wrapper">            <span class="nv">url = </span><span class="nx">url</span><span class="p">.</span><span class="nx">replace</span> <span class="s">&quot;{type.</span><span class="si">#{</span><span class="nx">index</span><span class="si">}</span><span class="s">}&quot;</span><span class="p">,</span> <span class="nx">url_encode</span> <span class="nx">fragment</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>strip all <code>{type.index}</code> markers that are left</p></div></div><div class="code"><div class="wrapper">        <span class="nv">url = </span><span class="nx">url</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/\{type.[0-9]+\}/g</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="nx">url</span>
+      <span class="s">&quot;[</span><span class="si">#{</span><span class="nx">caption</span><span class="si">}</span><span class="s">](</span><span class="si">#{</span><span class="nx">url</span><span class="si">}</span><span class="s">)&quot;</span>
+    <span class="k">else</span>
+      <span class="nx">caption</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>create_type_url</em></span></p>
+
+<hr />
+
+<p>create an URL or skip the URL for the given type, depending on the given
+namespace and definition</p>
+
+<p><strong>Parameters:</strong></p>
+
+<ul>
+<li><p><strong><em>type</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p><strong><em>namespace</em> must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Object">Object</a></em> of <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Function">Functions</a></em>, <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">Strings</a></em> or <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Arrays</a></em></strong></p>
+
+<ul><li><p>[…].<strong><em>separator</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p></li>
+<li><p>[…].<strong><em>types</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em></strong></p></li>
+<li><p>[…].<strong><em>fn</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Function">Function</a></em></strong> <br />
+Functions will be called as: <code>fn(type, separator, args...)</code></p></li></ul></li>
+<li><p><strong><em>definition</em> can be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em> or a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+An array as documented below or the URL to return</p>
+
+<ul><li><p>[…].<strong><em>0</em> is optional and must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong> <br />
+A Function in <code>namespace[definition.0]</code> or an URL-fragment prepended to the result</p></li>
+<li><p>[…].<strong><em>1</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em></strong> <br />
+A string to strip from the start of <code>type</code> or third argument of <code>namespace[definition.0](…)</code></p></li>
+<li><p>[…].<strong><em>2</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em></strong> <br />
+A string to append to the URL or fourth argument of <code>namespace[definition.0](…)</code></p></li>
+<li><p>[…].<strong><em>3</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em></strong> <br />
+A string to split <code>type</code> or fifth argument of <code>namespace[definition.0](…)</code></p></li>
+<li><p>[…].<strong><em>4</em> is optional and must be an <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Array">Array</a></em></strong> <br />
+A string to join the splitted <code>type</code> or sixth argument of <code>namespace[definition.0](…)</code></p></li></ul></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em>, a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></em> or <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/null">null</a></em></strong></p>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="../languages/namespace.html">Type Namespaces</a></li>
+</ul>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">create_type_url: create_type_url = </span><span class="nf">(type, namespace, definition) -&gt;</span>
+
+    <span class="nv">hasDefinition = </span><span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">definition</span>
+
+    <span class="k">if</span> <span class="nx">hasDefinition</span>
+      <span class="p">[</span><span class="nx">urlOrFn</span><span class="p">,</span> <span class="nx">strip</span><span class="p">,</span> <span class="nx">append</span><span class="p">,</span> <span class="nx">split</span><span class="p">,</span> <span class="nx">join</span><span class="p">]</span> <span class="o">=</span> <span class="nx">definition</span>
+    <span class="k">else</span>
+      <span class="nv">urlOrFn = </span><span class="s">&quot;</span><span class="si">#{</span><span class="nx">definition</span><span class="si">}</span><span class="s">&quot;</span>
+
+    <span class="k">if</span> <span class="nx">urlOrFn</span> <span class="o">and</span> <span class="nx">namespace</span><span class="p">[</span><span class="nx">urlOrFn</span><span class="p">]</span><span class="o">?</span> <span class="o">and</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">namespace</span><span class="p">[</span><span class="nx">urlOrFn</span><span class="p">]</span>
+      <span class="nx">namespace</span><span class="p">[</span><span class="nx">urlOrFn</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span>
+        <span class="kc">null</span><span class="p">,</span>
+        <span class="p">[</span><span class="nx">type</span><span class="p">,</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span>
+          <span class="k">if</span> <span class="nx">hasDefinition</span> <span class="k">then</span> <span class="nx">definition</span><span class="p">[</span><span class="mi">1</span><span class="p">..]</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+      <span class="p">)</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="nx">hasDefinition</span>
+      <span class="nx">urlOrFn</span> <span class="o">?=</span> <span class="s">&#39;&#39;</span>
+      <span class="nx">strip</span>   <span class="o">?=</span> <span class="s">&#39;&#39;</span>
+      <span class="nx">append</span>  <span class="o">?=</span> <span class="s">&#39;.html&#39;</span>
+      <span class="nx">split</span>   <span class="o">?=</span> <span class="nx">namespace</span><span class="p">.</span><span class="nx">separator</span>
+      <span class="nx">join</span>    <span class="o">?=</span> <span class="s">&#39;/&#39;</span>
+      <span class="nv">name     = </span><span class="k">if</span> <span class="nx">type</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">strip</span><span class="p">)</span> <span class="o">is</span> <span class="mi">0</span> <span class="k">then</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">type</span><span class="p">[</span><span class="nx">strip</span><span class="p">.</span><span class="nx">length</span><span class="p">..]</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">else</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">type</span><span class="si">}</span><span class="s">&quot;</span>
+
+      <span class="s">&quot;</span><span class="si">#{</span><span class="nx">urlOrFn</span><span class="si">}#{</span><span class="k">if</span> <span class="nx">split</span> <span class="k">then</span> <span class="nx">name</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">split</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="nx">join</span><span class="p">)</span> <span class="k">else</span> <span class="nx">name</span><span class="si">}#{</span><span class="nx">append</span><span class="si">}</span><span class="s">&quot;</span>
+    <span class="k">else</span>
+      <span class="nx">urlOrFn</span></div></div></div><div class="segment"><div class="comments doc-section doc-section-public"><div class="wrapper"><p><span class='doc-section-header'>Public method <em>url_encode</em></span></p>
+
+<hr />
+
+<p>encode a string-fragment for URLs including some extra characters,
+which might cause troubles under some circumstances:</p>
+
+<blockquote>
+  <ul>
+  <li><code>!</code> -> <code>%21</code></li>
+  <li><code>'</code> -> <code>%27</code></li>
+  <li><code>(</code> -> <code>%28</code></li>
+  <li><code>)</code> -> <code>%29</code></li>
+  <li><code>*</code> -> <code>%2A</code></li>
+  <li><code>.</code> -> <code>%2E</code></li>
+  <li><code>~</code> -> <code>%7E</code></li>
+  </ul>
+</blockquote>
+
+<p>TODO: Fix indent-detection and remove work-around citations as above …</p>
+
+<p><strong>Parameter:</strong></p>
+
+<ul>
+<li><strong><em>fragment</em> must be a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></li>
+</ul>
+
+<p><strong>Returns a <em><a href="https://developer.mozilla.org/en/docs/JavaScript/Reference/Global_Objects/String">String</a></em></strong></p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">url_encode: url_encode = </span><span class="nf">(fragment) -&gt;</span>
+    <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">fragment</span><span class="p">)</span> <span class="o">\</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/!/g</span><span class="p">,</span>  <span class="s">&#39;%21&#39;</span><span class="p">)</span> <span class="o">\</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&#39;/g</span><span class="p">,</span>  <span class="s">&#39;%27&#39;</span><span class="p">)</span> <span class="o">\</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\(/g</span><span class="p">,</span> <span class="s">&#39;%28&#39;</span><span class="p">)</span> <span class="o">\</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\)/g</span><span class="p">,</span> <span class="s">&#39;%29&#39;</span><span class="p">)</span> <span class="o">\</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\*/g</span><span class="p">,</span> <span class="s">&#39;%2A&#39;</span><span class="p">)</span> <span class="o">\</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\./g</span><span class="p">,</span> <span class="s">&#39;%2E&#39;</span><span class="p">)</span> <span class="o">\</span>
+      <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/~/g</span><span class="p">,</span>  <span class="s">&#39;%7E&#39;</span><span class="p">)</span></div></div></div></div></body></html>

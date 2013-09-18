@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><title>utils</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="utils"><meta name="groc-project-path" content="lib/utils.coffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/utils.coffee">lib/utils.coffee</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Miscellaneous code fragments reside here.</p>
+<!DOCTYPE html><html lang="en" class="two-column-layout"><head><title>utils</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="utils"><meta name="groc-project-path" content="lib/utils.coffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/utils.coffee">lib/utils.coffee</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Miscellaneous code fragments reside here.</p>
 
 <p>TODO: should be migrated into <code>lib/utils</code>.</p></div></div><div class="code"><div class="wrapper"><span class="nv">childProcess = </span><span class="nx">require</span> <span class="s">&#39;child_process&#39;</span>
 <span class="nv">path         = </span><span class="nx">require</span> <span class="s">&#39;path&#39;</span>
@@ -8,9 +8,9 @@
 
 <span class="nv">CompatibilityHelpers = </span><span class="nx">require</span> <span class="s">&#39;./utils/compatibility_helpers&#39;</span>
 <span class="nv">LANGUAGES            = </span><span class="kc">null</span>
-<span class="nv">DOC_TAGS             = </span><span class="nx">require</span> <span class="s">&#39;./doc_tags&#39;</span>
+<span class="nv">DOC_TAGS             = </span><span class="kc">null</span>
 <span class="nv">Logger               = </span><span class="nx">require</span> <span class="s">&#39;./utils/logger&#39;</span>
-
+<span class="nv">DOCTAGHelpers        = </span><span class="nx">require</span> <span class="s">&#39;./utils/doctag_helpers&#39;</span>
 
 <span class="nv">module.exports = Utils =</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Code from <a href="http://zetafleet.com/">http://zetafleet.com/</a>
 via <a href="http://blog.simonwillison.net/post/57956816139/escape">http://blog.simonwillison.net/post/57956816139/escape</a></p></div></div><div class="code"><div class="wrapper">  <span class="nv">regexpEscapePattern : </span><span class="sr">/[-[\]{}()*+?.,\\^$|#\s]/g</span>
@@ -63,10 +63,14 @@ directory given.  The assumption is that you don't want merged paths,
 but probably did specify the most important source directory first.</p></div></div><div class="code"><div class="wrapper">    <span class="nv">result = </span><span class="nx">_</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nx">uniq</span><span class="p">()[...</span><span class="mi">1</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>How many directories deep is a given path?</p></div></div><div class="code"><div class="wrapper">  <span class="nv">pathDepth: </span><span class="nf">(path) -&gt;</span>
     <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="sr">/[\/\\]/</span><span class="p">).</span><span class="nx">length</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Split source code into segments (comment + code pairs)</p></div></div><div class="code"><div class="wrapper">  <span class="nv">splitSource: </span><span class="nf">(data, language, options={}) -&gt;</span>
     <span class="nv">lines = </span><span class="nx">data</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/\r?\n/</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Always strip shebangs - but don't shift it off the array to
-avoid the perf hit of walking the array to update indices.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;&#39;</span> <span class="k">if</span> <span class="nx">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">..</span><span class="mi">1</span><span class="p">]</span> <span class="o">is</span> <span class="s">&#39;#!&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Special case: If the language is comments-only, we can skip pygments</p></div></div><div class="code"><div class="wrapper">    <span class="k">return</span> <span class="p">[</span><span class="k">new</span> <span class="nx">@Segment</span> <span class="p">[],</span> <span class="nx">lines</span><span class="p">]</span> <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">commentsOnly</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Special case: If the language is code-only, we can shorten the process</p></div></div><div class="code"><div class="wrapper">    <span class="k">return</span> <span class="p">[</span><span class="k">new</span> <span class="nx">@Segment</span> <span class="nx">lines</span><span class="p">,</span> <span class="p">[]]</span> <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">codeOnly</span>
+avoid the perf hit of walking the array to update indices.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;&#39;</span> <span class="k">if</span> <span class="nx">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">..</span><span class="mi">1</span><span class="p">]</span> <span class="o">is</span> <span class="s">&#39;#!&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Special case: If the language is comments-only, we can skip pygments</p></div></div><div class="code"><div class="wrapper">    <span class="k">return</span> <span class="p">[</span><span class="k">new</span> <span class="nx">@Segment</span> <span class="p">[],</span> <span class="nx">lines</span><span class="p">]</span> <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">commentsOnly</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Special case: If the language is code-only, we can shorten the process</p></div></div><div class="code"><div class="wrapper">    <span class="k">return</span> <span class="p">[</span><span class="k">new</span> <span class="nx">@Segment</span> <span class="nx">lines</span><span class="p">,</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">markdown</span> <span class="o">?</span> <span class="s">&#39;&#39;</span><span class="p">).</span><span class="nx">split</span> <span class="sr">/\r?\n/</span><span class="p">]</span> <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">codeOnly</span>
 
     <span class="nv">segments = </span><span class="p">[]</span>
     <span class="nv">currSegment = </span><span class="k">new</span> <span class="nx">@Segment</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Enforced whitespace after the comment token</p></div></div><div class="code"><div class="wrapper">    <span class="nv">whitespaceMatch = </span><span class="k">if</span> <span class="nx">options</span><span class="p">.</span><span class="nx">requireWhitespaceAfterToken</span> <span class="k">then</span> <span class="s">&#39;\\s&#39;</span> <span class="k">else</span> <span class="s">&#39;\\s?&#39;</span>
+
+    <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">literateCodeLines</span><span class="o">?</span>
+      <span class="nv">codeLines  = </span><span class="nx">@regexpEscape</span><span class="p">(</span><span class="nx">language</span><span class="p">.</span><span class="nx">literateCodeLines</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;|&#39;</span>
+      <span class="nv">aCodeLine  = </span><span class="sr">///^(?:</span><span class="si">#{</span><span class="nx">codeLines</span><span class="si">}</span><span class="sr">)(?:(.*))?$///</span>
 
     <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">singleLineComment</span><span class="o">?</span>
       <span class="nv">singleLines = </span><span class="nx">@regexpEscape</span><span class="p">(</span><span class="nx">language</span><span class="p">.</span><span class="nx">singleLineComment</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;|&#39;</span>
@@ -151,6 +155,7 @@ below this line …</p>
 <span class="sr">        (?:</span><span class="si">#{</span><span class="nx">stripMarks</span><span class="si">}</span><span class="sr">)           # The marker(s) to strip from result</span>
 <span class="sr">      ///</span> <span class="k">if</span> <span class="nx">blockStarts</span><span class="o">?</span>
 
+    <span class="nv">isLiteral = </span><span class="nx">aCodeLine</span><span class="o">?</span> <span class="c1"># If available we start in literal parsing mode.</span>
     <span class="nv">inBlock   = </span><span class="kc">false</span>
     <span class="nv">inFolded  = </span><span class="kc">false</span>
     <span class="nv">inIgnored = </span><span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Variables used in temporary assignments have been collected here for
@@ -161,9 +166,44 @@ documentation purposes only. </p></div></div><div class="code"><div class="wrapp
     <span class="nv">endmark   = </span><span class="kc">null</span>
     <span class="nv">indention = </span><span class="kc">null</span>
     <span class="nv">comment   = </span><span class="kc">null</span>
-    <span class="nv">code      = </span><span class="kc">null</span>
+    <span class="nv">code      = </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This flag indicates if the previous line was empty, hence literate code
+must always be surrounded (or at least introduced) by an empty line, ie.
+matching an empty string (<code>""</code>).  This is needed to distinguish code from
+bullet-lists or the like, which may accidently match the start of a line
+of code.  The initial value <code>true</code> allows us to immediately start with
+code, although this is quite unusual.</p></div></div><div class="code"><div class="wrapper">    <span class="nv">canCode = </span><span class="nx">aCodeLine</span><span class="o">?</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Now iterate over each line</p></div></div><div class="code"><div class="wrapper">    <span class="k">for</span> <span class="nx">line</span> <span class="k">in</span> <span class="nx">lines</span>
 
-    <span class="k">for</span> <span class="nx">line</span> <span class="k">in</span> <span class="nx">lines</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Match that line to the language's block-comment syntax, if it exists</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nx">aBlockStart</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">inBlock</span> <span class="o">and</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">aBlockStart</span><span class="p">)</span><span class="o">?</span>
+      <span class="k">if</span> <span class="nx">aCodeLine</span><span class="o">?</span>
+
+        <span class="k">if</span> <span class="nx">canCode</span> <span class="o">and</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">aCodeLine</span><span class="p">)</span><span class="o">?</span>
+          <span class="nv">codeline = </span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Skip empty code-lines (often used to close a code-block).
+TODO: Skipping empty code-lines is certainly not perfect yet!</p></div></div><div class="code"><div class="wrapper">          <span class="k">continue</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">codeline</span><span class="o">?</span> <span class="o">or</span> <span class="nx">codeline</span> <span class="o">is</span> <span class="s">&#39;&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The previous cycle contained literate comments - in literate mode
+we absolutely want to separate code from comments into independent
+segments, as overlapping will make no sense in most cases.  Really!?</p></div></div><div class="code"><div class="wrapper">          <span class="k">if</span> <span class="nx">isLiteral</span> <span class="o">and</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
+            <span class="nv">currSegment   = </span><span class="k">new</span> <span class="nx">@Segment</span>
+            <span class="nv">isFolded      = </span><span class="kc">false</span> <span class="c1"># Make sure to reset folding state.</span>
+
+          <span class="nv">isLiteral = </span><span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Process the matching literate code as if it isn't literate, hence
+we continue further processing of this line and therefore no
+<code>continue</code>-statement occurs here.  Compare this to the following
+<code>else</code>-statement.</p></div></div><div class="code"><div class="wrapper">          <span class="nv">line = </span><span class="nx">codeline</span>
+
+        <span class="k">else</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A code-block requires an introducing empty line, to distinguish code
+from nested bullet-list or the like, as described in the <code>canCode</code> 
+flag initialization above.</p></div></div><div class="code"><div class="wrapper">          <span class="nv">canCode = </span><span class="nx">line</span> <span class="o">is</span> <span class="s">&#39;&#39;</span>
+
+          <span class="k">if</span> <span class="nx">isLiteral</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The previous cycle contained literate code, so let's start a new
+segment, as in literate mode we separate code from comments in
+independent segments, as overlapping makes no sense in most cases.</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+              <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
+              <span class="nv">currSegment   = </span><span class="k">new</span> <span class="nx">@Segment</span>
+              <span class="nv">isFolded      = </span><span class="kc">false</span> <span class="c1"># Make sure to reset folding state.</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Switch to plain literal comments</p></div></div><div class="code"><div class="wrapper">          <span class="k">else</span>
+            <span class="nv">isLiteral = </span><span class="kc">true</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>From the previous cycle are comments left not being literate,
+so let's start a new segment and reset folding state.</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+              <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
+              <span class="nv">currSegment   = </span><span class="k">new</span> <span class="nx">@Segment</span>
+              <span class="nv">isFolded      = </span><span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Collect this line, even empty ones. Really ?</p></div></div><div class="code"><div class="wrapper">          <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">line</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We skip further processing this line.  A literal is as it is.</p></div></div><div class="code"><div class="wrapper">          <span class="k">continue</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Match that line to the language's block-comment syntax, if it exists</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nx">aBlockStart</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">inBlock</span> <span class="o">and</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">aBlockStart</span><span class="p">)</span><span class="o">?</span>
         <span class="nv">inBlock = </span><span class="kc">true</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Reusing <code>match</code> as a placeholder.</p></div></div><div class="code"><div class="wrapper">        <span class="p">[</span><span class="nx">match</span><span class="p">,</span> <span class="nx">indention</span><span class="p">,</span> <span class="nx">blockmark</span><span class="p">,</span> <span class="nx">linemark</span><span class="p">]</span> <span class="o">=</span> <span class="nx">match</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Strip the block-comments start, preserving any inline stuff.
 We don't touch the <code>line</code> itself, as we still need it.</p></div></div><div class="code"><div class="wrapper">        <span class="nv">blockline = </span><span class="nx">line</span><span class="p">.</span><span class="nx">replace</span> <span class="nx">aBlockStart</span><span class="p">,</span> <span class="s">&#39;&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If we found a <code>linemark</code>, prepend it (back) to the <code>blockline</code>, if it
 does not correspond to the initial <code>blockmark</code>.</p></div></div><div class="code"><div class="wrapper">        <span class="k">if</span> <span class="nx">linemark</span><span class="o">?</span> <span class="o">and</span> <span class="nx">blockComments</span><span class="p">[</span><span class="nx">blockmark</span><span class="p">].</span><span class="nx">linemark</span> <span class="o">isnt</span> <span class="nx">linemark</span>
@@ -256,7 +296,11 @@ TODO: <em>Alternative (b)</em>: Improve folded comments visual appearance in sin
 
     <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
 
-    <span class="nx">segments</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Just a convenient prototype for building segments</p></div></div><div class="code"><div class="wrapper">  <span class="nv">Segment: </span><span class="k">class</span> <span class="nx">Segment</span>
+    <span class="nx">segments</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p><span class='doc-section-header'>Class <em>Segment</em> is in namespace <em>groc.Utils</em></span></p>
+
+<p>Just a convenient prototype for building segments</p>
+
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">Segment: </span><span class="k">class</span> <span class="nx">Segment</span>
     <span class="nv">constructor: </span><span class="nf">(code=[], comments=[], foldMarker=&#39;&#39;) -&gt;</span>
       <span class="vi">@code     = </span><span class="nx">code</span>
       <span class="vi">@comments = </span><span class="nx">comments</span>
@@ -320,7 +364,10 @@ We have to match the indentation of the line following the divider comment.</p><
     <span class="nx">pygmentize</span><span class="p">.</span><span class="nx">stdin</span><span class="p">.</span><span class="nx">write</span> <span class="nx">mergedCode</span>
     <span class="nx">pygmentize</span><span class="p">.</span><span class="nx">stdin</span><span class="p">.</span><span class="nx">end</span><span class="p">()</span>
 
-  <span class="nv">parseDocTags: </span><span class="nf">(segments, project, callback) -&gt;</span>
+  <span class="nv">parseDocTags: </span><span class="nf">(segments, project, fileInfo, callback) -&gt;</span>
+    
+    <span class="nv">DOC_TAGS = </span><span class="k">if</span> <span class="nx">fileInfo</span><span class="o">?</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">doctags</span><span class="o">?</span> <span class="k">then</span> <span class="nx">fileInfo</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">doctags</span> <span class="k">else</span> <span class="kc">null</span>
+
     <span class="nv">TAG_REGEX = </span><span class="sr">/(?:^|\s)@(\w+)(?:\s+(.*))?/</span>
     <span class="nv">TAG_VALUE_REGEX = </span><span class="sr">/^(?:&quot;(.*)&quot;|&#39;(.*)&#39;|\{(.*)\}|(.*))$/</span>
 
@@ -335,7 +382,7 @@ We have to match the indentation of the line following the divider comment.</p><
         <span class="nv">tagSections = </span><span class="p">{}</span>
 
         <span class="k">for</span> <span class="nx">line</span> <span class="k">in</span> <span class="nx">segment</span><span class="p">.</span><span class="nx">comments</span> <span class="k">when</span> <span class="nx">line</span><span class="o">?</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">TAG_REGEX</span><span class="p">)</span><span class="o">?</span>
+          <span class="k">if</span> <span class="nx">DOC_TAGS</span><span class="o">?</span> <span class="o">and</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">TAG_REGEX</span><span class="p">)</span><span class="o">?</span>
             <span class="nv">currTag = </span><span class="p">{</span>
               <span class="nv">name: </span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
               <span class="nv">value: </span><span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="s">&#39;&#39;</span>
@@ -344,33 +391,34 @@ We have to match the indentation of the line following the divider comment.</p><
           <span class="k">else</span>
             <span class="nx">currTag</span><span class="p">.</span><span class="nx">value</span> <span class="o">+=</span> <span class="s">&quot;\n</span><span class="si">#{</span><span class="nx">line</span><span class="si">}</span><span class="s">&quot;</span>
 
-        <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">tags</span>
-          <span class="nv">tag.value = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/^\n|\n$/g</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+        <span class="k">if</span> <span class="nx">DOC_TAGS</span><span class="o">?</span>
+          <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">tags</span>
+            <span class="nv">tag.value = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/^\n|\n$/g</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
 
-          <span class="nv">tagDefinition = </span><span class="nx">DOC_TAGS</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span>
+            <span class="nv">tagDefinition = </span><span class="nx">DOC_TAGS</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span>
 
-          <span class="k">unless</span> <span class="nx">tagDefinition</span><span class="o">?</span>
-            <span class="k">if</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
-              <span class="nv">tagDefinition = </span><span class="s">&#39;defaultNoValue&#39;</span>
-            <span class="k">else</span>
-              <span class="nv">tagDefinition = </span><span class="s">&#39;defaultHasValue&#39;</span>
+            <span class="k">unless</span> <span class="nx">tagDefinition</span><span class="o">?</span>
+              <span class="k">if</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
+                <span class="nv">tagDefinition = </span><span class="s">&#39;defaultNoValue&#39;</span>
+              <span class="k">else</span>
+                <span class="nv">tagDefinition = </span><span class="s">&#39;defaultHasValue&#39;</span>
 
-          <span class="k">if</span> <span class="s">&#39;string&#39;</span> <span class="o">==</span> <span class="k">typeof</span> <span class="nx">tagDefinition</span>
-            <span class="nv">tagDefinition = </span><span class="nx">DOC_TAGS</span><span class="p">[</span><span class="nx">tagDefinition</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s">&#39;string&#39;</span> <span class="o">==</span> <span class="k">typeof</span> <span class="nx">tagDefinition</span>
+              <span class="nv">tagDefinition = </span><span class="nx">DOC_TAGS</span><span class="p">[</span><span class="nx">tagDefinition</span><span class="p">]</span>
 
-          <span class="nv">tag.definition = </span><span class="nx">tagDefinition</span>
-          <span class="nv">tag.section = </span><span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">section</span>
+            <span class="nv">tag.definition = </span><span class="nx">tagDefinition</span>
+            <span class="nv">tag.section = </span><span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">section</span>
 
-          <span class="k">if</span> <span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">valuePrefix</span><span class="o">?</span>
-            <span class="nv">tag.value = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">///</span><span class="si">#{</span><span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">valuePrefix</span><span class="o">?</span><span class="si">}</span><span class="sr">\s+///</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
+            <span class="k">if</span> <span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">valuePrefix</span><span class="o">?</span>
+              <span class="nv">tag.value = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">///</span><span class="si">#{</span><span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">valuePrefix</span><span class="o">?</span><span class="si">}</span><span class="sr">\s+///</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
 
-          <span class="k">if</span> <span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">parseValue</span><span class="o">?</span>
-            <span class="nv">tag.value = </span><span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">parseValue</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span>
-          <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="sr">/\n/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span>
-            <span class="nv">tag.value = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">TAG_VALUE_REGEX</span><span class="p">)[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">join</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">parseValue</span><span class="o">?</span>
+              <span class="nv">tag.value = </span><span class="nx">tagDefinition</span><span class="p">.</span><span class="nx">parseValue</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="sr">/\n/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span>
+              <span class="nv">tag.value = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">TAG_VALUE_REGEX</span><span class="p">)[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">join</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
 
-          <span class="nx">tagSections</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">section</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">unless</span> <span class="nx">tagSections</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">section</span><span class="p">]</span><span class="o">?</span>
-          <span class="nx">tagSections</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">section</span><span class="p">].</span><span class="nx">push</span> <span class="nx">tag</span>
+            <span class="nx">tagSections</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">section</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">unless</span> <span class="nx">tagSections</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">section</span><span class="p">]</span><span class="o">?</span>
+            <span class="nx">tagSections</span><span class="p">[</span><span class="nx">tag</span><span class="p">.</span><span class="nx">section</span><span class="p">].</span><span class="nx">push</span> <span class="nx">tag</span>
 
         <span class="nv">segment.tags = </span><span class="nx">tags</span>
         <span class="nv">segment.tagSections = </span><span class="nx">tagSections</span>
@@ -380,16 +428,22 @@ We have to match the indentation of the line following the divider comment.</p><
 
     <span class="nx">callback</span><span class="p">()</span>
 
-  <span class="nv">markdownDocTags: </span><span class="nf">(segments, project, callback) -&gt;</span>
+  <span class="nv">markdownDocTags: </span><span class="nf">(segments, project, fileInfo, callback) -&gt;</span>
     <span class="k">try</span>
       <span class="k">for</span> <span class="nx">segment</span><span class="p">,</span> <span class="nx">segmentIndex</span> <span class="k">in</span> <span class="nx">segments</span> <span class="k">when</span> <span class="nx">segment</span><span class="p">.</span><span class="nx">tags</span><span class="o">?</span>
 
         <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">segment</span><span class="p">.</span><span class="nx">tags</span>
           <span class="k">if</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">definition</span><span class="p">.</span><span class="nx">markdown</span><span class="o">?</span>
             <span class="k">if</span> <span class="s">&#39;string&#39;</span> <span class="o">==</span> <span class="k">typeof</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">definition</span><span class="p">.</span><span class="nx">markdown</span>
-              <span class="nv">tag.markdown = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">definition</span><span class="p">.</span><span class="nx">markdown</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/\{value\}/g</span><span class="p">,</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span>
+              <span class="nv">tag.markdown = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">definition</span><span class="p">.</span><span class="nx">markdown</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\{value\}/g</span><span class="p">,</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>a {type} is an automatically linked {value}</p></div></div><div class="code"><div class="wrapper">              <span class="k">if</span> <span class="sr">/\{type\}/</span><span class="p">.</span><span class="nx">test</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">definition</span><span class="p">.</span><span class="nx">markdown</span>
+                <span class="k">if</span> <span class="nx">fileInfo</span><span class="o">?</span><span class="p">.</span><span class="nx">language</span><span class="p">.</span><span class="nx">namespace</span><span class="o">?</span>
+                  <span class="nv">type = </span><span class="nx">DOCTAGHelpers</span><span class="p">.</span><span class="nx">link_type</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">fileInfo</span>
+                <span class="k">else</span>
+                  <span class="nv">type = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span>
+                <span class="nv">tag.markdown = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\{type\}/g</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the value is empty, strip the empty suffix.  The simpler
+<code>tag.markdown.replace / \*\*$/, ''</code> erroneously fails </p></div></div><div class="code"><div class="wrapper">              <span class="nv">tag.markdown = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">.</span><span class="nx">replace</span> <span class="sr">/// \*\*$///</span><span class="p">,</span> <span class="s">&#39;&#39;</span>
             <span class="k">else</span>
-              <span class="nv">tag.markdown = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">definition</span><span class="p">.</span><span class="nx">markdown</span><span class="p">(</span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span>
+              <span class="nv">tag.markdown = </span><span class="nx">tag</span><span class="p">.</span><span class="nx">definition</span><span class="p">.</span><span class="nx">markdown</span><span class="p">(</span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">fileInfo</span><span class="p">)</span>
           <span class="k">else</span>
             <span class="k">if</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
               <span class="nv">tag.markdown = </span><span class="s">&quot;</span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="s"> </span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">value</span><span class="si">}</span><span class="s">&quot;</span>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><title>styles/default</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="styles/default"><meta name="groc-project-path" content="lib/styles/default.coffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/styles/default.coffee">lib/styles/default.coffee</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="nv">fs   = </span><span class="nx">require</span> <span class="s">&#39;fs&#39;</span>
+<!DOCTYPE html><html lang="en" class="two-column-layout"><head><title>styles/default</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="styles/default"><meta name="groc-project-path" content="lib/styles/default.coffee"><meta name="groc-github-url" content="https://github.com/nevir/groc"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/nevir/groc/blob/master/lib/styles/default.coffee">lib/styles/default.coffee</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="nv">fs   = </span><span class="nx">require</span> <span class="s">&#39;fs&#39;</span>
 <span class="nv">path = </span><span class="nx">require</span> <span class="s">&#39;path&#39;</span>
 
 <span class="nv">_            = </span><span class="nx">require</span> <span class="s">&#39;underscore&#39;</span>
@@ -95,22 +95,35 @@ over it (permissions), as well as wanting to avoid contention.</p></div></div><d
   <span class="nv">concatenateScripts: </span><span class="nf">(scriptSource, callback) -&gt;</span>
     <span class="nx">@log</span><span class="p">.</span><span class="nx">trace</span> <span class="s">&#39;styles.Default#concatenateScripts(..., ...)&#39;</span>
 
-    <span class="nv">jqueryPath = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">@sourceAssets</span><span class="p">,</span> <span class="s">&#39;jquery.min.js&#39;</span>
+    <span class="nv">sources           = </span><span class="p">[]</span>
+    <span class="nv">jqueryPath        = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">@sourceAssets</span><span class="p">,</span> <span class="s">&#39;jquery.min.js&#39;</span>
+    <span class="nv">jqueryCookiePath  = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">@sourceAssets</span><span class="p">,</span> <span class="s">&#39;jquery.cookie.js&#39;</span>
+    <span class="nv">outputPath        = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">@targetAssets</span><span class="p">,</span> <span class="s">&#39;behavior.js&#39;</span>
+
     <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span> <span class="nx">jqueryPath</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">,</span> <span class="nf">(error, data) =&gt;</span>
       <span class="k">if</span> <span class="nx">error</span>
         <span class="nx">@log</span><span class="p">.</span><span class="nx">error</span> <span class="s">&#39;Failed to read %s: %s&#39;</span><span class="p">,</span> <span class="nx">jqueryPath</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span>
         <span class="k">return</span> <span class="nx">callback</span> <span class="nx">error</span>
 
-      <span class="nv">outputPath = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">@targetAssets</span><span class="p">,</span> <span class="s">&#39;behavior.js&#39;</span>
-      <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span> <span class="nx">outputPath</span><span class="p">,</span> <span class="nx">data</span> <span class="o">+</span> <span class="nx">scriptSource</span><span class="p">,</span> <span class="nf">(error) =&gt;</span>
+      <span class="nx">sources</span><span class="p">.</span><span class="nx">push</span> <span class="nx">data</span>
+
+      <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span> <span class="nx">jqueryCookiePath</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">,</span> <span class="nf">(error, data) =&gt;</span>
         <span class="k">if</span> <span class="nx">error</span>
-          <span class="nx">@log</span><span class="p">.</span><span class="nx">error</span> <span class="s">&#39;Failed to write %s: %s&#39;</span><span class="p">,</span> <span class="nx">outputPath</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span>
+          <span class="nx">@log</span><span class="p">.</span><span class="nx">error</span> <span class="s">&#39;Failed to read %s: %s&#39;</span><span class="p">,</span> <span class="nx">jqueryCookiePath</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span>
           <span class="k">return</span> <span class="nx">callback</span> <span class="nx">error</span>
-        <span class="nx">@log</span><span class="p">.</span><span class="nx">trace</span> <span class="s">&#39;Wrote %s&#39;</span><span class="p">,</span> <span class="nx">outputPath</span>
 
-        <span class="nx">callback</span><span class="p">()</span>
+        <span class="nx">sources</span><span class="p">.</span><span class="nx">push</span> <span class="nx">data</span>
+        <span class="nx">sources</span><span class="p">.</span><span class="nx">push</span> <span class="nx">scriptSource</span>
 
-  <span class="nv">renderDocTags: </span><span class="nf">(segments) -&gt;</span>
+        <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span> <span class="nx">outputPath</span><span class="p">,</span> <span class="nx">sources</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">),</span> <span class="nf">(error) =&gt;</span>
+          <span class="k">if</span> <span class="nx">error</span>
+            <span class="nx">@log</span><span class="p">.</span><span class="nx">error</span> <span class="s">&#39;Failed to write %s: %s&#39;</span><span class="p">,</span> <span class="nx">outputPath</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span>
+            <span class="k">return</span> <span class="nx">callback</span> <span class="nx">error</span>
+          <span class="nx">@log</span><span class="p">.</span><span class="nx">trace</span> <span class="s">&#39;Wrote %s&#39;</span><span class="p">,</span> <span class="nx">outputPath</span>
+  
+          <span class="nx">callback</span><span class="p">()</span>
+
+  <span class="nv">renderDocTags: </span><span class="nf">(segments, fileInfo) -&gt;</span>
     <span class="k">for</span> <span class="nx">segment</span><span class="p">,</span> <span class="nx">segmentIndex</span> <span class="k">in</span> <span class="nx">segments</span> <span class="k">when</span> <span class="nx">segment</span><span class="p">.</span><span class="nx">tagSections</span><span class="o">?</span>
 
       <span class="nv">sections = </span><span class="nx">segment</span><span class="p">.</span><span class="nx">tagSections</span>
@@ -128,6 +141,7 @@ over it (permissions), as well as wanting to avoid contention.</p></div></div><d
       <span class="nx">firstPart</span><span class="p">.</span><span class="nx">push</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">type</span> <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">type</span><span class="o">?</span>
 
       <span class="nx">metaOutput</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">capitalize</span> <span class="nx">firstPart</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)</span><span class="si">}</span><span class="s">&quot;</span>
+
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">flags</span><span class="o">?</span> <span class="o">or</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">metadata</span><span class="o">?</span>
         <span class="nv">secondPart = </span><span class="p">[]</span>
         <span class="nx">secondPart</span><span class="p">.</span><span class="nx">push</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">flags</span> <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">flags</span><span class="o">?</span>
@@ -141,16 +155,41 @@ over it (permissions), as well as wanting to avoid contention.</p></div></div><d
       <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">todo</span> <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">todo</span><span class="o">?</span>
 
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">params</span><span class="o">?</span>
-        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&#39;Parameters:\n\n&#39;</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;**Parameter</span><span class="si">#{</span><span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">length</span> <span class="k">then</span> <span class="s">&#39;s&#39;</span> <span class="k">else</span> <span class="s">&#39;&#39;</span><span class="si">}</span><span class="s">:**\n\n&quot;</span>
         <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">params</span>
 
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">returns</span><span class="o">?</span>
-        <span class="nx">output</span> <span class="o">+=</span> <span class="p">(</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">capitalize</span><span class="p">(</span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">)</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">returns</span> <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">returns</span><span class="o">?</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&#39;&lt;br/&gt;**and** &#39;</span><span class="p">)</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="p">(</span>
+          <span class="k">for</span> <span class="nx">tag</span><span class="p">,</span> <span class="nx">index</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">returns</span>
+            <span class="k">if</span> <span class="nx">index</span> <span class="o">is</span> <span class="mi">0</span>
+              <span class="nx">humanize</span><span class="p">.</span><span class="nx">capitalize</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
+            <span class="k">else</span>
+              <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
+        <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot;&lt;br/&gt;**and** &quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;\n\n&quot;</span>
+
+      <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">throws</span><span class="o">?</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="p">(</span>
+          <span class="k">for</span> <span class="nx">tag</span><span class="p">,</span> <span class="nx">index</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">throws</span>
+            <span class="k">if</span> <span class="nx">index</span> <span class="o">is</span> <span class="mi">0</span>
+              <span class="nx">humanize</span><span class="p">.</span><span class="nx">capitalize</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
+            <span class="k">else</span>
+              <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span>
+        <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s">&quot;&lt;br/&gt;**and** &quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;\n\n&quot;</span>
 
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">howto</span><span class="o">?</span>
-        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;\n\nHow-To:\n\n</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">gutterify</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">,</span> <span class="mi">0</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">howto</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;How-To:\n\n</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">gutterify</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">,</span> <span class="mi">0</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">howto</span>
 
       <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">example</span><span class="o">?</span>
-        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;\n\nExample:\n\n</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">gutterify</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">,</span> <span class="mi">4</span><span class="si">}</span><span class="s">&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">example</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;Example:\n\n</span><span class="si">#{</span><span class="nx">humanize</span><span class="p">.</span><span class="nx">gutterify</span> <span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="p">,</span> <span class="mi">4</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">example</span>
+
+      <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">authors</span><span class="o">?</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;Author</span><span class="si">#{</span><span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">authors</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span> <span class="k">then</span> <span class="s">&#39;&#39;</span> <span class="k">else</span> <span class="s">&#39;s&#39;</span><span class="si">}</span><span class="s">:\n\n&quot;</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">authors</span>
+
+      <span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">references</span><span class="o">?</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;Reference</span><span class="si">#{</span><span class="k">if</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">references</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span> <span class="k">then</span> <span class="s">&#39;&#39;</span> <span class="k">else</span> <span class="s">&#39;s&#39;</span><span class="si">}</span><span class="s">:\n\n&quot;</span>
+        <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">tag</span><span class="p">.</span><span class="nx">markdown</span><span class="si">}</span><span class="s">\n\n&quot;</span> <span class="k">for</span> <span class="nx">tag</span> <span class="k">in</span> <span class="nx">sections</span><span class="p">.</span><span class="nx">references</span>
+
+      <span class="nx">output</span> <span class="o">+=</span> <span class="s">&quot;&lt;br/&gt;&lt;br/&gt;\n\n&quot;</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="nx">output</span><span class="p">.</span><span class="nx">length</span>
 
       <span class="nv">segment.comments = </span><span class="nx">output</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39;\n&#39;</span></div></div></div></div></body></html>
