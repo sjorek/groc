@@ -245,7 +245,6 @@ $ ->
     documentPath: $('meta[name="groc-document-path"]').attr('content')
     projectPath:  $('meta[name="groc-project-path"]').attr('content')
 
-  html$      = $('html')
   nav$       = buildNav metaInfo
   toc$       = nav$.find '.toc'
   search$    = $('#search')
@@ -274,7 +273,11 @@ $ ->
   # Set up the table of contents toggle
   tocToggle$ = nav$.find '.toc-toggle'
   tocToggle$.click (evt) ->
-    if (nav$.hasClass 'active' || search$.is ':focus') then search$.blur() else search$.focus()
+    if nav$.hasClass 'active'
+      search$.blur() if search$.is ':focus'
+      setTableOfContentsActive false
+    else
+      search$.focus()
     evt.preventDefault()
 
   # Note: the following CSS prevents text-selection:

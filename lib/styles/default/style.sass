@@ -20,7 +20,7 @@ $commentary-width: 29em
 //   unless their content grows past the page.
 $commentary-column-width: $commentary-width + ($common-margin + $column-padding) * 2
 // * Width of the tools pulldown in two-column mode.  NOT scaled by tools-font.
-$tools-width: 22em
+$tools-width: 20em
 // * Height of the main toolbar, scaled by the size of tools-font
 $tools-height: 2.1em
 // * Radius of the code-window's and comment-column's border for one-column-layout
@@ -119,10 +119,6 @@ $code-background-gradient: linear-gradient(left, darken($code-background-color, 
 html, body
   height: 100%
 
-// Conceptually, the automatic layout focuses the user on the commentary first, so we lay out that column.
-html.two-column-layout body
-  max-width: $commentary-column-width
-
 // In two-column mode, the segment is actually shifted over a full column to favor code fragments.
 // We may or may not have either .comment or .code sections, so we need to handle all three cases.
 html.one-column-layout .segment,
@@ -196,11 +192,12 @@ html.two-column-layout .segment
 
   body
     margin: 0 auto
+    // Conceptually, the automatic layout focuses the user on the commentary first, so we lay out that column.
+    max-width: $segment-max-width
 
     .segment
       padding:     $segment-padding
       white-space: normal
-      max-width:   $segment-max-width
       margin:      0 auto
 
       .comments, .code
@@ -218,6 +215,9 @@ html.two-column-layout .segment
         .wrapper
           display: inline-block
 
+    #document
+      min-height: 100%
+
   // Fit the meta info into on screen, removing any overflow it creates
   #meta
     margin-bottom:  $common-margin / 2
@@ -232,11 +232,11 @@ html.two-column-layout .segment
 html.one-column-layout
   +comment-column-layout(auto, 0 $common-margin 0 $common-margin)
 
-  body
-    max-width: auto
-
   #meta
     margin-left: $column-shadow-width + $common-margin // delibratly used these widths !
+
+html.no-js .segment .code
+  margin-right: $tools-width + ($common-margin * 3)
 
 // Switch modes at a little wider than a full (padded) column
 @media (max-width: #{$single-column-toggle-width})
@@ -255,15 +255,27 @@ html.one-column-layout
   html.two-column-layout #meta
     margin-top: $common-margin * 2.5
 
-  html.no-js .segment .code
-    margin-right: $tools-width
+  html.no-js
+    #meta
+      margin-left: $common-margin
+      margin-top: $common-margin / 2
 
-  html.no-js body
-    max-width: $commentary-column-width + $tools-width
+    .segment .code
+      margin-left: $common-margin / 2
+      margin-right: $common-margin / 2
 
 @media (max-width: #{$commentary-column-width})
   html.two-column-layout #meta
     margin-left: $common-margin
+
+  html.no-js
+    #meta
+      margin-left: $common-margin / 2
+
+    .segment .code
+      margin-left: 0
+      margin-right: 0
+
 
 .no-js #document
   min-height: 100%
@@ -533,6 +545,11 @@ html.one-column-layout #document
     margin-right:  0
     +border-radius(0)
 
+  html.no-js nav .toc
+    margin-top: $common-margin
+    +border-radius($border-radius)
+    +box-shadow(darken($code-background-color, 15%) 0 0 0.5em 0.2em)
+
 @media (max-width: #{$commentary-column-width})
   html.two-column-layout #document
     +border-radius(0)
@@ -733,7 +750,8 @@ nav
     .toc
       background: $opaque-tools-background-color
 
-nav.active .tools, .no-js nav .tools
+nav.active .tools
+  +box-shadow(rgba(0,0,0,0.3) 0 0 0.5em 0.1em)
   +border-bottom-left-radius(0)
 
 @media (max-width: #{$commentary-column-width})
@@ -994,3 +1012,9 @@ html.one-column-layout body .segment, html.two-column-layout body .segment
   
     .marker .c1:after
       content: " …"
+
+html.no-js body .segment
+  .code.folded .wrapper
+    display: block
+  .code.folded .marker
+    display: none
