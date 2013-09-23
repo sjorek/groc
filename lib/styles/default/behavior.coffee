@@ -1,17 +1,14 @@
-tableOfContents = <%= JSON.stringify(tableOfContents) %>
-
 # # Page Behavior
 
 # ## Table of Contents
 
 # Global jQuery references to navigation components we care about.
-html$ = null
-nav$ = null
-toc$ = null
+html$   = $(document.documentElement).removeClass('no-js').addClass('js')
+nav$    = null
+toc$    = null
+search$ = null
 
 setTableOfContentsActive = (active) ->
-  html$ = $('html')
-
   if active
     nav$.addClass  'active'
     html$.addClass 'popped'
@@ -55,11 +52,10 @@ setCurrentNodeExpanded = (expanded) ->
   focusCurrentNode()
 
 selectNode = (newNode$) ->
+  currentNode$ ?= newNode$
   # Remove first, in case it's the same node
   currentNode$.removeClass 'selected'
-  newNode$.addClass 'selected'
-
-  currentNode$ = newNode$
+  currentNode$ = newNode$.addClass 'selected'
   focusCurrentNode()
 
 selectNodeByDocumentPath = (documentPath, headerSlug=null) ->
@@ -92,9 +88,13 @@ moveCurrentNode = (up) ->
   selectNode $(visibleNodes$[newIndex])
 
 visitCurrentNode = ->
-  labelLink$ = currentNode$.children('a.label')
-  window.location = labelLink$.attr 'href' if labelLink$.length > 0
-
+  if currentNode$.hasClass 'folder'
+    setCurrentNodeExpanded(not currentNode$.hasClass 'expanded')
+  else if currentNode$.hasClass 'current'
+    search$.blur()
+  else
+    window.location = currentNode$.children('a.label').attr 'href'
+  return
 
 # ## Node Search
 
@@ -109,13 +109,13 @@ appendSearchNode = (node$) ->
 
 currentQuery = ''
 searchNodes = (queryString) ->
-  queryString = queryString.toLowerCase().replace(/\s+/, '')
+  queryString = queryString.toLowerCase().replace(/\s+/g, ' ')
   return if queryString == currentQuery
   currentQuery = queryString
 
   return clearFilter() if queryString == ''
 
-  matcher  = new RegExp (c.replace /[-[\]{}()*+?.,\\^$|#\s]/, "\\$&" for c in queryString).join '.*'
+  matcher  = new RegExp (c.replace ///[-[\]{}()*+?.,\\^$|#\s]///, "\\$&" for c in queryString).join '.*'
   matched  = []
   filtered = []
 
@@ -125,7 +125,7 @@ searchNodes = (queryString) ->
   return clearFilter() if matched.length > MAX_FILTER_SIZE
 
   nav$.addClass 'searching'
-
+  
   # Update the DOM
   for nodeInfo in filtered
     nodeInfo[1].removeClass 'matched-child'
@@ -139,14 +139,14 @@ searchNodes = (queryString) ->
     highlightMatch nodeInfo[2], queryString
 
     # Filter out our immediate parent
-    $(p).addClass 'matched-child' for p in nodeInfo[1].parents 'li'
+    $(p).addClass 'matched-child' for p in nodeInfo[1].parents 'li' when not $(p).hasClass 'matched'
 
 clearFilter = ->
   nav$.removeClass 'searching'
   currentQuery = ''
 
   for nodeInfo in searchableNodes
-    nodeInfo[1].removeClass 'filtered matched-child'
+    nodeInfo[1].removeClass 'filtered matched-child matched'
     clearHighlight nodeInfo[2]
 
 highlightMatch = (text$, queryString) ->
@@ -173,24 +173,22 @@ clearHighlight = (text$) ->
 fileMap = {} # A map of targetPath -> DOM node
 
 buildNav = (metaInfo) ->
-  nav$ = $("""
-    <nav>
-      <ul class="tools">
-        <li class="toggle toc-toggle toc-toggle4">
-          <a title="Show or hide the table of contents">Table of Contents</a>
-        </li>
-        <li class="search">
-          <input id="search" type="search" autocomplete="off"/>
-        </li>
-        <li class="toggle layout-toggle layout-toggle9">
-          <a title="Toogle documentation column to full-width (= switch between single- and two-column layout)">Toogle full-width</a>
-        </li>
-      </ul>
-      <ol class="toc"/>
-      </div>
-    </nav>
-  """).appendTo $('body')
+  nav$ = $('nav')
   toc$ = nav$.find '.toc'
+
+  $("""
+    <ul class="tools">
+      <li class="toggle toc-toggle toc-toggle4">
+        <a title="Show or hide the table of contents">Table of Contents</a>
+      </li>
+      <li class="search">
+        <input id="search" type="search" autocomplete="off"/>
+      </li>
+      <li class="toggle layout-toggle layout-toggle9">
+        <a title="Toogle documentation column to full-width (= switch between single- and two-column layout)">Toogle full-width</a>
+      </li>
+    </ul>
+  """).prependTo nav$
 
   if metaInfo.githubURL
     # Special case the index to go to the project root
@@ -205,53 +203,38 @@ buildNav = (metaInfo) ->
       </li>
     """
 
-  for node in tableOfContents
-    toc$.append buildTOCNode node, metaInfo
+  $('li', toc$).each (index) -> buildTOCNode(this, metaInfo)
 
   nav$
 
 buildTOCNode = (node, metaInfo) ->
-  node$ = $("""<li class="#{node.type}"/>""")
+  node$ = $(node)
+  label$ = node$.find('> .label')
 
   # } just to clarify: we use it in the `clickLabel`-method below, but can
   # } reference the first time after initializing it a few more lines below
-  discloser = null
+  discloser = label$.find('> .discloser').get(0)
 
-  switch node.type
-    when 'file'
-      # } Single line to avoid extra whitespace
-      node$.append """<a class="label" href="#{metaInfo.relativeRoot}#{node.data.targetPath}.html" title="#{node.data.projectPath}"><span class="text">#{node.data.title}</span></a>"""
-      clickLabel = (evt) ->
-        if evt.target is discloser
-          node$.toggleClass 'expanded'
-          evt.preventDefault()
-          return false
-        selectNode node$
-
-    when 'folder'
-      node$.append """<a class="label" href="#"><span class="text">#{node.data.title}</span></a>"""
-      clickLabel = (evt) ->
-        selectNode node$
+  if node$.hasClass 'file'
+    # Persist our references to the node
+    {data:{targetPath}} = node$.data('groc')
+    fileMap[targetPath] = node$
+    clickLabel = (evt) ->
+      if evt.target is discloser
         node$.toggleClass 'expanded'
         evt.preventDefault()
         return false
+      selectNode node$
+  else if node$.hasClass 'folder'
+    clickLabel = (evt) ->
+      node$.toggleClass 'expanded'
+      evt.preventDefault()
+      return false
 
-  if node.children?.length > 0
-    children$ = $('<ol class="children"/>')
-    children$.append buildTOCNode c, metaInfo for c in node.children
+  label$.click clickLabel if clickLabel?
 
-    node$.append children$
-
-  label$ = node$.find('> .label')
-  label$.click clickLabel
-
-  discloser$ = $('<span class="discloser"/>').prependTo label$
-  discloser$.addClass 'placeholder' unless node.children?.length > 0
-  discloser = discloser$.get(0)
-
-  # Persist our references to the node
-  fileMap[node.data.targetPath] = node$ if node.type == 'file'
   appendSearchNode node$
+  node$.removeClass 'expanded'
 
   node$
 
@@ -291,7 +274,7 @@ $ ->
   # Set up the table of contents toggle
   tocToggle$ = nav$.find '.toc-toggle'
   tocToggle$.click (evt) ->
-    if search$.is ':focus' then search$.blur() else search$.focus()
+    if (nav$.hasClass 'active' || search$.is ':focus') then search$.blur() else search$.focus()
     evt.preventDefault()
 
   # Note: the following CSS prevents text-selection:
@@ -352,25 +335,41 @@ $ ->
   $('body').keydown (evt) ->
     if nav$.hasClass 'active'
       switch evt.keyCode
-        when 13 then visitCurrentNode() # return
-        when 37 then setCurrentNodeExpanded false # left
-        when 38 then moveCurrentNode true # up
-        when 39 then setCurrentNodeExpanded true # right
-        when 40 then moveCurrentNode false # down
+        when 13 then visitCurrentNode() # Return
+        when 27 then setTableOfContentsActive(false) # ESC
+        when 37 then setCurrentNodeExpanded false # left ←
+        when 38 then moveCurrentNode true # up ↑
+        when 39 then setCurrentNodeExpanded true # right →
+        when 40 then moveCurrentNode false # down ↓
         else return
-
       evt.preventDefault()
+    else
+      switch evt.keyCode 
+        when 13
+          search$.focus()
+          evt.preventDefault()
+        when 27
+          setTableOfContentsActive(true)
+          evt.preventDefault()
 
   # searching
   search$.bind 'keyup search', (evt) ->
     searchNodes search$.val()
 
   search$.keydown (evt) ->
-    if evt.keyCode == 27 # Esc
-      if search$.val().trim() == ''
+    switch evt.keyCode
+      when 9 # TAB
         search$.blur()
-      else
-        search$.val ''
+        setTableOfContentsActive(true) 
+        evt.preventDefault()
+        return false
+      when 27 # ESC
+        if search$.val().trim() == ''
+          search$.blur()
+        else
+          search$.val ''
+        evt.preventDefault()
+        return false
 
   # Make folded code blocks toggleable; the marker and the code are clickable.
   $('.code.folded').each (index, code) ->

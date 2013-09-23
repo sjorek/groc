@@ -19,11 +19,11 @@ module.exports = class Default extends Base
     @sourceAssets = path.join __dirname, 'default'
     @targetAssets = path.resolve @project.outPath, 'assets'
 
-    templateData  = fs.readFileSync path.join(@sourceAssets, 'docPage.jade'), 'utf-8'
-    @templateFunc = jade.compile templateData
+    data  = fs.readFileSync path.join(@sourceAssets, 'docPage.jade'), 'utf-8'
+    @templateFunc = jade.compile data
 
-  renderCompleted: (callback) ->
-    @log.trace 'styles.Default#renderCompleted(...)'
+  exportCompleted: (callback) ->
+    @log.trace 'styles.Default#exportCompleted(...)'
 
     super (error) =>
       return error if error
@@ -73,7 +73,7 @@ module.exports = class Default extends Base
         @log.trace 'Compiled %s', scriptPath
       catch error
         @log.debug scriptSource
-        @log.error 'Failed to compile %s: %s', scriptPath, error.message
+        @log.error 'Failed to compile %s (%s): %s', scriptPath, scriptSource, error.message
         return callback error
 
       #@compressScript scriptSource, callback

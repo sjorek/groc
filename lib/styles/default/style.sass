@@ -119,9 +119,6 @@ $code-background-gradient: linear-gradient(left, darken($code-background-color, 
 html, body
   height: 100%
 
-#document
-  min-height: 100%
-
 // Conceptually, the automatic layout focuses the user on the commentary first, so we lay out that column.
 html.two-column-layout body
   max-width: $commentary-column-width
@@ -176,6 +173,8 @@ html.two-column-layout .segment
   padding:    $common-margin / 4 $common-margin
   margin-top: $common-margin / 2
 
+.no-js #meta
+  margin-top: 0
 
 // ## Two-Column Scaling
 
@@ -256,9 +255,21 @@ html.one-column-layout
   html.two-column-layout #meta
     margin-top: $common-margin * 2.5
 
+  html.no-js .segment .code
+    margin-right: $tools-width
+
+  html.no-js body
+    max-width: $commentary-column-width + $tools-width
+
 @media (max-width: #{$commentary-column-width})
   html.two-column-layout #meta
     margin-left: $common-margin
+
+.no-js #document
+  min-height: 100%
+
+.js #document
+  min-height: 100%
 
 // ## Navigation
 $tools-padding: ($tools-height - 1em) / 2
@@ -332,6 +343,12 @@ nav
     li li li li li li .label
       padding-left: $tools-padding * 6
 
+.no-js nav
+  @media (max-width: #{$single-column-toggle-width})
+    position: relative
+  .toc
+    top: 0
+
 // ## Behavior
 $navigation-shift-duration: 150ms
 
@@ -343,16 +360,16 @@ nav
   .tools .toc-toggle
     +transition(background $navigation-shift-duration)
 
-  &.active
-    +transition(height 0 0)
-    height: 100%
+nav.active, .no-js nav
+  +transition(height 0 0)
+  height: 100%
 
 // In two-column mode, we slide the table of contents in from the right
 nav .toc
   +transition(right $navigation-shift-duration)
   right: -100%
 
-nav.active .toc
+nav.active .toc, .no-js nav .toc
   right: 0
 
 // In single column mode, we slide in from the left (and also pop the body)
@@ -362,7 +379,7 @@ nav.active .toc
     right: auto
     left: -100%
 
-  nav.active .toc
+  nav.active .toc, .no-js nav .toc
     left: 0
 
 // When we switch to the navigation in single column mode, "pop" the body off by sliding it off
@@ -666,7 +683,7 @@ nav
       text-decoration: none
       border-top:      1px solid darken($tools-background-color, 15%)
       border-bottom:   1px solid darken($tools-background-color, 15%)
-      margin-top:     -1px
+      margin-top:      -1px
 
       &:hover
         background: darken($tools-background-color, 10%)
@@ -674,8 +691,20 @@ nav
     .file > .label
       font-weight: bold
 
+    .current > .label
+      background: darken($tools-background-color, 10%)
+      +box-shadow(darken($tools-background-color, 10%) 0 0 2px 1px inset)
+      border-top: 1px solid darken($tools-background-color, 30%)
+      border-bottom: 1px solid darken($tools-background-color, 30%)
+
     .selected > .label
       background: $commentary-background-color
+
+    .selected > .label:hover
+      background: darken($tools-background-color, 10%)
+
+    .current > .label:hover
+      background: darken($tools-background-color, 15%)
 
     // Search styling
     .label em
@@ -703,6 +732,9 @@ nav
 
     .toc
       background: $opaque-tools-background-color
+
+nav.active .tools, .no-js nav .tools
+  +border-bottom-left-radius(0)
 
 @media (max-width: #{$commentary-column-width})
   nav .tools .layout-toggle
