@@ -110,7 +110,958 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
 
 }));
 (function() {
-  var MAX_FILTER_SIZE, appendSearchNode, buildNav, buildTOCNode, clearFilter, clearHighlight, currentNode$, currentQuery, fileMap, focusCurrentNode, highlightMatch, html$, moveCurrentNode, nav$, search$, searchNodes, searchableNodes, selectNode, selectNodeByDocumentPath, setCurrentNodeExpanded, setTableOfContentsActive, toc$, toggleTableOfContents, visitCurrentNode;
+  var MAX_FILTER_SIZE, appendSearchNode, buildNav, buildTOCNode, clearFilter, clearHighlight, currentNode$, currentQuery, fileMap, focusCurrentNode, highlightMatch, html$, moveCurrentNode, nav$, search$, searchNodes, searchableNodes, selectNode, selectNodeByDocumentPath, setCurrentNodeExpanded, setTableOfContentsActive, tableOfContents, toc$, toggleTableOfContents, visitCurrentNode;
+
+  tableOfContents = [
+    {
+      "type": "file",
+      "data": {
+        "projectPath": "README.md",
+        "targetPath": "index",
+        "pageTitle": "index",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "groc",
+            "slug": "groc",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "What does it give you?",
+                "slug": "what-does-it-give-you"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "How?",
+                "slug": "how"
+              },
+              "depth": 2,
+              "children": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Installing groc",
+                    "slug": "installing-groc"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Using groc (CLI)",
+                    "slug": "using-groc-cli"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Configuring groc (.groc.json)",
+                    "slug": "configuring-groc-grocjson"
+                  },
+                  "depth": 3
+                }
+              ]
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Literate programming?",
+                "slug": "literate-programming"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Known Issues",
+                "slug": "known-issues"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "What's in the works?",
+                "slug": "whats-in-the-works"
+              },
+              "depth": 2
+            }
+          ]
+        },
+        "title": "groc"
+      },
+      "depth": 1,
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "What does it give you?",
+            "slug": "what-does-it-give-you"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "How?",
+            "slug": "how"
+          },
+          "depth": 2,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Installing groc",
+                "slug": "installing-groc"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Using groc (CLI)",
+                "slug": "using-groc-cli"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Configuring groc (.groc.json)",
+                "slug": "configuring-groc-grocjson"
+              },
+              "depth": 3
+            }
+          ]
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Literate programming?",
+            "slug": "literate-programming"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Known Issues",
+            "slug": "known-issues"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "What's in the works?",
+            "slug": "whats-in-the-works"
+          },
+          "depth": 2
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": ".groc.json",
+        "targetPath": ".groc",
+        "pageTitle": ".groc",
+        "markdown": "# Project configuration\n\nIf not explicitly excluded, every commandline-option as described in [Command \nLine Interface](cli.html) or and summarized via `groc -h`  can be given to ease\nthe (re-)generation of the project's documentation. Arguments must be specified\nvia a configuration file in the current directory named `.groc.json` (like this\nfile). It should contain a mapping between groc's option names and their values,\nhence you must preserve the option's type.\n\n",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Project configuration",
+            "slug": "project-configuration",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "Project configuration"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "lib/cli.coffee",
+        "targetPath": "cli",
+        "pageTitle": "cli",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Command Line Interface",
+            "slug": "command-line-interface",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "CLI Overview",
+                "slug": "cli-overview"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "CLI Options",
+                "slug": "cli-options"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Argument processing",
+                "slug": "argument-processing"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Project Generation",
+                "slug": "project-generation"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "GitHub",
+                "slug": "github"
+              },
+              "depth": 2
+            }
+          ]
+        },
+        "title": "Command Line Interface"
+      },
+      "depth": 1,
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "CLI Overview",
+            "slug": "cli-overview"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "CLI Options",
+            "slug": "cli-options"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Argument processing",
+            "slug": "argument-processing"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Project Generation",
+            "slug": "project-generation"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "GitHub",
+            "slug": "github"
+          },
+          "depth": 2
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "lib/doc_tags.coffee",
+        "targetPath": "doc_tags",
+        "pageTitle": "doc_tags",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Supported Doctags",
+            "slug": "supported-doctags",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "Supported Doctags"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "lib/languages.coffee",
+        "targetPath": "languages",
+        "pageTitle": "languages",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Supported Languages",
+            "slug": "supported-languages",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "Supported Languages"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "lib/namespace.litcoffee",
+        "targetPath": "namespace",
+        "pageTitle": "namespace",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Supported Namespaces",
+            "slug": "supported-namespaces",
+            "isFileHeader": true
+          },
+          "depth": 1,
+          "children": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Important notice",
+                "slug": "important-notice"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Objectives",
+                "slug": "objectives"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Language definitions",
+                "slug": "language-definitions"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Synopsis",
+                "slug": "synopsis"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Example: 1:1 type translations",
+                "slug": "example-11-type-translations"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Example: Namespaces",
+                "slug": "example-namespaces"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Example: skip linking a type or namespace",
+                "slug": "example-skip-linking-a-type-or-namespace"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Example: call a function",
+                "slug": "example-call-a-function"
+              },
+              "depth": 2
+            }
+          ]
+        },
+        "title": "Supported Namespaces"
+      },
+      "depth": 1,
+      "outline": [
+        {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Important notice",
+            "slug": "important-notice"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Objectives",
+            "slug": "objectives"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Language definitions",
+            "slug": "language-definitions"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Synopsis",
+            "slug": "synopsis"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Example: 1:1 type translations",
+            "slug": "example-11-type-translations"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Example: Namespaces",
+            "slug": "example-namespaces"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Example: skip linking a type or namespace",
+            "slug": "example-skip-linking-a-type-or-namespace"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Example: call a function",
+            "slug": "example-call-a-function"
+          },
+          "depth": 2
+        }
+      ],
+      "children": [
+        {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/namespace/javascript_dom.json",
+            "targetPath": "namespace/javascript_dom",
+            "pageTitle": "namespace/javascript_dom",
+            "title": "javascript_dom"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/namespace/javascript_globals.json",
+            "targetPath": "namespace/javascript_globals",
+            "pageTitle": "namespace/javascript_globals",
+            "title": "javascript_globals"
+          },
+          "depth": 2,
+          "outline": []
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "package.json",
+        "targetPath": "package",
+        "pageTitle": "package",
+        "markdown": "# Package configuration\n\nThis is a [node package manager (npm)](https://npmjs.org) configuration file.\nIt's JSON-syntax is [documented here](https://npmjs.org/doc/json.html).\n",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "Package configuration",
+            "slug": "package-configuration",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "Package configuration"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "lib/project.coffee",
+        "targetPath": "project",
+        "pageTitle": "project",
+        "firstHeader": {
+          "type": "heading",
+          "data": {
+            "level": 1,
+            "title": "groc API",
+            "slug": "groc-api",
+            "isFileHeader": true
+          },
+          "depth": 1
+        },
+        "title": "groc API"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "folder",
+      "data": {
+        "path": "scripts",
+        "title": "scripts"
+      },
+      "depth": 1,
+      "children": [
+        {
+          "type": "file",
+          "data": {
+            "projectPath": "scripts/publish-git-pages.sh",
+            "targetPath": "scripts/publish-git-pages",
+            "pageTitle": "scripts/publish-git-pages",
+            "title": "publish-git-pages"
+          },
+          "depth": 2,
+          "outline": []
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "lib/styles.coffee",
+        "targetPath": "styles",
+        "pageTitle": "styles",
+        "title": "styles"
+      },
+      "depth": 1,
+      "outline": [],
+      "children": [
+        {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/styles/base.coffee",
+            "targetPath": "styles/base",
+            "pageTitle": "styles/base",
+            "title": "base"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/styles/default.coffee",
+            "targetPath": "styles/default",
+            "pageTitle": "styles/default",
+            "title": "default"
+          },
+          "depth": 2,
+          "outline": [],
+          "children": [
+            {
+              "type": "file",
+              "data": {
+                "projectPath": "lib/styles/default/behavior.coffee",
+                "targetPath": "styles/default/behavior",
+                "pageTitle": "styles/default/behavior",
+                "title": "behavior"
+              },
+              "depth": 3,
+              "outline": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 1,
+                    "title": "Page Behavior",
+                    "slug": "page-behavior"
+                  },
+                  "depth": 1,
+                  "children": [
+                    {
+                      "type": "heading",
+                      "data": {
+                        "level": 2,
+                        "title": "Table of Contents",
+                        "slug": "table-of-contents"
+                      },
+                      "depth": 2,
+                      "children": [
+                        {
+                          "type": "heading",
+                          "data": {
+                            "level": 3,
+                            "title": "Node Navigation",
+                            "slug": "node-navigation"
+                          },
+                          "depth": 3
+                        }
+                      ]
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 2,
+                        "title": "Node Search",
+                        "slug": "node-search"
+                      },
+                      "depth": 2
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 2,
+                        "title": "DOM Construction",
+                        "slug": "dom-construction"
+                      },
+                      "depth": 2
+                    }
+                  ]
+                }
+              ]
+            }, {
+              "type": "file",
+              "data": {
+                "projectPath": "lib/styles/default/docPage.jade",
+                "targetPath": "styles/default/docPage",
+                "pageTitle": "styles/default/docPage",
+                "title": "docPage"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "projectPath": "lib/styles/default/style.sass",
+                "targetPath": "styles/default/style",
+                "pageTitle": "styles/default/style",
+                "title": "style"
+              },
+              "depth": 3,
+              "outline": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Configuration",
+                    "slug": "configuration"
+                  },
+                  "depth": 2,
+                  "children": [
+                    {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "Sizing",
+                        "slug": "sizing"
+                      },
+                      "depth": 3
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "Color Scheme",
+                        "slug": "color-scheme"
+                      },
+                      "depth": 3
+                    }, {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "Typography",
+                        "slug": "typography"
+                      },
+                      "depth": 3
+                    }
+                  ]
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Two-Column Layout",
+                    "slug": "two-column-layout"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Two-Column Scaling",
+                    "slug": "two-column-scaling"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Single-Column Layout",
+                    "slug": "single-column-layout"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Navigation",
+                    "slug": "navigation"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Behavior",
+                    "slug": "behavior"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Typography",
+                    "slug": "typography"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Visual Design",
+                    "slug": "visual-design"
+                  },
+                  "depth": 2,
+                  "children": [
+                    {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "Commentary Elements",
+                        "slug": "commentary-elements"
+                      },
+                      "depth": 3
+                    }
+                  ]
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Browser-Specific Tweaks",
+                    "slug": "browser-specific-tweaks"
+                  },
+                  "depth": 2,
+                  "children": [
+                    {
+                      "type": "heading",
+                      "data": {
+                        "level": 3,
+                        "title": "Doc Tags",
+                        "slug": "doc-tags"
+                      },
+                      "depth": 3
+                    }
+                  ]
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "Code folding",
+                    "slug": "code-folding"
+                  },
+                  "depth": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "projectPath": "lib/utils.coffee",
+        "targetPath": "utils",
+        "pageTitle": "utils",
+        "title": "utils"
+      },
+      "depth": 1,
+      "outline": [],
+      "children": [
+        {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/utils/cli_helpers.coffee",
+            "targetPath": "utils/cli_helpers",
+            "pageTitle": "utils/cli_helpers",
+            "title": "cli_helpers"
+          },
+          "depth": 2,
+          "outline": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 1,
+                "title": "Command Line Helpers",
+                "slug": "command-line-helpers"
+              },
+              "depth": 1,
+              "children": [
+                {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "configureOptimist",
+                    "slug": "configureoptimist"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "extractArgv",
+                    "slug": "extractargv"
+                  },
+                  "depth": 2
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 2,
+                    "title": "guessPrimaryGitHubURL",
+                    "slug": "guessprimarygithuburl"
+                  },
+                  "depth": 2
+                }
+              ]
+            }
+          ]
+        }, {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/utils/compatibility_helpers.coffee",
+            "targetPath": "utils/compatibility_helpers",
+            "pageTitle": "utils/compatibility_helpers",
+            "title": "compatibility_helpers"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/utils/doctag_helpers.coffee",
+            "targetPath": "utils/doctag_helpers",
+            "pageTitle": "utils/doctag_helpers",
+            "firstHeader": {
+              "type": "heading",
+              "data": {
+                "level": 1,
+                "title": "Doctag Helpers",
+                "slug": "doctag-helpers",
+                "isFileHeader": true
+              },
+              "depth": 1
+            },
+            "title": "Doctag Helpers"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/utils/humanize.coffee",
+            "targetPath": "utils/humanize",
+            "pageTitle": "utils/humanize",
+            "title": "humanize"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/utils/logger.coffee",
+            "targetPath": "utils/logger",
+            "pageTitle": "utils/logger",
+            "firstHeader": {
+              "type": "heading",
+              "data": {
+                "level": 1,
+                "title": "groc.Logger",
+                "slug": "groclogger",
+                "isFileHeader": true
+              },
+              "depth": 1
+            },
+            "title": "groc.Logger"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "projectPath": "lib/utils/style_helpers.coffee",
+            "targetPath": "utils/style_helpers",
+            "pageTitle": "utils/style_helpers",
+            "title": "style_helpers"
+          },
+          "depth": 2,
+          "outline": [
+            {
+              "type": "heading",
+              "data": {
+                "level": 1,
+                "title": "Style Helpers",
+                "slug": "style-helpers"
+              },
+              "depth": 1
+            }
+          ]
+        }
+      ]
+    }
+  ];
 
   html$ = $(document.documentElement).removeClass('no-js').addClass('js');
 
