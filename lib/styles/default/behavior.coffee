@@ -1,3 +1,5 @@
+tableOfContents = <%= JSON.stringify(tableOfContents) %>
+
 # # Page Behavior
 
 # ## Table of Contents
@@ -115,7 +117,7 @@ searchNodes = (queryString) ->
 
   return clearFilter() if queryString == ''
 
-  matcher  = new RegExp (c.replace ///[-[\]{}()*+?.,\\^$|#\s]///, "\\$&" for c in queryString).join '.*'
+  matcher  = new RegExp (c.replace /[-[\]{}()*+?.,\\^$|#\s]/, "\\$&" for c in queryString).join '.*'
   matched  = []
   filtered = []
 
@@ -125,7 +127,7 @@ searchNodes = (queryString) ->
   return clearFilter() if matched.length > MAX_FILTER_SIZE
 
   nav$.addClass 'searching'
-  
+
   # Update the DOM
   for nodeInfo in filtered
     nodeInfo[1].removeClass 'matched-child'
@@ -210,9 +212,7 @@ buildNav = (metaInfo) ->
 buildTOCNode = (node, metaInfo) ->
   node$ = $(node)
   label$ = node$.find('> .label')
-
-  # } just to clarify: we use it in the `clickLabel`-method below, but can
-  # } reference the first time after initializing it a few more lines below
+  # we use the `discloser` in the `clickLabel`-closure below
   discloser = label$.find('> .discloser').get(0)
 
   if node$.hasClass 'file'
@@ -338,16 +338,17 @@ $ ->
   $('body').keydown (evt) ->
     if nav$.hasClass 'active'
       switch evt.keyCode
-        when 13 then visitCurrentNode() # Return
+        when 13 then visitCurrentNode() # return
         when 27 then setTableOfContentsActive(false) # ESC
-        when 37 then setCurrentNodeExpanded false # left ←
-        when 38 then moveCurrentNode true # up ↑
-        when 39 then setCurrentNodeExpanded true # right →
-        when 40 then moveCurrentNode false # down ↓
+        when 37 then setCurrentNodeExpanded false # left
+        when 38 then moveCurrentNode true # up
+        when 39 then setCurrentNodeExpanded true # right
+        when 40 then moveCurrentNode false # down
         else return
+
       evt.preventDefault()
     else
-      switch evt.keyCode 
+      switch evt.keyCode
         when 13
           search$.focus()
           evt.preventDefault()
@@ -363,7 +364,7 @@ $ ->
     switch evt.keyCode
       when 9 # TAB
         search$.blur()
-        setTableOfContentsActive(true) 
+        setTableOfContentsActive(true)
         evt.preventDefault()
         return false
       when 27 # ESC

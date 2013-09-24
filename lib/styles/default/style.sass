@@ -235,8 +235,11 @@ html.one-column-layout
   #meta
     margin-left: $column-shadow-width + $common-margin // delibratly used these widths !
 
-html.no-js .segment .code
-  margin-right: $tools-width + ($common-margin * 3)
+.no-js .segment .code
+  margin-right: $tools-width + ( 2 * $common-margin )
+
+.no-js body
+  max-width: $commentary-column-width + $tools-width + ( 2 * $common-margin )
 
 // Switch modes at a little wider than a full (padded) column
 @media (max-width: #{$single-column-toggle-width})
@@ -372,7 +375,11 @@ nav
   .tools .toc-toggle
     +transition(background $navigation-shift-duration)
 
-nav.active, .no-js nav
+  &.active
+    +transition(height 0 0)
+    height: 100%
+
+.no-js nav
   +transition(height 0 0)
   height: 100%
 
@@ -666,7 +673,7 @@ nav
   &.active .tools
     +border-bottom-left-radius(0)
 
-    .toc-toggle
+    .toggle
       background:  darken($tools-background-color, 10%)
       position:    relative
 
@@ -700,7 +707,7 @@ nav
       text-decoration: none
       border-top:      1px solid darken($tools-background-color, 15%)
       border-bottom:   1px solid darken($tools-background-color, 15%)
-      margin-top:      -1px
+      margin-top:     -1px
 
       &:hover
         background: darken($tools-background-color, 10%)
@@ -750,8 +757,10 @@ nav
     .toc
       background: $opaque-tools-background-color
 
-nav.active .tools
+nav .tools
   +box-shadow(rgba(0,0,0,0.3) 0 0 0.5em 0.1em)
+
+.no-js nav .tools
   +border-bottom-left-radius(0)
 
 @media (max-width: #{$commentary-column-width})
