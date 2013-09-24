@@ -212,6 +212,9 @@ module.exports = Utils =
       stripMarks.push foldPrefix if foldPrefix?
       stripMarks = @regexpEscape(stripMarks).join '|'
 
+      # Strip final space only if one is required, hence yet present.
+      stripSpace = if options.requireWhitespaceAfterToken then '(?:\\s)?' else ''
+
       # A dirty lap-dance performed here …
       singleStrip = ///
         (                           # Capture this group:
@@ -219,6 +222,7 @@ module.exports = Utils =
           #{whitespaceMatch}        #   … plus whitespace
         )
         (?:#{stripMarks})           # The marker(s) to strip from result
+        #{stripSpace}               #   … plus an optional whitespace.
       /// if singleLines?
 
       # … and the corresponding gang-bang here. 8-)
@@ -229,6 +233,7 @@ module.exports = Utils =
           #{whitespaceMatch}        #   … plus whitespace
         )
         (?:#{stripMarks})           # The marker(s) to strip from result
+        #{stripSpace}               #   … plus an optional whitespace.
       /// if blockStarts?
 
     isLiteral = aCodeLine? # If available we start in literal parsing mode.
