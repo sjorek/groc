@@ -282,20 +282,24 @@ module.exports = Utils =
       if aCodeLine?
 
         if canCode and (match = line.match aCodeLine)?
-          codeline = match[1]
+
+          [match, codeline] = match
 
           # Skip empty code-lines (often used to close a code-block).
           # TODO: Skipping empty code-lines is certainly not perfect yet!
           continue if not codeline? or codeline is ''
 
-          # The previous cycle contained literate comments - We absolutely want
-          # to separate code from comments into independent segments, so this
-          # block must be enabled. If disabled it's impossible embed comments
-          # into the code! TODO: Implement a switch somewhere ?
-          # } if isLiteral and currSegment.comments.length > 0
-          # }    segments.push currSegment
-          # }    currSegment   = new @Segment
-          # }    isFolded      = false # Make sure to reset folding state.
+          # The previous cycle contained literate comments - If one absolutely
+          # wants to separate code from comments into independent segments this
+          # block must be enabled.
+          if isLiteral and currSegment.comments.length > 0
+            # TODO: Implement a better literal-segments solution:
+            # If the current segment contains just one empty line, merge the
+            # code with the previous segment, and make the previous segment
+            # the current
+            segments.push currSegment
+            currSegment   = new @Segment
+            isFolded      = false # Make sure to reset folding state.
 
           isLiteral = false
 
@@ -316,20 +320,16 @@ module.exports = Utils =
             # segment, as in literate mode we separate code from comments in
             # independent segments, as overlapping makes no sense in most cases.
             if currSegment.code.length > 0
+              # TODO: Implement a better literal-segments solution. Idea:
+              #       (a) Use horizontal lines as split marks
+              #       (b) Use previous headline
+              #       (c) Optimize splitArray afterwards ?
+              #       (d) Combine any of the above
               segments.push currSegment
               currSegment   = new @Segment
               isFolded      = false # Make sure to reset folding state.
 
-              # Collect this line
-              currSegment.comments.push line unless canCode
-            else
-              # Collect this line
-              currSegment.comments.push line
-
-          # Switch to plain literal comments
           else
-            isLiteral = true
-
             # From the previous cycle are comments left not being literate,
             # so let's start a new segment and reset folding state.
             if currSegment.comments.length > 0
@@ -337,8 +337,11 @@ module.exports = Utils =
               currSegment   = new @Segment
               isFolded      = false
 
-            # Collect this line, even empty ones. Really ?
-            currSegment.comments.push line unless canCode
+          # Collect this line, even empty ones in literal mode
+          currSegment.comments.push line
+
+          # Switch to plain literal comments
+          isLiteral = true
 
           # We skip further processing this line.  A literal is as it is.
           continue
