@@ -124,9 +124,24 @@ module.exports = Utils =
     # Enforced whitespace after the comment token
     whitespaceMatch = if options.requireWhitespaceAfterToken then '\\s' else '\\s?'
 
-    if language.literateCodeLines?
-      codeLines  = @regexpEscape(language.literateCodeLines).join '|'
-      aCodeLine  = ///^(?:#{codeLines})(?:(.*))?$///
+    if language.literateCode?
+      literateCode = @regexpEscape(language.literateCode)
+
+      codeStarts = _.select(literateCode, (v, i) -> i % 2 == 0).join '|'
+      codeLines  = _.select(literateCode, (v, i) -> i % 2 == 1).join '|'
+
+      aCodeStart  = ///
+        ^                          # Start a line.
+        (?:#{codeStarts})          # Match but don't capture the codeStart …
+        $                          # … up to the EOL.
+      ///
+
+      aCodeLine  = ///
+        ^                          # Start a line.
+        (?:#{codeLines})           # Match but don't capture the codeLines and …
+        (.*)?                      # … optionally capture everything …
+        $                          # … up to the EOL.
+      ///
 
     if language.singleLineComment?
       singleLines = @regexpEscape(language.singleLineComment).join '|'
@@ -236,7 +251,8 @@ module.exports = Utils =
         #{stripSpace}               #   … plus an optional whitespace.
       /// if blockStarts?
 
-    isLiteral = aCodeLine? # If available we start in literal parsing mode.
+    # If available we start in literal parsing mode.
+    isLiteral = aCodeLine?
     inBlock   = false
     inFolded  = false
     inIgnored = false
@@ -253,8 +269,8 @@ module.exports = Utils =
     code      = null
 
     # This flag indicates if the previous line was empty, hence literate code
-    # must always be surrounded (or at least introduced) by an empty line, ie.
-    # matching an empty string (`""`).  This is needed to distinguish code from
+    # must always be surrounded (or at least introduced) by an indicator,
+    # which is usually a empty line.  This is needed to distinguish code from
     # bullet-lists or the like, which may accidently match the start of a line
     # of code.  The initial value `true` allows us to immediately start with
     # code, although this is quite unusual.
@@ -272,13 +288,14 @@ module.exports = Utils =
           # TODO: Skipping empty code-lines is certainly not perfect yet!
           continue if not codeline? or codeline is ''
 
-          # The previous cycle contained literate comments - in literate mode
-          # we absolutely want to separate code from comments into independent
-          # segments, as overlapping will make no sense in most cases.  Really!?
-          if isLiteral and currSegment.comments.length > 0
-            segments.push currSegment
-            currSegment   = new @Segment
-            isFolded      = false # Make sure to reset folding state.
+          # The previous cycle contained literate comments - We absolutely want
+          # to separate code from comments into independent segments, so this
+          # block must be enabled. If disabled it's impossible embed comments
+          # into the code! TODO: Implement a switch somewhere ?
+          # } if isLiteral and currSegment.comments.length > 0
+          # }    segments.push currSegment
+          # }    currSegment   = new @Segment
+          # }    isFolded      = false # Make sure to reset folding state.
 
           isLiteral = false
 
@@ -289,10 +306,10 @@ module.exports = Utils =
           line = codeline
 
         else
-          # A code-block requires an introducing empty line, to distinguish code
+          # A code-block requires an introducing indicator, to distinguish code
           # from nested bullet-list or the like, as described in the `canCode` 
           # flag initialization above.
-          canCode = line is ''
+          canCode = aCodeStart.test line
 
           if isLiteral
             # The previous cycle contained literate code, so let's start a new
@@ -302,6 +319,12 @@ module.exports = Utils =
               segments.push currSegment
               currSegment   = new @Segment
               isFolded      = false # Make sure to reset folding state.
+
+              # Collect this line
+              currSegment.comments.push line unless canCode
+            else
+              # Collect this line
+              currSegment.comments.push line
 
           # Switch to plain literal comments
           else
@@ -314,8 +337,8 @@ module.exports = Utils =
               currSegment   = new @Segment
               isFolded      = false
 
-          # Collect this line, even empty ones. Really ?
-          currSegment.comments.push line
+            # Collect this line, even empty ones. Really ?
+            currSegment.comments.push line unless canCode
 
           # We skip further processing this line.  A literal is as it is.
           continue
