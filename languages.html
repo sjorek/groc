@@ -77,7 +77,7 @@ not been applied to coffee-script's codebase …)</li>
 <span class="cm">    # with `&#39;#&#39;`, because we add unmatched lines to the comments once we are</span>
 <span class="cm">    # in a multi-line comment-block and until we left them …</span>
 <span class="cm">    ###</span>
-    <span class="nv">multiLineComment  : </span><span class="p">[</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Syntax definition for variant 1.</p></div></div><div class="code"><div class="wrapper">      <span class="s">&#39;###*&#39;</span><span class="p">,</span>   <span class="s">&#39; *&#39;</span><span class="p">,</span>   <span class="s">&#39; ###&#39;</span><span class="p">,</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Syntax definition for variant 2 and 3.</p></div></div><div class="code"><div class="wrapper">      <span class="s">&#39;###&#39;</span> <span class="p">,</span>   <span class="s">&#39;#&#39;</span> <span class="p">,</span>   <span class="s">&#39;###&#39;</span>
+    <span class="nv">multiLineComment: </span> <span class="p">[</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Syntax definition for variant 1.</p></div></div><div class="code"><div class="wrapper">      <span class="s">&#39;###*&#39;</span><span class="p">,</span>   <span class="s">&#39; *&#39;</span><span class="p">,</span>   <span class="s">&#39; ###&#39;</span><span class="p">,</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Syntax definition for variant 2 and 3.</p></div></div><div class="code"><div class="wrapper">      <span class="s">&#39;###&#39;</span> <span class="p">,</span>   <span class="s">&#39;#&#39;</span> <span class="p">,</span>   <span class="s">&#39;###&#39;</span>
     <span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This flag indicates if the end-mark of block-comments (the third value in
 the list of 3-tuples above) must correspond to the initial block-mark (the
 first value in the list of 3-tuples above).  If this flag is missing it
@@ -92,17 +92,30 @@ different syntax-definitions, like in handlebars or html+php.</p></div></div><di
       <span class="nv">types           : </span><span class="p">[</span>
         <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_globals.json&#39;</span>
         <span class="nx">require</span> <span class="s">&#39;./namespace/javascript_dom.json&#39;</span>
-      <span class="p">]</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>References:</p>
+      <span class="p">]</span></div></div></div><div class="segment"><div class="comments doc-section"><div class="wrapper"><p>This is a clone of the coffee-script definition above plus the <code>literateCode</code>
+defintion below.</p>
+
+<p>References:</p>
 
 <ul>
 <li><p><a href="http://ashkenas.com/literate-coffeescript">http://ashkenas.com/literate-coffeescript</a></p></li>
 <li><p><a href="http://coffeescript.org/#literate">http://coffeescript.org/#literate</a></p></li>
 </ul>
 
-<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">LiterateCoffeeScript:</span>
-    <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.litcoffee&#39;</span><span class="p">]</span>
-    <span class="nv">pygmentsLexer     : </span><span class="s">&#39;coffee-script&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Everything below <code>literateCodeLines</code> is used to match the code we detected</p></div></div><div class="code"><div class="wrapper">    <span class="nv">literateCodeLines : </span><span class="p">[</span><span class="s">&#39;    &#39;</span><span class="p">]</span>
-    <span class="nv">multiLineComment  : </span><span class="p">[</span>
+<p><br/><br/></p></div></div><div class="code"><div class="wrapper">  <span class="nv">LiterateCoffeeScript: </span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The second name-matcher <code>'.coffee.md'</code> is untested and might conflict
+with the plain markdown-definition above.</p></div></div><div class="code"><div class="wrapper">    <span class="nv">nameMatchers      : </span><span class="p">[</span><span class="s">&#39;.litcoffee&#39;</span><span class="p">,</span> <span class="s">&#39;.coffee.md&#39;</span><span class="p">]</span>
+    <span class="nv">pygmentsLexer     : </span><span class="s">&#39;coffee-script&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Syntax: <code>[ startMatcher, lineMatcher, startMatcher, lineMatcher … ]</code></p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><ul>
+<li><em>startMatcher</em>: 
+A literate coffee-script code-block requires an introducing empty line,
+hence an empty string to distinguish code from nested bullet-lists, as
+described in the <code>canCode</code> flag initialization in <code>lib/utils.coffee</code>.</li>
+<li><em>lineMatcher</em>: 
+Literate coffee-script is the sum of all code-blocks in a markdown-file.
+This prefix will be stripped from every code-line and the resulting
+code will be processed by <code>pygments</code>.</li>
+</ul></div></div><div class="code"><div class="wrapper">    <span class="nv">literateCode      : </span><span class="p">[</span>
+      <span class="s">&#39;&#39;</span><span class="p">,</span> <span class="s">&#39;    &#39;</span>
+    <span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Everything below <code>literateCode</code> is used to match the code we detected</p></div></div><div class="code"><div class="wrapper">    <span class="nv">multiLineComment  : </span><span class="p">[</span>
       <span class="s">&#39;###*&#39;</span><span class="p">,</span>   <span class="s">&#39; *&#39;</span><span class="p">,</span>   <span class="s">&#39; ###&#39;</span><span class="p">,</span>
       <span class="s">&#39;###&#39;</span> <span class="p">,</span>   <span class="s">&#39;#&#39;</span> <span class="p">,</span>   <span class="s">&#39;###&#39;</span>
     <span class="p">]</span>

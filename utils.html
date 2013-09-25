@@ -68,9 +68,24 @@ avoid the perf hit of walking the array to update indices.</p></div></div><div c
     <span class="nv">segments = </span><span class="p">[]</span>
     <span class="nv">currSegment = </span><span class="k">new</span> <span class="nx">@Segment</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Enforced whitespace after the comment token</p></div></div><div class="code"><div class="wrapper">    <span class="nv">whitespaceMatch = </span><span class="k">if</span> <span class="nx">options</span><span class="p">.</span><span class="nx">requireWhitespaceAfterToken</span> <span class="k">then</span> <span class="s">&#39;\\s&#39;</span> <span class="k">else</span> <span class="s">&#39;\\s?&#39;</span>
 
-    <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">literateCodeLines</span><span class="o">?</span>
-      <span class="nv">codeLines  = </span><span class="nx">@regexpEscape</span><span class="p">(</span><span class="nx">language</span><span class="p">.</span><span class="nx">literateCodeLines</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;|&#39;</span>
-      <span class="nv">aCodeLine  = </span><span class="sr">///^(?:</span><span class="si">#{</span><span class="nx">codeLines</span><span class="si">}</span><span class="sr">)(?:(.*))?$///</span>
+    <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">literateCode</span><span class="o">?</span>
+      <span class="nv">literateCode = </span><span class="nx">@regexpEscape</span><span class="p">(</span><span class="nx">language</span><span class="p">.</span><span class="nx">literateCode</span><span class="p">)</span>
+
+      <span class="nv">codeStarts = </span><span class="nx">_</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">literateCode</span><span class="p">,</span> <span class="nf">(v, i) -&gt;</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;|&#39;</span>
+      <span class="nv">codeLines  = </span><span class="nx">_</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">literateCode</span><span class="p">,</span> <span class="nf">(v, i) -&gt;</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;|&#39;</span>
+
+      <span class="nv">aCodeStart  = </span><span class="sr">///</span>
+<span class="sr">        ^                          # Start a line.</span>
+<span class="sr">        (?:</span><span class="si">#{</span><span class="nx">codeStarts</span><span class="si">}</span><span class="sr">)          # Match but don&#39;t capture the codeStart …</span>
+<span class="sr">        $                          # … up to the EOL.</span>
+<span class="sr">      ///</span>
+
+      <span class="nv">aCodeLine  = </span><span class="sr">///</span>
+<span class="sr">        ^                          # Start a line.</span>
+<span class="sr">        (?:</span><span class="si">#{</span><span class="nx">codeLines</span><span class="si">}</span><span class="sr">)           # Match but don&#39;t capture the codeLines and …</span>
+<span class="sr">        (.*)?                      # … optionally capture everything …</span>
+<span class="sr">        $                          # … up to the EOL.</span>
+<span class="sr">      ///</span>
 
     <span class="k">if</span> <span class="nx">language</span><span class="p">.</span><span class="nx">singleLineComment</span><span class="o">?</span>
       <span class="nv">singleLines = </span><span class="nx">@regexpEscape</span><span class="p">(</span><span class="nx">language</span><span class="p">.</span><span class="nx">singleLineComment</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;|&#39;</span>
@@ -155,9 +170,7 @@ below this line …</p>
 <span class="sr">        )</span>
 <span class="sr">        (?:</span><span class="si">#{</span><span class="nx">stripMarks</span><span class="si">}</span><span class="sr">)           # The marker(s) to strip from result</span>
 <span class="sr">        </span><span class="si">#{</span><span class="nx">stripSpace</span><span class="si">}</span><span class="sr">               #   … plus an optional whitespace.</span>
-<span class="sr">      ///</span> <span class="k">if</span> <span class="nx">blockStarts</span><span class="o">?</span>
-
-    <span class="nv">isLiteral = </span><span class="nx">aCodeLine</span><span class="o">?</span> <span class="c1"># If available we start in literal parsing mode.</span>
+<span class="sr">      ///</span> <span class="k">if</span> <span class="nx">blockStarts</span><span class="o">?</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If available we start in literal parsing mode.</p></div></div><div class="code"><div class="wrapper">    <span class="nv">isLiteral = </span><span class="nx">aCodeLine</span><span class="o">?</span>
     <span class="nv">inBlock   = </span><span class="kc">false</span>
     <span class="nv">inFolded  = </span><span class="kc">false</span>
     <span class="nv">inIgnored = </span><span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Variables used in temporary assignments have been collected here for
@@ -169,8 +182,8 @@ documentation purposes only. </p></div></div><div class="code"><div class="wrapp
     <span class="nv">indention = </span><span class="kc">null</span>
     <span class="nv">comment   = </span><span class="kc">null</span>
     <span class="nv">code      = </span><span class="kc">null</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This flag indicates if the previous line was empty, hence literate code
-must always be surrounded (or at least introduced) by an empty line, ie.
-matching an empty string (<code>""</code>).  This is needed to distinguish code from
+must always be surrounded (or at least introduced) by an indicator,
+which is usually a empty line.  This is needed to distinguish code from
 bullet-lists or the like, which may accidently match the start of a line
 of code.  The initial value <code>true</code> allows us to immediately start with
 code, although this is quite unusual.</p></div></div><div class="code"><div class="wrapper">    <span class="nv">canCode = </span><span class="nx">aCodeLine</span><span class="o">?</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Now iterate over each line</p></div></div><div class="code"><div class="wrapper">    <span class="k">for</span> <span class="nx">line</span> <span class="k">in</span> <span class="nx">lines</span>
@@ -178,11 +191,14 @@ code, although this is quite unusual.</p></div></div><div class="code"><div clas
       <span class="k">if</span> <span class="nx">aCodeLine</span><span class="o">?</span>
 
         <span class="k">if</span> <span class="nx">canCode</span> <span class="o">and</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">aCodeLine</span><span class="p">)</span><span class="o">?</span>
-          <span class="nv">codeline = </span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Skip empty code-lines (often used to close a code-block).
-TODO: Skipping empty code-lines is certainly not perfect yet!</p></div></div><div class="code"><div class="wrapper">          <span class="k">continue</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">codeline</span><span class="o">?</span> <span class="o">or</span> <span class="nx">codeline</span> <span class="o">is</span> <span class="s">&#39;&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The previous cycle contained literate comments - in literate mode
-we absolutely want to separate code from comments into independent
-segments, as overlapping will make no sense in most cases.  Really!?</p></div></div><div class="code"><div class="wrapper">          <span class="k">if</span> <span class="nx">isLiteral</span> <span class="o">and</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
+
+          <span class="p">[</span><span class="nx">match</span><span class="p">,</span> <span class="nx">codeline</span><span class="p">]</span> <span class="o">=</span> <span class="nx">match</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Skip empty code-lines (often used to close a code-block).
+TODO: Skipping empty code-lines is certainly not perfect yet!</p></div></div><div class="code"><div class="wrapper">          <span class="k">continue</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">codeline</span><span class="o">?</span> <span class="o">or</span> <span class="nx">codeline</span> <span class="o">is</span> <span class="s">&#39;&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The previous cycle contained literate comments - If one absolutely
+wants to separate code from comments into independent segments this
+block must be enabled.</p></div></div><div class="code"><div class="wrapper">          <span class="k">if</span> <span class="nx">isLiteral</span> <span class="o">and</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO: Implement a better literal-segments solution:
+If the current segment contains just one empty line, merge the
+code with the previous segment, and make the previous segment
+the current</p></div></div><div class="code"><div class="wrapper">            <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
             <span class="nv">currSegment   = </span><span class="k">new</span> <span class="nx">@Segment</span>
             <span class="nv">isFolded      = </span><span class="kc">false</span> <span class="c1"># Make sure to reset folding state.</span>
 
@@ -191,21 +207,25 @@ we continue further processing of this line and therefore no
 <code>continue</code>-statement occurs here.  Compare this to the following
 <code>else</code>-statement.</p></div></div><div class="code"><div class="wrapper">          <span class="nv">line = </span><span class="nx">codeline</span>
 
-        <span class="k">else</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A code-block requires an introducing empty line, to distinguish code
+        <span class="k">else</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A code-block requires an introducing indicator, to distinguish code
 from nested bullet-list or the like, as described in the <code>canCode</code> 
-flag initialization above.</p></div></div><div class="code"><div class="wrapper">          <span class="nv">canCode = </span><span class="nx">line</span> <span class="o">is</span> <span class="s">&#39;&#39;</span>
+flag initialization above.</p></div></div><div class="code"><div class="wrapper">          <span class="nv">canCode = </span><span class="nx">aCodeStart</span><span class="p">.</span><span class="nx">test</span> <span class="nx">line</span>
 
           <span class="k">if</span> <span class="nx">isLiteral</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>The previous cycle contained literate code, so let's start a new
 segment, as in literate mode we separate code from comments in
-independent segments, as overlapping makes no sense in most cases.</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
-              <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
+independent segments, as overlapping makes no sense in most cases.</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO: Implement a better literal-segments solution. Idea:
+      (a) Use horizontal lines as split marks
+      (b) Use previous headline
+      (c) Optimize splitArray afterwards ?
+      (d) Combine any of the above</p></div></div><div class="code"><div class="wrapper">              <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
               <span class="nv">currSegment   = </span><span class="k">new</span> <span class="nx">@Segment</span>
-              <span class="nv">isFolded      = </span><span class="kc">false</span> <span class="c1"># Make sure to reset folding state.</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Switch to plain literal comments</p></div></div><div class="code"><div class="wrapper">          <span class="k">else</span>
-            <span class="nv">isLiteral = </span><span class="kc">true</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>From the previous cycle are comments left not being literate,
+              <span class="nv">isFolded      = </span><span class="kc">false</span> <span class="c1"># Make sure to reset folding state.</span>
+
+          <span class="k">else</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>From the previous cycle are comments left not being literate,
 so let's start a new segment and reset folding state.</p></div></div><div class="code"><div class="wrapper">            <span class="k">if</span> <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
               <span class="nx">segments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">currSegment</span>
               <span class="nv">currSegment   = </span><span class="k">new</span> <span class="nx">@Segment</span>
-              <span class="nv">isFolded      = </span><span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Collect this line, even empty ones. Really ?</p></div></div><div class="code"><div class="wrapper">          <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">line</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We skip further processing this line.  A literal is as it is.</p></div></div><div class="code"><div class="wrapper">          <span class="k">continue</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Match that line to the language's block-comment syntax, if it exists</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nx">aBlockStart</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">inBlock</span> <span class="o">and</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">aBlockStart</span><span class="p">)</span><span class="o">?</span>
+              <span class="nv">isFolded      = </span><span class="kc">false</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Collect this line, even empty ones in literal mode</p></div></div><div class="code"><div class="wrapper">          <span class="nx">currSegment</span><span class="p">.</span><span class="nx">comments</span><span class="p">.</span><span class="nx">push</span> <span class="nx">line</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Switch to plain literal comments</p></div></div><div class="code"><div class="wrapper">          <span class="nv">isLiteral = </span><span class="kc">true</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We skip further processing this line.  A literal is as it is.</p></div></div><div class="code"><div class="wrapper">          <span class="k">continue</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Match that line to the language's block-comment syntax, if it exists</p></div></div><div class="code"><div class="wrapper">      <span class="k">if</span> <span class="nx">aBlockStart</span><span class="o">?</span> <span class="o">and</span> <span class="o">not</span> <span class="nx">inBlock</span> <span class="o">and</span> <span class="p">(</span><span class="nv">match = </span><span class="nx">line</span><span class="p">.</span><span class="nx">match</span> <span class="nx">aBlockStart</span><span class="p">)</span><span class="o">?</span>
         <span class="nv">inBlock = </span><span class="kc">true</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Reusing <code>match</code> as a placeholder.</p></div></div><div class="code"><div class="wrapper">        <span class="p">[</span><span class="nx">match</span><span class="p">,</span> <span class="nx">indention</span><span class="p">,</span> <span class="nx">blockmark</span><span class="p">,</span> <span class="nx">linemark</span><span class="p">]</span> <span class="o">=</span> <span class="nx">match</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Strip the block-comments start, preserving any inline stuff.
 We don't touch the <code>line</code> itself, as we still need it.</p></div></div><div class="code"><div class="wrapper">        <span class="nv">blockline = </span><span class="nx">line</span><span class="p">.</span><span class="nx">replace</span> <span class="nx">aBlockStart</span><span class="p">,</span> <span class="s">&#39;&#39;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If we found a <code>linemark</code>, prepend it (back) to the <code>blockline</code>, if it
 does not correspond to the initial <code>blockmark</code>.</p></div></div><div class="code"><div class="wrapper">        <span class="k">if</span> <span class="nx">linemark</span><span class="o">?</span> <span class="o">and</span> <span class="nx">blockComments</span><span class="p">[</span><span class="nx">blockmark</span><span class="p">].</span><span class="nx">linemark</span> <span class="o">isnt</span> <span class="nx">linemark</span>
