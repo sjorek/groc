@@ -494,7 +494,7 @@ module.exports = Utils =
       # However, we treat all comments beginning with } as inline code commentary
       # and comments starting with ^ cause that comment and the following code
       # block to start folded.
-      else if (match = line.match aSingleLine)?
+      else if aSingleLine? and (match = line.match aSingleLine)?
 
         # Uses `match` as a placeholder.
         [match, comment] = match
@@ -659,6 +659,8 @@ module.exports = Utils =
     
     DOC_TAGS = if fileInfo?.language.doctags? then fileInfo.language.doctags else null
 
+    # nevir: 
+    # TAG_REGEX=/(?:^|\n)@(\w+)(?:\s+(.*))?/
     TAG_REGEX = /(?:^|\s)@(\w+)(?:\s+(.*))?/
     TAG_VALUE_REGEX = /^(?:"(.*)"|'(.*)'|\{(.*)\}|(.*))$/
 

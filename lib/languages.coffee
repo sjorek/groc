@@ -3,7 +3,7 @@
 module.exports = LANGUAGES =
 
   Markdown            : 
-    nameMatchers      : ['.md']
+    nameMatchers      : ['.md', '.markdown','.mkd', '.mkdn', '.mdown']
     commentsOnly      : true
 
   C                   : 
@@ -81,11 +81,16 @@ module.exports = LANGUAGES =
     # with `'#'`, because we add unmatched lines to the comments once we are
     # in a multi-line comment-block and until we left them …
     ###
-    multiLineComment:  [
+    #- Variant 4:
+    #   (This definition matches the format used by YUIDoc to parse CoffeeScript
+    #   comments)
+    multiLineComment  : [
       # Syntax definition for variant 1.
       '###*',   ' *',   ' ###',
       # Syntax definition for variant 2 and 3.
-      '###' ,   '#' ,   '###'
+      '###' ,   '#' ,   '###',
+      # Syntax definition for variant 4
+      '###*',   '#',    '###'
     ]
     # This flag indicates if the end-mark of block-comments (the third value in
     # the list of 3-tuples above) must correspond to the initial block-mark (the
@@ -215,6 +220,16 @@ module.exports = LANGUAGES =
     pygmentsLexer     : 'json'
     codeOnly          : true
 
+  JSP                 :
+    nameMatchers      : ['.jsp']
+    pygmentsLexer     : 'jsp'
+    multiLineComment  : [
+      '<%--', '', '--%>'
+    ]
+    strictMultiLineEnd:true
+    ignorePrefix      : '#'
+    foldPrefix        : '^'
+
   LaTeX               : 
     nameMatchers      : ['.tex', '.latex', '.sty']
     pygmentsLexer     : 'latex'
@@ -226,6 +241,14 @@ module.exports = LANGUAGES =
     nameMatchers      : ['.less']
     pygmentsLexer     : 'sass' # TODO: is there a less lexer? No. Maybe in the future.
     singleLineComment : ['//']
+    ignorePrefix      : '}'
+    foldPrefix        : '^'
+
+  LiveScript          :
+    nameMatchers      : ['.ls', 'Slakefile']
+    pygmentsLexer     : 'livescript'
+    multiLineComment  : ['/*', '*', '*/']
+    singleLineComment : ['#']
     ignorePrefix      : '}'
     foldPrefix        : '^'
 
@@ -310,6 +333,7 @@ module.exports = LANGUAGES =
   Sass                : 
     nameMatchers      : ['.sass']
     pygmentsLexer     : 'sass'
+    multiLineComment  : ['/*', '*', '*/']
     singleLineComment : ['//']
     ignorePrefix      : '}'
     foldPrefix        : '^'
@@ -317,6 +341,7 @@ module.exports = LANGUAGES =
   SCSS                : 
     nameMatchers      : ['.scss']
     pygmentsLexer     : 'scss'
+    multiLineComment  : ['/*', '*', '*/']
     singleLineComment : ['//']
     ignorePrefix      : '}'
     foldPrefix        : '^'
@@ -335,9 +360,18 @@ module.exports = LANGUAGES =
     ignorePrefix      : '}'
     foldPrefix        : '^'
 
+  TypeScript          :
+    nameMatchers      : ['.ts']
+    pygmentsLexer     : 'ts'
+    multiLineComment  : ['/*', '*', '*/']
+    singleLineComment : ['//']
+    ignorePrefix      : '}'
+    foldPrefix        : '^'
+
   YAML                : 
     nameMatchers      : ['.yml', '.yaml']
     pygmentsLexer     : 'yaml'
     singleLineComment : ['#']
     ignorePrefix      : '}'
     foldPrefix        : '^'
+
